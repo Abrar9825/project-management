@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documents | ProjectControl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',600:'#008080',700:'#0f766e' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-700 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944"/></svg>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">Documents</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-1">
+                        <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium text-sm">My Work</a>
+                        <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium text-sm admin-subadmin-only">Projects</a>
+                        <a href="/documents" class="px-4 py-2 rounded-lg bg-teal-50 text-teal-700 font-medium text-sm">Documents</a>
+                        <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium text-sm admin-only">Users</a>
+                    </div>
+                    <a href="/profile" class="flex items-center space-x-2 hover:bg-gray-50 rounded-lg px-2 py-1">
+                        <div class="w-8 h-8 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold text-xs"><span id="userInitials">AK</span></div>
+                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Admin</span>
+                    </a>
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-2">
+                <h1 class="text-3xl font-bold text-gray-900">Project Documents & Quotations</h1>
+                <div class="flex gap-2">
+                    <a id="docCenterLink" href="/document-center" class="px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg hover:from-teal-600 hover:to-teal-800 text-sm font-medium shadow-sm hidden admin-subadmin-only">
+                        📄 Open Document Center
+                    </a>
+                </div>
+            </div>
+            <p class="text-gray-500 text-sm mb-3">Select a project below to open its Document Center for auto-generated contracts, invoices & more.</p>
+            <div class="flex gap-2 admin-only">
+                <button onclick="openCreateModal('requirement')" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 text-sm font-medium">+ Requirement Document</button>
+                <button onclick="openCreateModal('quotation')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">+ Quotation</button>
+                <button onclick="openCreateModal('agreement')" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-medium">+ Agreement</button>
+                <button onclick="openCreateModal('design-brief')" class="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 text-sm font-medium">+ Design Brief</button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white border-b border-gray-200 mb-6">
+            <div class="flex space-x-4">
+                <button onclick="filterByType('all')" data-type="all" class="filter-btn active px-4 py-3 font-medium text-teal-600 border-b-2 border-teal-600">All Documents</button>
+                <button onclick="filterByType('requirement')" data-type="requirement" class="filter-btn px-4 py-3 font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Requirements</button>
+                <button onclick="filterByType('quotation')" data-type="quotation" class="filter-btn px-4 py-3 font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Quotations</button>
+                <button onclick="filterByType('agreement')" data-type="agreement" class="filter-btn px-4 py-3 font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Agreements</button>
+                <button onclick="filterByType('handover')" data-type="handover" class="filter-btn px-4 py-3 font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Handovers</button>
+            </div>
+        </div>
+
+        <!-- Documents Grid -->
+        <div id="documentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="col-span-full text-center py-12 text-gray-500">
+                <p>Loading documents...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Create Modal -->
+    <div id="createModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4" id="modalTitle">Create Document</h2>
+            
+            <!-- AI Toggle -->
+            <div class="mb-6 flex gap-3">
+                <button onclick="toggleAIMode(false)" id="manualModeBtn" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-all active">📝 Manual</button>
+                <button onclick="toggleAIMode(true)" id="aiModeBtn" class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-all">✨ AI Generate</button>
+            </div>
+
+            <div class="space-y-4">
+                <input type="hidden" id="docType" value="">
+                <input type="hidden" id="aiMode" value="false">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Project</label>
+                    <select id="docProject" class="w-full px-4 py-2 border rounded-lg outline-none" onchange="loadDocuments()">
+                        <option value="">Select Project</option>
+                    </select>
+                </div>
+
+                <!-- AI Mode: Description -->
+                <div id="aiSectionDescription" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">📋 Describe what you need</label>
+                    <textarea id="docDescription" rows="6" placeholder="E.g., A quotation for e-commerce development including frontend, backend, and deployment. Client budget is $50,000..." class="w-full px-4 py-2 border rounded-lg outline-none resize-none"></textarea>
+                    <p class="text-xs text-gray-400 mt-1">AI will generate professional document based on this description</p>
+                </div>
+
+                <!-- Manual Mode: Title + Content -->
+                <div id="manualSectionTitle">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <input type="text" id="docTitle" placeholder="Document title" class="w-full px-4 py-2 border rounded-lg outline-none">
+                </div>
+                <div id="manualSectionContent">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                    <textarea id="docContent" rows="6" placeholder="Document content..." class="w-full px-4 py-2 border rounded-lg outline-none resize-none"></textarea>
+                </div>
+                
+                <div id="docExtras"></div>
+                
+                <div class="flex gap-2">
+                    <button onclick="submitDocument()" id="submitBtn" class="px-6 py-2 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700">Create</button>
+                    <button onclick="closeModal()" class="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Modal -->
+    <div id="viewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-900" id="viewModalTitle">Document</h2>
+                <button onclick="closeViewModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+            <div id="viewModalContent" class="space-y-4"></div>
+            <div class="flex gap-2 mt-6">
+                <button onclick="if(currentDoc) downloadDocPDF(currentDoc._id)" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 text-sm">📄 Download PDF</button>
+                <button onclick="closeViewModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        const TOKEN = localStorage.getItem('token');
+        const USER = JSON.parse(localStorage.getItem('user') || '{}');
+        const HEADERS = { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' };
+
+        let documents = [];
+        let currentType = 'all';
+        let currentDoc = null;
+
+        function formatDate(d) {
+            if(!d) return '—';
+            return new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+        }
+
+        function formatDateTime(d) {
+            if(!d) return '—';
+            return new Date(d).toLocaleString('en-US', {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'});
+        }
+
+        function filterByType(type) {
+            currentType = type;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('!text-teal-600', '!border-teal-600');
+                btn.classList.add('text-gray-600', 'border-transparent');
+            });
+            document.querySelector(`.filter-btn[data-type="${type}"]`).classList.add('!text-teal-600', '!border-teal-600');
+            renderDocuments();
+        }
+
+        function renderDocuments() {
+            const toDisplay = currentType === 'all' ? documents : documents.filter(d => d.type === currentType);
+            
+            if(toDisplay.length === 0) {
+                document.getElementById('documentsGrid').innerHTML = `<div class="col-span-full text-center py-12 text-gray-500"><p>No documents found</p></div>`;
+                return;
+            }
+
+            const typeIcons = {requirement:'📋', quotation:'🧾', agreement:'📝', 'design-brief':'🎨', handover:'📦'};
+            const typeColors = {requirement:'teal', quotation:'blue', agreement:'purple', 'design-brief':'pink', handover:'orange'};
+
+            const html = toDisplay.map(doc => {
+                const icon = typeIcons[doc.type] || '📄';
+                const color = typeColors[doc.type] || 'gray';
+                return `<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all">
+                    <div class="p-6">
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="text-4xl">${icon}</span>
+                            <span class="px-2 py-0.5 text-xs font-medium rounded-full ${
+                                doc.status === 'approved' ? 'bg-emerald-100 text-emerald-700' :
+                                doc.status === 'final' ? 'bg-blue-100 text-blue-700' :
+                                'bg-gray-100 text-gray-600'
+                            }">${doc.status}</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-1">${doc.title}</h3>
+                        <p class="text-sm text-gray-500 mb-3">Type: ${doc.type.replace('-', ' ')}</p>
+                        <p class="text-xs text-gray-400 mb-4">Created by ${doc.generatedByName || 'System'} • ${formatDate(doc.createdAt)}</p>
+                        <div class="flex gap-2">
+                            <button onclick="viewDocument('${doc._id}')" class="flex-1 px-3 py-1.5 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-gray-200">View</button>
+                            <button onclick="downloadDocPDF('${doc._id}')" class="flex-1 px-3 py-1.5 bg-teal-100 text-teal-700 text-sm rounded-lg hover:bg-teal-200">PDF</button>
+                            ${doc.status !== 'approved' && USER.role === 'admin' ? `<button onclick="approveDoc('${doc._id}')" class="flex-1 px-3 py-1.5 bg-emerald-100 text-emerald-700 text-sm rounded-lg hover:bg-emerald-200">✓ Approve</button>` : ''}
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            document.getElementById('documentsGrid').innerHTML = html;
+        }
+
+        function openCreateModal(type) {
+            const titles = {
+                requirement: 'Requirement Document',
+                quotation: 'Quotation',
+                agreement: 'Client Agreement',
+                'design-brief': 'Design Brief'
+            };
+
+            document.getElementById('modalTitle').textContent = 'Create ' + titles[type];
+            document.getElementById('docTitle').value = titles[type];
+            document.getElementById('docContent').value = '';
+            document.getElementById('docDescription').value = '';
+            document.getElementById('docType').value = type;
+            document.getElementById('aiMode').value = 'false';
+            
+            // Reset to manual mode
+            toggleAIMode(false);
+
+            // Extra fields for quotation
+            let extrasHtml = '';
+            if(type === 'quotation') {
+                extrasHtml = `
+                    <div class="border-t pt-4" id="quotationExtras">
+                        <h3 class="font-semibold text-gray-900 mb-3">Quotation Items</h3>
+                        <div id="quotationItems" class="space-y-2 mb-3">
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Description" class="flex-1 px-2 py-1 border rounded text-sm item-desc">
+                                <input type="number" placeholder="Qty" class="w-16 px-2 py-1 border rounded text-sm item-qty">
+                                <input type="number" placeholder="Rate" class="w-20 px-2 py-1 border rounded text-sm item-rate">
+                            </div>
+                        </div>
+                        <button onclick="addQuotationItem()" class="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200">+ Add Item</button>
+                    </div>
+                `;
+            }
+            document.getElementById('docExtras').innerHTML = extrasHtml;
+
+            document.getElementById('createModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('createModal').classList.add('hidden');
+        }
+
+        function renderSections(sections) {
+            const renderSec = (sections, depth = 0) => {
+                let h = '';
+                for (const [key, value] of Object.entries(sections)) {
+                    const title = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).replace(/_/g, ' ');
+                    if (value === null || value === undefined) continue;
+
+                    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                        h += `<p class="mb-2 text-sm"><strong class="text-gray-800">${title}:</strong> <span class="text-gray-700">${value}</span></p>`;
+                    } else if (Array.isArray(value)) {
+                        h += `<h4 class="font-semibold text-gray-900 mt-3 mb-2 text-sm">${title}</h4>`;
+                        if (value.length === 0) {
+                            h += '<p class="text-sm text-gray-500 italic">None</p>';
+                        } else if (typeof value[0] === 'string') {
+                            h += '<ul class="list-disc list-inside space-y-1 text-gray-700 ml-2 text-sm">' + value.map(v => '<li>' + v + '</li>').join('') + '</ul>';
+                        } else if (typeof value[0] === 'object') {
+                            const keys = Object.keys(value[0]).filter(k => k !== '_id');
+                            h += '<div class="overflow-x-auto"><table class="w-full text-sm border-collapse border rounded-lg overflow-hidden mt-1"><thead><tr class="bg-teal-50 border-b border-teal-200">' + keys.map(k => '<th class="p-2 text-left font-semibold text-teal-800 text-xs uppercase">' + k + '</th>').join('') + '</tr></thead><tbody>';
+                            value.forEach((row, i) => { 
+                                h += '<tr class="' + (i % 2 ? 'bg-gray-50' : '') + ' border-b">' + keys.map(k => {
+                                    const cellVal = row[k];
+                                    const display = typeof cellVal === 'object' ? JSON.stringify(cellVal) : (cellVal ?? '');
+                                    return '<td class="p-2 text-gray-700 text-sm">' + display + '</td>';
+                                }).join('') + '</tr>'; 
+                            });
+                            h += '</tbody></table></div>';
+                        }
+                    } else if (typeof value === 'object') {
+                        if (depth === 0) {
+                            h += `<div class="mt-5 mb-3"><h3 class="text-base font-bold text-teal-700 pb-1 border-b-2 border-teal-100">${title}</h3></div>`;
+                        } else {
+                            h += `<h4 class="font-semibold text-gray-800 mt-3 mb-1 text-sm">${title}</h4>`;
+                        }
+                        h += renderSec(value, depth + 1);
+                    }
+                }
+                return h;
+            };
+            return renderSec(sections, 0);
+        }
+
+        function viewDocument(id) {
+            const doc = documents.find(d => d._id === id);
+            if(!doc) return;
+
+            currentDoc = doc;
+            document.getElementById('viewModalTitle').textContent = doc.title;
+            
+            // Parse content if it's JSON
+            let content = doc.content;
+            let parsedContent = null;
+            
+            try {
+                parsedContent = typeof content === 'string' ? JSON.parse(content) : content;
+            } catch(e) {
+                // If not JSON, treat as plain text
+            }
+
+            let contentHtml = '';
+
+            // KINNOVANCE Header with logo
+            contentHtml += `
+                <div class="text-center pb-4 mb-4 border-b-2 border-teal-600">
+                    <img src="/images/logo.svg" alt="KINNOVANCE" class="h-12 mx-auto mb-2" onerror="this.style.display='none'">
+                    <div class="text-xl font-bold tracking-widest text-gray-900">KINNOVANCE</div>
+                    <div class="text-sm text-teal-600 mt-1">Digital Solutions Partner</div>
+                </div>
+            `;
+
+            // Document title
+            contentHtml += `<h2 class="text-xl font-bold text-teal-700 mb-3">${doc.title}</h2>`;
+
+            // Meta info
+            contentHtml += `
+                <div class="grid grid-cols-2 gap-3 pb-4 mb-4 border-b text-sm">
+                    <div><strong>Type:</strong> <span class="capitalize">${doc.type.replace('-', ' ')}</span></div>
+                    <div><strong>Status:</strong> <span class="capitalize">${doc.status}</span></div>
+                    <div><strong>Created:</strong> ${formatDateTime(doc.createdAt)}</div>
+                    <div><strong>By:</strong> ${doc.generatedByName || 'System'}</div>
+                </div>
+            `;
+
+            // Render parsed content nicely
+            if (parsedContent) {
+                // Client info box
+                if (parsedContent.clientInfo) {
+                    const ci = parsedContent.clientInfo;
+                    contentHtml += `
+                        <div class="bg-gray-50 border rounded-lg p-4 mb-4">
+                            <h4 class="font-semibold text-gray-900 mb-2">Client Information</h4>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                ${ci.name ? `<div><strong>Name:</strong> ${ci.name}</div>` : ''}
+                                ${ci.company ? `<div><strong>Company:</strong> ${ci.company}</div>` : ''}
+                                ${ci.email ? `<div><strong>Email:</strong> ${ci.email}</div>` : ''}
+                                ${ci.phone ? `<div><strong>Phone:</strong> ${ci.phone}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Summary
+                if (parsedContent.summary) {
+                    contentHtml += `<div class="bg-teal-50 border border-teal-200 rounded-lg p-4 mb-4">
+                        <p class="text-gray-800 text-sm"><strong>Summary:</strong> ${parsedContent.summary}</p>
+                    </div>`;
+                }
+
+                // Sections
+                if (parsedContent.sections) {
+                    contentHtml += `<div class="space-y-2">${renderSections(parsedContent.sections)}</div>`;
+                }
+            } else {
+                contentHtml += `<div class="py-4">
+                    <div class="text-gray-700 whitespace-pre-wrap bg-gray-50 p-4 rounded-lg">${content || 'No content'}</div>
+                </div>`;
+            }
+
+            // KINNOVANCE Footer
+            contentHtml += `
+                <div class="text-center mt-6 pt-4 border-t-2 border-gray-200">
+                    <p class="text-xs text-gray-500">This document is generated by <strong class="text-gray-700">KINNOVANCE</strong></p>
+                    <p class="text-xs text-gray-400">Confidential — For authorized use only</p>
+                </div>
+            `;
+
+            document.getElementById('viewModalContent').innerHTML = contentHtml;
+            document.getElementById('viewModal').classList.remove('hidden');
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewModal').classList.add('hidden');
+        }
+
+        async function submitDocument() {
+            const project = document.getElementById('docProject').value;
+            const type = document.getElementById('docType').value || 'requirement';
+            const aiMode = document.getElementById('aiMode').value === 'true';
+
+            if (!project) {
+                alert('Please select a project');
+                return;
+            }
+
+            if (aiMode) {
+                await generateDocumentWithAI();
+            } else {
+                const title = document.getElementById('docTitle').value;
+                const content = document.getElementById('docContent').value;
+
+                if (!title || !content) {
+                    alert('Please fill all fields');
+                    return;
+                }
+
+                try {
+                    const res = await fetch('/api/documents', {
+                        method: 'POST',
+                        headers: HEADERS,
+                        body: JSON.stringify({project, type, title, content})
+                    });
+                    
+                    const data = await res.json();
+                    if (data.success) {
+                        closeModal();
+                        showToast('Document created!');
+                        loadDocuments();
+                    } else {
+                        alert(data.error || 'Failed to create document');
+                    }
+                } catch (e) {
+                    alert('Error: ' + e.message);
+                }
+            }
+        }
+
+        async function generateDocumentWithAI() {
+            const project = document.getElementById('docProject').value;
+            const type = document.getElementById('docType').value || 'requirement';
+            const description = document.getElementById('docDescription').value;
+
+            if (!description.trim()) {
+                alert('Please describe what you need');
+                return;
+            }
+
+            try {
+                showToast('🤖 Generating document with AI...');
+                
+                const res = await fetch('/api/documents/generate-ai', {
+                    method: 'POST',
+                    headers: HEADERS,
+                    body: JSON.stringify({
+                        project,
+                        type,
+                        description
+                    })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    closeModal();
+                    showToast('✨ Document generated with AI!', 'success');
+                    loadDocuments();
+                } else {
+                    alert(data.error || 'Failed to generate document');
+                    showToast('Error: ' + (data.error || 'Generation failed'), 'error');
+                }
+            } catch (e) {
+                alert('Error: ' + e.message);
+                showToast('Error: ' + e.message, 'error');
+            }
+        }
+
+        function toggleAIMode(useAI) {
+            const aiMode = useAI;
+            document.getElementById('aiMode').value = aiMode;
+
+            // Update button styles
+            const manualBtn = document.getElementById('manualModeBtn');
+            const aiBtn = document.getElementById('aiModeBtn');
+            
+            if (aiMode) {
+                aiBtn.classList.add('bg-teal-100', 'text-teal-700', 'active');
+                aiBtn.classList.remove('bg-gray-100', 'text-gray-700');
+                manualBtn.classList.remove('bg-teal-100', 'text-teal-700', 'active');
+                manualBtn.classList.add('bg-gray-100', 'text-gray-700');
+            } else {
+                manualBtn.classList.add('bg-teal-100', 'text-teal-700', 'active');
+                manualBtn.classList.remove('bg-gray-100', 'text-gray-700');
+                aiBtn.classList.remove('bg-teal-100', 'text-teal-700', 'active');
+                aiBtn.classList.add('bg-gray-100', 'text-gray-700');
+            }
+
+            // Show/hide sections
+            const manualSectionTitle = document.getElementById('manualSectionTitle');
+            const manualSectionContent = document.getElementById('manualSectionContent');
+            const aiSectionDescription = document.getElementById('aiSectionDescription');
+
+            if (aiMode) {
+                manualSectionTitle.classList.add('hidden');
+                manualSectionContent.classList.add('hidden');
+                aiSectionDescription.classList.remove('hidden');
+                document.getElementById('submitBtn').textContent = '✨ Generate with AI';
+            } else {
+                manualSectionTitle.classList.remove('hidden');
+                manualSectionContent.classList.remove('hidden');
+                aiSectionDescription.classList.add('hidden');
+                document.getElementById('submitBtn').textContent = 'Create';
+            }
+        }
+
+        async function downloadDocPDF(id) {
+            const doc = documents.find(d => d._id === id);
+            if(!doc) return;
+
+            try {
+                const printWindow = window.open('', '_blank');
+                let content;
+                try { content = JSON.parse(doc.content); } catch(e) { content = null; }
+                
+                let sectionsHtml = '';
+                if (content && content.sections) {
+                    const renderSec = (sections, depth = 0) => {
+                        let h = '';
+                        for (const [key, value] of Object.entries(sections)) {
+                            const title = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).replace(/_/g, ' ');
+                            if (value === null || value === undefined) continue;
+                            if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                                h += '<p><strong>' + title + ':</strong> ' + value + '</p>';
+                            } else if (Array.isArray(value)) {
+                                h += '<h3 class="section-h3">' + title + '</h3>';
+                                if (value.length && typeof value[0] === 'string') {
+                                    h += '<ul>' + value.map(v => '<li>' + v + '</li>').join('') + '</ul>';
+                                } else if (value.length && typeof value[0] === 'object') {
+                                    const keys = Object.keys(value[0]).filter(k => k !== '_id');
+                                    h += '<table><tr>' + keys.map(k => '<th>' + k + '</th>').join('') + '</tr>';
+                                    value.forEach(row => { h += '<tr>' + keys.map(k => '<td>' + (typeof row[k] === 'object' ? JSON.stringify(row[k]) : (row[k] ?? '')) + '</td>').join('') + '</tr>'; });
+                                    h += '</table>';
+                                }
+                            } else if (typeof value === 'object') {
+                                const tag = depth === 0 ? 'h2' : 'h3';
+                                h += '<' + tag + ' class="section-' + tag + '">' + title + '</' + tag + '>' + renderSec(value, depth + 1);
+                            }
+                        }
+                        return h;
+                    };
+
+                    // Client info block
+                    if (content.clientInfo) {
+                        const ci = content.clientInfo;
+                        sectionsHtml += '<div class="client-box"><h3 class="section-h3">Client Information</h3>';
+                        if (ci.name) sectionsHtml += '<p><strong>Name:</strong> ' + ci.name + '</p>';
+                        if (ci.company) sectionsHtml += '<p><strong>Company:</strong> ' + ci.company + '</p>';
+                        if (ci.email) sectionsHtml += '<p><strong>Email:</strong> ' + ci.email + '</p>';
+                        if (ci.phone) sectionsHtml += '<p><strong>Phone:</strong> ' + ci.phone + '</p>';
+                        sectionsHtml += '</div>';
+                    }
+
+                    // Summary
+                    if (content.summary) {
+                        sectionsHtml += '<div class="summary-box"><strong>Summary:</strong> ' + content.summary + '</div>';
+                    }
+
+                    sectionsHtml += renderSec(content.sections);
+                } else {
+                    sectionsHtml = '<pre style="white-space:pre-wrap;font-family:inherit;">' + (doc.content || '') + '</pre>';
+                }
+
+                printWindow.document.write(`<html><head><title>${doc.title}</title>
+                <style>
+                    * { box-sizing: border-box; }
+                    body { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px; color: #1a1a2e; line-height: 1.6; }
+                    .logo-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #008080; }
+                    .logo-header img { height: 50px; margin-bottom: 8px; }
+                    .logo-header .company-name { font-size: 24px; font-weight: 800; letter-spacing: 3px; color: #1a1a2e; margin: 0; }
+                    .logo-header .tagline { font-size: 12px; color: #008080; letter-spacing: 1px; margin-top: 2px; }
+                    .logo-header .doc-title { font-size: 18px; color: #008080; margin-top: 12px; font-weight: 600; }
+                    .logo-header .doc-meta { font-size: 12px; color: #829ab1; margin-top: 4px; }
+                    .client-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 16px 0; }
+                    .client-box p { margin: 4px 0; font-size: 14px; }
+                    .summary-box { background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 16px; margin: 16px 0; font-size: 14px; }
+                    .section-h2 { color: #008080; margin-top: 28px; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #e2e8f0; font-size: 18px; }
+                    .section-h3 { color: #334e68; margin-top: 18px; margin-bottom: 8px; font-size: 15px; }
+                    p { margin: 6px 0; font-size: 14px; }
+                    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+                    th, td { border: 1px solid #e2e8f0; padding: 10px 12px; text-align: left; }
+                    th { background: #f0fdfa; color: #008080; font-weight: 600; }
+                    tr:nth-child(even) { background: #f8fafc; }
+                    ul { padding-left: 20px; margin: 8px 0; } li { margin: 5px 0; font-size: 14px; }
+                    .footer { text-align: center; margin-top: 50px; padding-top: 20px; border-top: 3px solid #008080; }
+                    .footer .company { font-size: 16px; font-weight: 700; letter-spacing: 2px; color: #1a1a2e; }
+                    .footer .confidential { font-size: 11px; color: #829ab1; margin-top: 4px; }
+                    @media print { body { padding: 20px; } }
+                </style>
+                </head><body>
+                <div class="logo-header">
+                    <img src="/images/logo.svg" alt="KINNOVANCE" onerror="this.style.display='none'">
+                    <div class="company-name">KINNOVANCE</div>
+                    <div class="tagline">Digital Solutions Partner</div>
+                    <div class="doc-title">${doc.title}</div>
+                    <div class="doc-meta">${doc.type.replace('-', ' ').toUpperCase()} • ${new Date(doc.createdAt).toLocaleDateString('en-US', {year:'numeric', month:'long', day:'numeric'})} • ${doc.generatedByName || 'System'}</div>
+                </div>
+                ${sectionsHtml}
+                <div class="footer">
+                    <div class="company">KINNOVANCE</div>
+                    <p class="confidential">This document is generated by KINNOVANCE — Confidential — For authorized use only</p>
+                </div>
+                <scr` + `ipt>setTimeout(()=>window.print(),500);<\/scr` + `ipt>
+                </body></html>`);
+                showToast('PDF ready!');
+            } catch(e) {
+                alert('Download failed');
+            }
+        }
+
+        function downloadPDF() {
+            downloadDocPDF(currentDoc._id);
+        }
+
+        async function approveDoc(id) {
+            try {
+                const res = await fetch('/api/documents/'+id+'/approve', {
+                    method: 'PUT',
+                    headers: HEADERS
+                });
+                
+                if(res.ok) {
+                    showToast('Document approved!');
+                    loadDocuments();
+                    closeViewModal();
+                }
+            } catch(e) {
+                alert('Failed to approve');
+            }
+        }
+
+        function addQuotationItem() {
+            const div = document.createElement('div');
+            div.className = 'flex gap-2';
+            div.innerHTML = `
+                <input type="text" placeholder="Description" class="flex-1 px-2 py-1 border rounded text-sm item-desc">
+                <input type="number" placeholder="Qty" class="w-16 px-2 py-1 border rounded text-sm item-qty">
+                <input type="number" placeholder="Rate" class="w-20 px-2 py-1 border rounded text-sm item-rate">
+            `;
+            document.getElementById('quotationItems').appendChild(div);
+        }
+
+        async function loadDocuments() {
+            try {
+                const projectId = document.getElementById('docProject').value;
+                if (!projectId) {
+                    documents = [];
+                    renderDocuments();
+                    return;
+                }
+                
+                const res = await fetch(`/api/documents/project/${projectId}`, {headers: HEADERS});
+                const data = await res.json();
+                documents = data.data || [];
+                renderDocuments();
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        async function loadProjects() {
+            try {
+                const res = await fetch('/api/projects', {headers: HEADERS});
+                const data = await res.json();
+                const select = document.getElementById('docProject');
+                (data.data || []).forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p._id;
+                    opt.textContent = p.name;
+                    select.appendChild(opt);
+                });
+            } catch(e) {}
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-4 right-4 bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+
+        // Init
+        if(!TOKEN || !USER.name) {
+            window.location.href = '/login';
+        } else {
+            if(USER.role !== 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            }
+            loadProjects();
+            setTimeout(() => {
+                // Auto-select first project after projects are loaded
+                const select = document.getElementById('docProject');
+                if (select.children.length > 1) {
+                    select.value = select.children[1].value;
+                }
+                loadDocuments();
+            }, 500);
+        }
+    </script>
+</body>
+</html>

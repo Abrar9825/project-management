@@ -1,0 +1,108 @@
+# ==========================================
+# PROJECT STRUCTURE
+# 04-management/
+# ├── backend/        (Node.js/Express API)
+# ├── js/            (Frontend JS utilities)
+# └── .gitignore     (Root config)
+# ==========================================
+
+# ==========================================
+# ALL NODE_MODULES (ANYWHERE in project)
+# ==========================================
+**/node_modules/
+**/*.npm
+**/package-lock.json
+**/yarn.lock
+**/npm-shrinkwrap.json
+
+# ==========================================
+# BACKEND ENVIRONMENT VARIABLES (SENSITIVE)
+# ==========================================
+backend/.env
+backend/.env.local
+backend/.env.*.local
+backend/.env.development.local
+backend/.env.test.local
+backend/.env.production.local
+
+# ==========================================
+# ROOT ENVIRONMENT VARIABLES (IF ANY)
+# ==========================================
+.env
+.env.local
+.env.*.local
+
+# ==========================================
+# IDE & EDITOR (Root + all subdirs)
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+.code-workspace
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# ==========================================
+# LOGS (Root + all subdirs)
+# ==========================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ==========================================
+# BUILD & DISTRIBUTION
+# ==========================================
+dist/
+build/
+out/
+.next/
+.nuxt
+
+# ==========================================
+# DATABASE FILES (if using locally)
+# ==========================================
+*.db
+*.sqlite
+*.sqlite3
+data/
+dump.rdb
+
+# ==========================================
+# TESTING & COVERAGE
+# ==========================================
+coverage/
+.nyc_output/
+test-results/
+
+# ==========================================
+# TEMPORARY & BACKUP FILES
+# ==========================================
+tmp/
+temp/
+*.tmp
+*.bak
+*.backup
+.cache/
+.parcel-cache
+.turbo/
+.venv
+ENV/
+env.bak/
+venv.bak/
+
+# ==========================================
+# OS & SYSTEM FILES
+# ==========================================
+.Trash-*
+.nfs*
+*.DS_Store
+Thumbs.db

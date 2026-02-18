@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Portal | Agency Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',300:'#5eead4',400:'#2dd4bf',500:'#008080',600:'#0d9488',700:'#0f766e',800:'#115e59',900:'#134e4a' },
+                        oxford: { 50:'#f0f4f8',100:'#d9e2ec',200:'#bcccdc',300:'#9fb3c8',400:'#829ab1',500:'#627d98',600:'#486581',700:'#334e68',800:'#243b53',900:'#102a43' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .stage-card:hover { transform: translateY(-2px); }
+        .progress-ring { transition: stroke-dashoffset 0.5s; }
+        .tab-active { border-bottom: 3px solid #008080; color: #008080; font-weight: 600; }
+        .feedback-star { cursor: pointer; transition: all 0.2s; }
+        .feedback-star:hover, .feedback-star.active { color: #f59e0b; transform: scale(1.2); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-700 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </div>
+                    <span class="text-xl font-bold text-oxford-900">Client Portal</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-500" id="clientName">Welcome</span>
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg" title="Logout">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Project Header -->
+        <div class="bg-gradient-to-r from-teal-500 to-teal-700 rounded-2xl p-8 mb-8 text-white">
+            <h1 class="text-3xl font-bold mb-2" id="projectName">Loading...</h1>
+            <p class="text-teal-100 mb-4" id="projectDesc">Loading project details...</p>
+            <div class="flex flex-wrap gap-6 items-center">
+                <div>
+                    <span class="text-teal-200 text-sm">Progress</span>
+                    <div class="flex items-center gap-3 mt-1">
+                        <div class="w-48 bg-teal-800/50 rounded-full h-3">
+                            <div class="bg-white rounded-full h-3 transition-all duration-500" id="progressBar" style="width:0%"></div>
+                        </div>
+                        <span class="font-bold text-lg" id="progressPercent">0%</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-teal-200 text-sm">Current Stage</span>
+                    <p class="font-semibold text-lg" id="currentStage">—</p>
+                </div>
+                <div>
+                    <span class="text-teal-200 text-sm">Status</span>
+                    <p class="font-semibold text-lg" id="projectMode">—</p>
+                </div>
+                <div>
+                    <span class="text-teal-200 text-sm">Due Date</span>
+                    <p class="font-semibold" id="dueDate">—</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alerts -->
+        <div id="alertsSection" class="space-y-3 mb-6"></div>
+
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-200 mb-6 overflow-x-auto">
+            <button onclick="switchTab('stages')" class="portal-tab px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap tab-active" data-tab="stages">Stage Progress</button>
+            <button onclick="switchTab('payments')" class="portal-tab px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="payments">Payments</button>
+            <button onclick="switchTab('documents')" class="portal-tab px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="documents">Documents</button>
+            <button onclick="switchTab('meetings')" class="portal-tab px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="meetings">Meetings</button>
+            <button onclick="switchTab('reports')" class="portal-tab px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="reports">Reports</button>
+            <button onclick="switchTab('feedback')" class="portal-tab px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="feedback">Feedback</button>
+            <button onclick="switchTab('assets')" class="portal-tab px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="assets">Upload Assets</button>
+        </div>
+
+        <!-- Tab Content -->
+        <!-- Stages Tab -->
+        <div id="tab-stages" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="stagesGrid"></div>
+        </div>
+
+        <!-- Payments Tab -->
+        <div id="tab-payments" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" id="paymentStats"></div>
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <table class="min-w-full">
+                    <thead><tr class="bg-gray-50"><th class="px-6 py-3 text-left text-xs font-semibold text-gray-500">Payment</th><th class="px-6 py-3 text-left text-xs font-semibold text-gray-500">Amount</th><th class="px-6 py-3 text-left text-xs font-semibold text-gray-500">Due Date</th><th class="px-6 py-3 text-left text-xs font-semibold text-gray-500">Status</th></tr></thead>
+                    <tbody id="paymentTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="tab-documents" class="tab-content hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="clientDocsGrid">
+                <div class="text-center text-gray-400 py-8 col-span-full">Loading documents...</div>
+            </div>
+        </div>
+
+        <!-- Meetings Tab -->
+        <div id="tab-meetings" class="tab-content hidden">
+            <div class="space-y-4" id="meetingsGrid">
+                <div class="text-center text-gray-400 py-8">Loading meetings...</div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="tab-reports" class="tab-content hidden">
+            <div class="space-y-4" id="reportsGrid">
+                <div class="text-center text-gray-400 py-8">Loading reports...</div>
+            </div>
+        </div>
+
+        <!-- Feedback Tab -->
+        <div id="tab-feedback" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Submit Feedback -->
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-oxford-900 mb-4">Submit Feedback</h3>
+                    <form id="feedbackForm" onsubmit="submitFeedback(event)">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-700 mb-1 block">Stage (optional)</label>
+                                <select id="fbStage" class="w-full px-3 py-2 border rounded-lg text-sm">
+                                    <option value="">General</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700 mb-2 block">Overall Rating</label>
+                                <div class="flex gap-2" id="ratingStars">
+                                    <span class="feedback-star text-3xl text-gray-300" onclick="setRating(1)">★</span>
+                                    <span class="feedback-star text-3xl text-gray-300" onclick="setRating(2)">★</span>
+                                    <span class="feedback-star text-3xl text-gray-300" onclick="setRating(3)">★</span>
+                                    <span class="feedback-star text-3xl text-gray-300" onclick="setRating(4)">★</span>
+                                    <span class="feedback-star text-3xl text-gray-300" onclick="setRating(5)">★</span>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div>
+                                    <label class="text-xs font-medium text-gray-600">Communication</label>
+                                    <select id="fbComm" class="w-full px-2 py-1.5 border rounded-lg text-sm"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-medium text-gray-600">Quality</label>
+                                    <select id="fbQuality" class="w-full px-2 py-1.5 border rounded-lg text-sm"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select>
+                                </div>
+                                <div>
+                                    <label class="text-xs font-medium text-gray-600">Timeliness</label>
+                                    <select id="fbTime" class="w-full px-2 py-1.5 border rounded-lg text-sm"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700 mb-1 block">Comments</label>
+                                <textarea id="fbComments" rows="3" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Share your experience..."></textarea>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-700 mb-1 block">Suggestions</label>
+                                <textarea id="fbSuggestions" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm" placeholder="Any suggestions for improvement..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-2.5 bg-teal-600 text-white rounded-xl font-medium hover:bg-teal-700 transition-all">Submit Feedback</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Previous Feedbacks -->
+                <div>
+                    <h3 class="text-lg font-bold text-oxford-900 mb-4">Previous Feedback</h3>
+                    <div class="space-y-3" id="feedbackList">
+                        <div class="text-center text-gray-400 py-8">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assets Tab -->
+        <div id="tab-assets" class="tab-content hidden">
+            <div class="grid grid-cols-1 gap-4">
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                    <h3 class="text-lg font-bold text-oxford-900 mb-4">Requested Assets</h3>
+                    <p class="text-sm text-gray-500 mb-4">Items the team needs from you to continue work.</p>
+                    <div class="space-y-3" id="assetsList">
+                        <div class="text-center text-gray-400 py-8">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        let projectId = new URLSearchParams(window.location.search).get('id');
+        let clientData = null;
+        let feedbackRating = 0;
+
+        async function init() {
+            if (!projectId) { alert('No project ID provided'); return; }
+            await loadClientView();
+            await loadClientDocuments();
+            await loadMeetings();
+            await loadFeedback();
+        }
+
+        async function loadClientView() {
+            try {
+                const res = await api.fetch(`/projects/${projectId}/client-view`);
+                clientData = res.data;
+                renderClientView();
+            } catch(e) {
+                document.getElementById('projectName').textContent = 'Error loading project';
+            }
+        }
+
+        function renderClientView() {
+            const d = clientData;
+            document.getElementById('clientName').textContent = `Welcome, ${d.client}`;
+            document.getElementById('projectName').textContent = d.projectName;
+            document.getElementById('progressBar').style.width = d.progress + '%';
+            document.getElementById('progressPercent').textContent = d.progress + '%';
+            document.getElementById('currentStage').textContent = d.currentStage;
+            document.getElementById('projectMode').textContent = d.mode === 'active' ? '🟢 Active' : d.mode === 'paused' ? '🟡 Paused' : d.mode === 'maintenance' ? '🔧 Maintenance' : d.mode;
+            document.getElementById('dueDate').textContent = d.dueDate ? new Date(d.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+
+            // Alerts
+            const alerts = document.getElementById('alertsSection');
+            let alertHtml = '';
+            if (d.isPaused) alertHtml += `<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg"><p class="text-yellow-800 font-medium">⚠️ Project is currently on hold. Please check payment status.</p></div>`;
+            if (d.payments.isOverdue) alertHtml += `<div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r-lg"><p class="text-red-800 font-medium">🚨 ${d.payments.overdueCount} payment(s) overdue. Please make the payment to resume work.</p></div>`;
+            if (d.pendingFromClient.length > 0) alertHtml += `<div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg"><p class="text-blue-800 font-medium">📎 ${d.pendingFromClient.length} asset(s) requested. Please upload them in the Assets tab.</p></div>`;
+            alerts.innerHTML = alertHtml;
+
+            // Stages
+            const stagesGrid = document.getElementById('stagesGrid');
+            if (d.phases && d.phases.length > 0) {
+                stagesGrid.innerHTML = d.phases.map(s => {
+                    const statusColors = {
+                        'completed': 'bg-green-100 text-green-700',
+                        'in-progress': 'bg-blue-100 text-blue-700',
+                        'pending': 'bg-gray-100 text-gray-600',
+                        'blocked': 'bg-red-100 text-red-700',
+                        'waiting-client': 'bg-yellow-100 text-yellow-700'
+                    };
+                    return `<div class="stage-card bg-white rounded-2xl border border-gray-100 shadow-sm p-5 transition-all duration-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-2xl">${s.icon || '📌'}</span>
+                            <span class="px-2.5 py-1 text-xs font-semibold rounded-full ${statusColors[s.status] || 'bg-gray-100 text-gray-600'}">${s.status}</span>
+                        </div>
+                        <h3 class="font-semibold text-oxford-900 mb-2">${s.name}</h3>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                            <div class="bg-teal-500 rounded-full h-2 transition-all" style="width:${s.completionRate || 0}%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400">
+                            <span>${s.completionRate || 0}% complete</span>
+                            <span>${s.deadline ? new Date(s.deadline).toLocaleDateString('en-US', {month:'short', day:'numeric'}) : ''}</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            } else {
+                stagesGrid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-8">No visible stages</p>';
+            }
+
+            // Payments
+            const ps = d.payments;
+            document.getElementById('paymentStats').innerHTML = `
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 text-center">
+                    <p class="text-3xl font-bold text-oxford-900">$${(ps.total || 0).toLocaleString()}</p>
+                    <p class="text-sm text-gray-500 mt-1">Total</p>
+                </div>
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 text-center">
+                    <p class="text-3xl font-bold text-green-600">$${(ps.received || 0).toLocaleString()}</p>
+                    <p class="text-sm text-gray-500 mt-1">Received</p>
+                </div>
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 text-center">
+                    <p class="text-3xl font-bold ${ps.isOverdue ? 'text-red-600' : 'text-amber-600'}">$${(ps.pending || 0).toLocaleString()}</p>
+                    <p class="text-sm text-gray-500 mt-1">${ps.isOverdue ? 'Overdue' : 'Pending'}</p>
+                </div>`;
+            
+            document.getElementById('paymentTable').innerHTML = (ps.details || []).map(p => {
+                const statusBg = p.status === 'received' ? 'bg-green-100 text-green-700' : p.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600';
+                return `<tr class="border-b border-gray-50">
+                    <td class="px-6 py-4 font-medium text-oxford-900">${p.label}</td>
+                    <td class="px-6 py-4">$${(p.amount || 0).toLocaleString()}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${p.date ? new Date(p.date).toLocaleDateString() : '—'}</td>
+                    <td class="px-6 py-4"><span class="px-2.5 py-1 text-xs font-semibold rounded-full ${statusBg}">${p.status}</span></td>
+                </tr>`;
+            }).join('');
+
+            // Populate feedback stage select
+            const fbStage = document.getElementById('fbStage');
+            if (d.phases) {
+                d.phases.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.name;
+                    opt.textContent = s.name;
+                    fbStage.appendChild(opt);
+                });
+            }
+
+            // Assets
+            const assetsList = document.getElementById('assetsList');
+            const allAssets = [...(d.pendingFromClient || []), ...(d.completedByClient || [])];
+            if (allAssets.length === 0) {
+                assetsList.innerHTML = '<p class="text-center text-gray-400 py-4">No asset requests at this time.</p>';
+            } else {
+                assetsList.innerHTML = '';
+                (d.pendingFromClient || []).forEach(a => {
+                    assetsList.innerHTML += `<div class="flex items-center justify-between p-4 bg-yellow-50 rounded-xl border border-yellow-100">
+                        <div>
+                            <p class="font-medium text-oxford-900">${a.label}</p>
+                            <p class="text-xs text-gray-500">Stage: ${a.stageName} • Type: ${a.type}</p>
+                        </div>
+                        <span class="px-3 py-1 text-xs font-semibold bg-yellow-200 text-yellow-800 rounded-full">Pending</span>
+                    </div>`;
+                });
+                (d.completedByClient || []).forEach(a => {
+                    assetsList.innerHTML += `<div class="flex items-center justify-between p-4 bg-green-50 rounded-xl border border-green-100">
+                        <div>
+                            <p class="font-medium text-oxford-900">${a.label}</p>
+                            <p class="text-xs text-gray-500">Stage: ${a.stageName}</p>
+                        </div>
+                        <span class="px-3 py-1 text-xs font-semibold bg-green-200 text-green-800 rounded-full">✅ Received</span>
+                    </div>`;
+                });
+            }
+        }
+
+        async function loadClientDocuments() {
+            try {
+                const res = await api.getClientDocuments(projectId);
+                const docs = res.data || [];
+                const grid = document.getElementById('clientDocsGrid');
+                if (docs.length === 0) {
+                    grid.innerHTML = '<p class="col-span-full text-center text-gray-400 py-8">No documents shared yet.</p>';
+                    return;
+                }
+                grid.innerHTML = docs.map(doc => `
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md transition-all cursor-pointer" onclick="viewClientDoc('${doc._id}')">
+                        <div class="text-2xl mb-2">📄</div>
+                        <h4 class="font-semibold text-oxford-900 mb-1 text-sm line-clamp-2">${doc.title}</h4>
+                        <p class="text-xs text-gray-400">${new Date(doc.createdAt).toLocaleDateString()}</p>
+                    </div>
+                `).join('');
+            } catch(e) {
+                document.getElementById('clientDocsGrid').innerHTML = '<p class="col-span-full text-center text-red-400 py-8">Error loading documents</p>';
+            }
+        }
+
+        async function loadMeetings() {
+            try {
+                const res = await api.getUpcomingMeetings(projectId);
+                const meetings = res.data || [];
+                const grid = document.getElementById('meetingsGrid');
+                if (meetings.length === 0) {
+                    grid.innerHTML = '<p class="text-center text-gray-400 py-8">No upcoming meetings.</p>';
+                    return;
+                }
+                grid.innerHTML = meetings.map(m => `
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold text-oxford-900">${m.title}</h4>
+                            <span class="px-2 py-1 text-xs font-medium bg-teal-50 text-teal-700 rounded-full">${m.type}</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mb-2">📅 ${new Date(m.scheduledAt).toLocaleString()}</p>
+                        ${m.meetingLink ? `<a href="${m.meetingLink}" target="_blank" class="text-sm text-teal-600 hover:underline">🔗 Join Meeting</a>` : ''}
+                        ${m.agenda ? `<p class="text-xs text-gray-400 mt-2">${m.agenda}</p>` : ''}
+                    </div>
+                `).join('');
+            } catch(e) {
+                document.getElementById('meetingsGrid').innerHTML = '<p class="text-center text-red-400 py-8">Error loading meetings</p>';
+            }
+        }
+
+        async function loadFeedback() {
+            try {
+                const res = await api.getFeedback(projectId);
+                const feedbacks = res.data || [];
+                const list = document.getElementById('feedbackList');
+                if (feedbacks.length === 0) {
+                    list.innerHTML = '<p class="text-center text-gray-400 py-4">No feedback submitted yet.</p>';
+                    return;
+                }
+                list.innerHTML = feedbacks.map(f => `
+                    <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-yellow-400">${'★'.repeat(f.rating)}${'☆'.repeat(5-f.rating)}</span>
+                            <span class="text-xs text-gray-400">${new Date(f.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        ${f.stage ? `<p class="text-xs font-medium text-teal-600 mb-1">${f.stage} Stage</p>` : ''}
+                        <p class="text-sm text-gray-700 mb-1">${f.comments || 'No comments'}</p>
+                        ${f.response ? `<div class="bg-teal-50 rounded-lg p-3 mt-2"><p class="text-xs font-medium text-teal-700">Response:</p><p class="text-sm text-gray-700">${f.response.text}</p></div>` : ''}
+                    </div>
+                `).join('');
+            } catch(e) {
+                document.getElementById('feedbackList').innerHTML = '<p class="text-center text-red-400 py-4">Error loading feedback</p>';
+            }
+        }
+
+        function setRating(val) {
+            feedbackRating = val;
+            document.querySelectorAll('#ratingStars .feedback-star').forEach((star, i) => {
+                star.classList.toggle('active', i < val);
+                star.style.color = i < val ? '#f59e0b' : '#d1d5db';
+            });
+        }
+
+        async function submitFeedback(e) {
+            e.preventDefault();
+            if (feedbackRating === 0) { alert('Please select a rating'); return; }
+            try {
+                await api.submitFeedback({
+                    project: projectId,
+                    stage: document.getElementById('fbStage').value,
+                    type: document.getElementById('fbStage').value ? 'stage-completion' : 'general',
+                    rating: feedbackRating,
+                    communication: parseInt(document.getElementById('fbComm').value),
+                    quality: parseInt(document.getElementById('fbQuality').value),
+                    timeliness: parseInt(document.getElementById('fbTime').value),
+                    comments: document.getElementById('fbComments').value,
+                    suggestions: document.getElementById('fbSuggestions').value
+                });
+                showToast('Feedback submitted successfully!', 'success');
+                document.getElementById('feedbackForm').reset();
+                feedbackRating = 0;
+                setRating(0);
+                await loadFeedback();
+            } catch(e) {
+                showToast('Error submitting feedback', 'error');
+            }
+        }
+
+        async function viewClientDoc(docId) {
+            try {
+                const res = await api.fetch(`/documents/${docId}`);
+                const doc = res.data;
+                const printWindow = window.open('', '_blank');
+                let content;
+                try { content = JSON.parse(doc.content); } catch(e) { content = null; }
+                
+                const cName = clientData?.client || '';
+                const pName = clientData?.projectName || doc.projectName || '';
+
+                printWindow.document.write(`<html><head><title>${doc.title}</title>
+                <style>body{font-family:'Segoe UI',sans-serif;max-width:800px;margin:0 auto;padding:40px;color:#1a1a2e;}
+                .logo-header{text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:3px solid #008080;}
+                .logo-header img{height:48px;margin-bottom:8px;}
+                .logo-header .company-name{font-size:22px;font-weight:700;letter-spacing:2px;color:#1a1a2e;}
+                .logo-header .doc-title{font-size:18px;color:#008080;margin-top:8px;}
+                .logo-header .client-info{font-size:12px;color:#627d98;margin-top:4px;}
+                h1{color:#008080;border-bottom:3px solid #008080;padding-bottom:10px;}h2{color:#334e68;margin-top:24px;}
+                table{width:100%;border-collapse:collapse;margin:10px 0;}th,td{border:1px solid #ddd;padding:8px;text-align:left;font-size:14px;}
+                th{background:#f0fdfa;color:#008080;}ul{padding-left:20px;}li{margin:4px 0;}.meta{color:#829ab1;font-size:12px;}
+                .footer{text-align:center;margin-top:40px;padding-top:16px;border-top:2px solid #e2e8f0;font-size:11px;color:#829ab1;}
+                .footer strong{color:#334e68;}</style>
+                </head><body>
+                <div class="logo-header">
+                    <img src="/images/logo.svg" alt="KINNOVANCE" onerror="this.style.display='none'">
+                    <div class="company-name">KINNOVANCE</div>
+                    <div class="doc-title">${doc.title}</div>
+                    ${cName ? '<div class="client-info">Client: ' + cName + '</div>' : ''}
+                    ${pName ? '<div class="client-info">Project: ' + pName + '</div>' : ''}
+                </div>
+                <p class="meta">Generated: ${new Date(doc.createdAt).toLocaleDateString()}</p>
+                ${content && content.sections ? '<div id="doc-sections"></div>' : '<pre style="white-space:pre-wrap;font-family:inherit;">' + (doc.content || '') + '</pre>'}
+                <div class="footer">
+                    <p>This document is generated by <strong>KINNOVANCE</strong></p>
+                    <p>Confidential — For authorized use only</p>
+                </div>
+                </body></html>`);
+                
+                // If we have structured sections, render them in the popup
+                if (content && content.sections) {
+                    const renderSec = (sections, depth = 0) => {
+                        let h = '';
+                        for (const [key, value] of Object.entries(sections)) {
+                            const title = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).replace(/_/g, ' ');
+                            if (value === null || value === undefined) continue;
+                            if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                                h += '<p><strong>' + title + ':</strong> ' + value + '</p>';
+                            } else if (Array.isArray(value)) {
+                                h += '<h3>' + title + '</h3>';
+                                if (value.length && typeof value[0] === 'string') {
+                                    h += '<ul>' + value.map(v => '<li>' + v + '</li>').join('') + '</ul>';
+                                } else if (value.length && typeof value[0] === 'object') {
+                                    const keys = Object.keys(value[0]).filter(k => k !== '_id');
+                                    h += '<table><tr>' + keys.map(k => '<th>' + k + '</th>').join('') + '</tr>';
+                                    value.forEach(row => { h += '<tr>' + keys.map(k => '<td>' + (row[k] ?? '') + '</td>').join('') + '</tr>'; });
+                                    h += '</table>';
+                                }
+                            } else if (typeof value === 'object') {
+                                h += '<h2>' + title + '</h2>' + renderSec(value, depth + 1);
+                            }
+                        }
+                        return h;
+                    };
+                    const secEl = printWindow.document.getElementById('doc-sections');
+                    if (secEl) secEl.innerHTML = renderSec(content.sections);
+                }
+            } catch(e) {
+                showToast('Error loading document', 'error');
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.portal-tab').forEach(el => el.classList.remove('tab-active'));
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('tab-active');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            const colors = { info: 'bg-teal-600', success: 'bg-green-600', error: 'bg-red-600' };
+            toast.className = `fixed bottom-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-xl shadow-lg z-50`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Detail | Project Control System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .stage-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stage-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .stage-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .stage-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .stage-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .stage-gradient-6 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .stage-gradient-7 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
+        
+        .stage-card.expanded .stage-content { max-height: 2000px; }
+        .stage-card .stage-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+        .stage-card.expanded .chevron { transform: rotate(180deg); }
+        .chevron { transition: transform 0.3s ease; }
+
+        .tab-btn { transition: all 0.3s ease; border-bottom: 3px solid transparent; }
+        .tab-btn.active { color: #4f46e5; border-bottom-color: #4f46e5; background: #eef2ff; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">ProjectControl</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium' href='/my-work'>My Work</a>
+                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-subadmin-only' href='/projects'>Projects</a>
+                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-only' href='/add-project'>Add Project</a>
+                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-only' href='/users'>Users</a>
+                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-subadmin-only' href='/documents'>Documents</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a class='flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-all' href='/profile'>
+                        <div class="w-9 h-9 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                            <span id="userInitials">AK</span>
+                        </div>
+                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Ahmed Khan</span>
+                    </a>
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sticky Project Header -->
+    <div class="bg-white border-b border-gray-100 sticky top-16 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <a class='p-2 hover:bg-gray-100 rounded-lg transition-all' href='/projects'>
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </a>
+                    <div>
+                        <div class="flex items-center gap-3">
+                            <h1 class="text-2xl font-bold text-gray-900" id="projectTitle">E-Commerce Platform</h1>
+                            <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
+                        </div>
+                        <p class="text-gray-500" id="projectClient">TechMart Inc.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a id="docCenterBtn" href="#" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 admin-subadmin-only">📄 Doc Center</a>
+                    <a id="clientPortalBtn" href="#" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 admin-subadmin-only">👤 Client Portal</a>
+                    <span class="px-3 py-1 text-sm font-medium rounded-lg bg-orange-100 text-orange-700 border border-orange-200" id="projectPriority">High Priority</span>
+                    <span class="px-3 py-1 text-sm font-medium rounded-lg bg-blue-100 text-blue-700 border border-blue-200" id="projectProgress">65% Complete</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="bg-white border-b border-gray-200 sticky top-[132px] z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex overflow-x-auto -mb-px">
+                <button onclick="switchTab('tasks')" class="tab-btn active px-6 py-4 text-sm font-semibold whitespace-nowrap flex items-center gap-2" data-tab="tasks">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    Tasks
+                </button>
+                <button onclick="switchTab('stages')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="stages">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                    Stages
+                </button>
+                <button onclick="switchTab('client-payments')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2 admin-only" data-tab="client-payments">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Client Payments
+                </button>
+                <button onclick="switchTab('dev-payments')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2 admin-only" data-tab="dev-payments">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    Developer Payments
+                </button>
+                <button onclick="switchTab('activity')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="activity">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Activity & Remarks
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- ==================== TAB 1: TASKS ==================== -->
+        <div class="tab-content active" id="tab-tasks">
+
+            <!-- Task Assignment (Admin Only) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden admin-only">
+                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                        Assign Task to Team Member
+                    </h2>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+                        <select id="taskRole" onchange="updateDeveloperDropdown()" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                            <option value="">Select Role</option>
+                            <option value="Frontend Dev">Frontend Dev</option>
+                            <option value="Backend Dev">Backend Dev</option>
+                            <option value="Designer">Designer</option>
+                            <option value="QA Engineer">QA Engineer</option>
+                            <option value="DevOps">DevOps</option>
+                            <option value="Project Manager">Project Manager</option>
+                        </select>
+                        <select id="taskDeveloper" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white">
+                            <option value="">Select Developer</option>
+                        </select>
+                        <input type="text" id="taskTitle" placeholder="Task title" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <input type="date" id="taskDeadline" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+                        <button onclick="addTask()" class="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">
+                            Add Task
+                        </button>
+                    </div>
+                    <textarea id="taskDescription" placeholder="Task description (optional)" rows="2" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Assigned Tasks -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <h2 class="text-lg font-bold text-gray-900">Assigned Tasks</h2>
+                </div>
+                <div class="divide-y divide-gray-100" id="tasksList"></div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 2: STAGES ==================== -->
+        <div class="tab-content" id="tab-stages">
+            <div class="space-y-4" id="stagesContainer"></div>
+        </div>
+
+        <!-- ==================== TAB 3: CLIENT PAYMENTS ==================== -->
+        <div class="tab-content" id="tab-client-payments">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-4">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Client Payments
+                    </h2>
+                    <p class="text-emerald-100 text-sm" id="clientPaymentTotal">Total: $50,000</p>
+                </div>
+                <div class="p-6" id="clientPaymentsList"></div>
+                
+                <!-- Add Payment (Admin) -->
+                <div class="px-6 pb-6 admin-only">
+                    <div class="flex gap-3">
+                        <input type="number" id="newPaymentAmount" placeholder="Amount" class="flex-1 px-4 py-2 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
+                        <input type="date" id="newPaymentDate" class="px-4 py-2 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
+                        <button onclick="addClientPayment()" class="px-5 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">
+                            Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 4: DEVELOPER PAYMENTS ==================== -->
+        <div class="tab-content" id="tab-dev-payments">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Developer Payments
+                    </h2>
+                    <p class="text-blue-100 text-sm">Team payment history</p>
+                </div>
+                <div class="p-6" id="devPaymentsList"></div>
+                
+                <!-- Add Dev Payment (Admin) -->
+                <div class="px-6 pb-6 admin-only">
+                    <div class="grid grid-cols-4 gap-2">
+                        <select id="devPaymentRole" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
+                            <option value="">Developer</option>
+                            <option value="Bilal Ahmed">Bilal (Frontend)</option>
+                            <option value="Omer Farooq">Omer (Backend)</option>
+                            <option value="Fatima Noor">Fatima (Design)</option>
+                            <option value="Nadia Hussain">Nadia (QA)</option>
+                        </select>
+                        <input type="number" id="devPaymentAmount" placeholder="Amount" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
+                        <input type="date" id="devPaymentDate" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
+                        <button onclick="addDevPayment()" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
+                            Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 5: ACTIVITY & REMARKS ==================== -->
+        <div class="tab-content" id="tab-activity">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Activity Timeline -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-slate-600 to-slate-800 px-6 py-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Project Activity
+                        </h3>
+                    </div>
+                    <div class="p-6 max-h-[500px] overflow-y-auto space-y-4" id="activityList"></div>
+                </div>
+
+                <!-- Remarks Section -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-amber-500 to-orange-600 px-6 py-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
+                            </svg>
+                            Remarks & Notes
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex gap-3 mb-4">
+                            <input type="text" id="remarkInput" placeholder="Add a remark..." class="flex-1 px-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500">
+                            <button onclick="addRemark()" class="px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">
+                                Add
+                            </button>
+                        </div>
+                        <div class="max-h-[400px] overflow-y-auto space-y-3" id="remarksList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // ==================== GLOBALS ====================
+        const projectId = new URLSearchParams(window.location.search).get('id');
+        const TOKEN = localStorage.getItem('token');
+        const USER = JSON.parse(localStorage.getItem('user') || '{}');
+        const HEADERS = { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' };
+
+        // Set Doc Center & Client Portal links
+        if (projectId) {
+            const dcBtn = document.getElementById('docCenterBtn');
+            const cpBtn = document.getElementById('clientPortalBtn');
+            if (dcBtn) dcBtn.href = '/document-center?id=' + projectId;
+            if (cpBtn) cpBtn.href = '/client-portal?id=' + projectId;
+        }
+
+        let project = null;
+        let tasks = [];
+        let stages = [];
+        let clientPayments = [];
+        let devPayments = [];
+        let activities = [];
+        let remarks = [];
+
+        const statusConfig = {
+            completed: { dot: 'bg-emerald-500', label: 'Completed', bg: 'bg-emerald-50', text: 'text-emerald-700' },
+            'in-progress': { dot: 'bg-blue-500', label: 'In Progress', bg: 'bg-blue-50', text: 'text-blue-700' },
+            pending: { dot: 'bg-gray-400', label: 'Pending', bg: 'bg-gray-50', text: 'text-gray-600' },
+            warning: { dot: 'bg-amber-500', label: 'At Risk', bg: 'bg-amber-50', text: 'text-amber-700' },
+            success: { dot: 'bg-emerald-500', label: 'Healthy', bg: 'bg-emerald-50', text: 'text-emerald-700' },
+            blocked: { dot: 'bg-red-500', label: 'Blocked', bg: 'bg-red-50', text: 'text-red-700' }
+        };
+
+        // ==================== HELPERS ====================
+        function formatTimeAgo(dateStr) {
+            if (!dateStr) return 'Just now';
+            const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+            if (diff < 60) return 'Just now';
+            if (diff < 3600) return Math.floor(diff / 60) + ' minutes ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + ' hours ago';
+            if (diff < 604800) return Math.floor(diff / 86400) + ' days ago';
+            return new Date(dateStr).toLocaleDateString();
+        }
+
+        function formatDuration(startedAt, completedAt) {
+            if (!startedAt) return '—';
+            const totalSec = Math.floor((new Date(completedAt || Date.now()) - new Date(startedAt)) / 1000);
+            if (totalSec <= 0) return '—';
+            const d = Math.floor(totalSec / 86400), h = Math.floor((totalSec % 86400) / 3600), m = Math.floor((totalSec % 3600) / 60);
+            if (d > 0) return d + 'd ' + h + 'h';
+            if (h > 0) return h + 'h ' + m + 'm';
+            return m + 'm';
+        }
+
+        function formatDT(dt) {
+            if (!dt) return '—';
+            return new Date(dt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        function addLocalActivity(action, icon) {
+            activities.unshift({ user: USER.name || 'User', action: action, time: 'Just now', icon: icon || '📌' });
+            renderActivities();
+        }
+
+        // ==================== TAB SWITCHING ====================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+                btn.classList.add('text-gray-500');
+            });
+            document.querySelectorAll('.tab-content').forEach(function(c) {
+                c.classList.remove('active');
+            });
+            var btn = document.querySelector('.tab-btn[data-tab="' + tabName + '"]');
+            if (btn) { btn.classList.add('active'); btn.classList.remove('text-gray-500'); }
+            var content = document.getElementById('tab-' + tabName);
+            if (content) content.classList.add('active');
+            if (tabName === 'stages' && stages.length > 0) {
+                var ip = stages.find(function(s) { return s.status === 'in-progress'; });
+                if (ip) setTimeout(function() { toggleStage(ip.id); }, 200);
+            }
+        }
+
+        // ==================== TOGGLE STAGE ====================
+        function toggleStage(id) {
+            var el = document.getElementById('stage-' + id);
+            if (el) el.classList.toggle('expanded');
+        }
+
+        // ==================== RENDER TASKS ====================
+        function renderTasks() {
+            var container = document.getElementById('tasksList');
+            if (!tasks || tasks.length === 0) {
+                container.innerHTML = '<p class="p-6 text-gray-500 text-center">No tasks assigned yet</p>';
+                return;
+            }
+            var statusBg = { pending: 'bg-amber-50 text-amber-700', 'in-progress': 'bg-blue-50 text-blue-700', completed: 'bg-emerald-50 text-emerald-700', blocked: 'bg-red-50 text-red-700' };
+            var statusLabel = { pending: 'Pending', 'in-progress': 'In Progress', completed: 'Completed', blocked: 'Blocked' };
+            var statusIcon = { pending: '⏳', 'in-progress': '▶️', completed: '✅', blocked: '⛔' };
+
+            container.innerHTML = tasks.map(function(task) {
+                var actionBtn = '';
+                if (task.status === 'pending') {
+                    actionBtn = '<button onclick="startTaskAPI(\'' + task.id + '\')" class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-lg hover:bg-blue-200 transition-all flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Start</button>';
+                } else if (task.status === 'in-progress') {
+                    actionBtn = '<button onclick="completeTaskAPI(\'' + task.id + '\')" class="px-3 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-lg hover:bg-emerald-200 transition-all flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Complete</button>';
+                }
+                var timeInfo = '';
+                if (task.status === 'in-progress' && task.startedAt) timeInfo = '<span class="text-xs text-blue-600 font-medium">▶ ' + formatDuration(task.startedAt, null) + '</span>';
+                else if (task.status === 'completed' && task.startedAt) timeInfo = '<span class="text-xs text-emerald-600 font-medium">✅ ' + formatDuration(task.startedAt, task.completedAt) + '</span>';
+
+                return '<div class="p-5 hover:bg-gray-50 transition-all"><div class="flex items-start justify-between gap-4"><div class="flex-1"><div class="flex items-center gap-2 mb-2"><span class="text-base">' + (statusIcon[task.status] || '') + '</span><span class="px-2.5 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 rounded-full">' + task.role + '</span><span class="text-sm text-gray-400">' + (task.assignee || 'Unassigned') + '</span>' + timeInfo + '</div><p class="font-semibold text-gray-900">' + task.title + '</p>' + (task.description ? '<p class="text-sm text-gray-500 mt-1">' + task.description + '</p>' : '') + '<div class="flex items-center gap-3 mt-2 text-xs text-gray-400">' + (task.startedAt ? '<span>Started: ' + formatDT(task.startedAt) + '</span>' : '') + (task.completedAt ? '<span>Completed: ' + formatDT(task.completedAt) + '</span>' : '') + '</div></div><div class="text-right flex-shrink-0"><p class="text-xs text-gray-400 mb-1">Deadline</p><p class="text-sm font-medium text-gray-700">' + new Date(task.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + '</p></div><div class="flex items-center gap-2"><span class="px-3 py-1.5 text-xs font-medium rounded-lg ' + (statusBg[task.status] || '') + '">' + (statusLabel[task.status] || task.status) + '</span>' + actionBtn + '</div></div></div>';
+            }).join('');
+        }
+
+        // ==================== RENDER STAGES ====================
+        function renderStages() {
+            var container = document.getElementById('stagesContainer');
+            if (!container) return;
+
+            if (!stages || stages.length === 0) {
+                container.innerHTML = '<p class="p-6 text-gray-500 text-center">No stages found for this project.</p>';
+                return;
+            }
+
+            var html = '';
+            for (var i = 0; i < stages.length; i++) {
+                var stage = stages[i];
+                var sid = String(stage.id);
+                var status = statusConfig[stage.status] || statusConfig['pending'];
+                var deadlineStr = stage.deadline ? new Date(stage.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No date';
+                var assignedName = stage.assigned || 'Unassigned';
+
+                // Build content based on type
+                var contentHtml = '';
+
+                if (stage.type === 'checklist') {
+                    var itemsHtml = '';
+                    var items = stage.items || [];
+                    for (var j = 0; j < items.length; j++) {
+                        var item = items[j];
+                        var iid = String(item.id);
+                        var checkedAttr = item.done ? 'checked' : '';
+                        var disabledAttr = stage.approved ? 'disabled' : '';
+                        var itemBg = item.done ? 'bg-emerald-50 border border-emerald-200' : 'bg-gray-50 border border-gray-200';
+                        var textClass = item.done ? 'line-through text-gray-400' : 'text-gray-700';
+                        var checkMark = item.done ? '<span class="ml-auto text-emerald-500 font-bold">✓</span>' : '';
+                        itemsHtml += '<label class="flex items-center gap-3 p-3 rounded-xl ' + itemBg + ' cursor-pointer transition-all hover:shadow-sm">' +
+                            '<input type="checkbox" ' + checkedAttr + ' ' + disabledAttr + ' onchange="toggleChecklistItem(\'' + sid + '\', \'' + iid + '\')" class="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">' +
+                            '<span class="' + textClass + '">' + item.text + '</span>' + checkMark + '</label>';
+                    }
+                    contentHtml = '<div class="space-y-3 mb-4">' + itemsHtml + '</div>';
+                    if (stage.approved) {
+                        contentHtml += '<div class="px-4 py-3 bg-emerald-100 rounded-xl text-emerald-700 font-medium flex items-center gap-2 border border-emerald-200"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Stage Approved</div>';
+                    } else {
+                        contentHtml += '<button onclick="approveStage(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Approve Stage</button>';
+                    }
+
+                } else if (stage.type === 'development') {
+                    var healthStatus = statusConfig[stage.health] || statusConfig['pending'];
+                    var healthBorderColor = stage.health === 'success' ? 'border-emerald-200' : 'border-amber-200';
+                    var linkedBackendHtml = '';
+                    if (stage.name === 'Frontend') {
+                        linkedBackendHtml = '<div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Linked Backend</label><select class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white"><option value="">Select backend</option><option value="backend-1">Backend API v1</option></select></div>';
+                    }
+                    var markReadyDisabled = !stage.liveUrl ? ' opacity-50 cursor-not-allowed" disabled' : '"';
+                    contentHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">' +
+                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Repository URL</label><input type="url" id="repo-' + sid + '" value="' + (stage.repoUrl || '') + '" placeholder="https://github.com/..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div>' +
+                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Live URL</label><input type="url" id="live-' + sid + '" value="' + (stage.liveUrl || '') + '" placeholder="https://..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div>' +
+                        '</div>' + linkedBackendHtml +
+                        '<div class="flex items-center justify-between p-4 rounded-xl ' + healthStatus.bg + ' border ' + healthBorderColor + ' mb-4"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full ' + healthStatus.dot + ' animate-pulse"></span><span class="font-medium ' + healthStatus.text + '">Health: ' + healthStatus.label + '</span></div></div>' +
+                        '<div class="flex gap-3"><button onclick="saveLinks(\'' + sid + '\')" class="px-5 py-2.5 bg-indigo-100 text-indigo-700 font-medium rounded-xl hover:bg-indigo-200 transition-all">Save Links</button>' +
+                        '<button onclick="markReady(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all' + markReadyDisabled + '>Mark as Ready</button></div>';
+
+                } else if (stage.type === 'hosting') {
+                    var selProvider = stage.hostingProvider || '';
+                    var selDomain = stage.domainUrl || '';
+                    var sslChecked = stage.sslStatus === 'active' ? 'checked' : '';
+                    contentHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">' +
+                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Hosting Provider</label><select id="hosting-' + sid + '" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white"><option value="">Select provider</option><option value="aws"' + (selProvider === 'aws' ? ' selected' : '') + '>AWS</option><option value="vercel"' + (selProvider === 'vercel' ? ' selected' : '') + '>Vercel</option><option value="digitalocean"' + (selProvider === 'digitalocean' ? ' selected' : '') + '>DigitalOcean</option><option value="heroku"' + (selProvider === 'heroku' ? ' selected' : '') + '>Heroku</option><option value="custom"' + (selProvider === 'custom' ? ' selected' : '') + '>Custom Server</option></select></div>' +
+                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Domain URL</label><input type="url" id="domain-' + sid + '" value="' + selDomain + '" placeholder="https://example.com" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div></div>' +
+                        '<div class="flex items-center gap-4 mb-4"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ssl-' + sid + '" ' + sslChecked + ' class="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="text-gray-700">SSL Certificate Installed</span></label></div>' +
+                        '<button onclick="saveHosting(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Save Hosting Details</button>';
+
+                } else if (stage.type === 'delivery') {
+                    var delsHtml = '';
+                    var deliveries = stage.deliveries || [];
+                    for (var k = 0; k < deliveries.length; k++) {
+                        var del = deliveries[k];
+                        var did = String(del.id);
+                        var delBorder = del.approved ? 'border-emerald-300 bg-emerald-50' : 'border-gray-200 bg-gray-50';
+                        var delCircleBg = del.approved ? 'bg-emerald-500' : 'bg-gray-300';
+                        var delCircleText = del.approved ? '✓' : String(k + 1);
+                        var delChecked = del.approved ? 'checked' : '';
+                        delsHtml += '<div class="flex items-center justify-between p-4 rounded-xl border-2 ' + delBorder + '">' +
+                            '<div class="flex items-center gap-4"><div class="w-12 h-12 rounded-full ' + delCircleBg + ' flex items-center justify-center text-white font-bold text-lg">' + delCircleText + '</div>' +
+                            '<div><p class="font-semibold text-gray-900">' + del.name + '</p><p class="text-sm text-gray-500">' + (del.date || 'Not scheduled') + '</p></div></div>' +
+                            '<label class="flex items-center gap-3 cursor-pointer"><span class="text-sm font-medium text-gray-600">Approved</span>' +
+                            '<div class="relative"><input type="checkbox" ' + delChecked + ' onchange="toggleDelivery(\'' + sid + '\', \'' + did + '\')" class="sr-only peer">' +
+                            '<div class="w-12 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[\'\'] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>' +
+                            '</div></label></div>';
+                    }
+                    contentHtml = '<div class="space-y-4">' + delsHtml + '</div>';
+                }
+
+                // Build card
+                html += '<div class="stage-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="stage-' + sid + '">' +
+                    '<div class="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-all" onclick="toggleStage(\'' + sid + '\')">' +
+                        '<div class="flex items-center gap-4">' +
+                            '<div class="w-14 h-14 ' + (stage.gradient || 'stage-gradient-1') + ' rounded-xl flex items-center justify-center text-2xl shadow-lg">' + (stage.icon || '📋') + '</div>' +
+                            '<div><div class="flex items-center gap-3">' +
+                                '<h3 class="text-lg font-bold text-gray-900">' + stage.name + '</h3>' +
+                                '<span class="w-2.5 h-2.5 rounded-full ' + status.dot + (stage.status !== 'pending' ? ' animate-pulse' : '') + '"></span>' +
+                                '<span class="px-2.5 py-0.5 text-xs font-medium rounded-full ' + status.bg + ' ' + status.text + '">' + status.label + '</span>' +
+                            '</div><p class="text-gray-500 text-sm">' + (stage.summary || '') + '</p></div>' +
+                        '</div>' +
+                        '<div class="flex items-center gap-6">' +
+                            '<div class="text-right hidden sm:block"><p class="text-xs text-gray-400 uppercase tracking-wide">Assigned</p><p class="font-medium text-gray-700">' + assignedName + '</p></div>' +
+                            '<div class="text-right hidden sm:block"><p class="text-xs text-gray-400 uppercase tracking-wide">Deadline</p><p class="font-medium text-gray-700">' + deadlineStr + '</p></div>' +
+                            '<svg class="w-6 h-6 text-gray-400 chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="stage-content"><div class="px-5 pb-5 pt-2 border-t border-gray-100">' +
+                        '<div class="flex gap-4 mb-4 sm:hidden">' +
+                            '<div class="flex-1 p-3 bg-gray-50 rounded-xl"><p class="text-xs text-gray-400 uppercase">Assigned</p><p class="font-medium text-gray-700">' + assignedName + '</p></div>' +
+                            '<div class="flex-1 p-3 bg-gray-50 rounded-xl"><p class="text-xs text-gray-400 uppercase">Deadline</p><p class="font-medium text-gray-700">' + deadlineStr + '</p></div>' +
+                        '</div>' +
+                        contentHtml +
+                    '</div></div>' +
+                '</div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        // ==================== RENDER CLIENT PAYMENTS ====================
+        function renderClientPayments() {
+            var container = document.getElementById('clientPaymentsList');
+            if (!container) return;
+            var total = clientPayments.reduce(function(s, p) { return s + (p.amount || 0); }, 0);
+            var received = clientPayments.filter(function(p) { return p.status === 'received'; }).reduce(function(s, p) { return s + (p.amount || 0); }, 0);
+            document.getElementById('clientPaymentTotal').textContent = 'Total: $' + total.toLocaleString();
+            var rows = clientPayments.map(function(p, i) {
+                var isReceived = p.status === 'received';
+                var border = isReceived ? 'bg-white border border-emerald-200' : 'bg-gray-50 border-2 border-dashed border-gray-300';
+                var circleBg = isReceived ? 'bg-emerald-500' : 'bg-gray-300';
+                var circleText = isReceived ? '✓' : String(i + 1);
+                var amountColor = isReceived ? 'text-emerald-600' : 'text-gray-400';
+                var markBtn = !isReceived ? '<button onclick="markPaymentReceived(\'' + (p._id || p.id) + '\')" class="text-xs text-indigo-600 hover:underline font-medium admin-only">Mark Received</button>' : '';
+                return '<div class="flex items-center justify-between p-4 rounded-xl ' + border + '"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full ' + circleBg + ' flex items-center justify-center text-white font-bold">' + circleText + '</div><div><p class="font-semibold text-gray-800">' + (p.label || 'Payment') + '</p><p class="text-sm text-gray-400">' + (p.date ? new Date(p.date).toLocaleDateString() : 'Not received') + '</p></div></div><div class="text-right"><p class="text-lg font-bold ' + amountColor + '">$' + (p.amount || 0).toLocaleString() + '</p>' + markBtn + '</div></div>';
+            }).join('');
+            container.innerHTML = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl mb-4 border border-emerald-200"><span class="font-medium text-emerald-700">Received</span><span class="text-xl font-bold text-emerald-700">$' + received.toLocaleString() + ' / $' + total.toLocaleString() + '</span></div><div class="space-y-3">' + rows + '</div>';
+        }
+
+        // ==================== RENDER DEV PAYMENTS ====================
+        function renderDevPayments() {
+            var container = document.getElementById('devPaymentsList');
+            if (!container) return;
+            var totalPaid = devPayments.reduce(function(s, p) { return s + (p.amount || 0); }, 0);
+            var rows = devPayments.map(function(p) {
+                return '<div class="relative pl-12"><div class="absolute left-3 w-4 h-4 rounded-full bg-blue-500 border-4 border-white shadow"></div><div class="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 border border-gray-100 hover:shadow-sm transition-all"><div class="flex justify-between items-start"><div><p class="font-semibold text-gray-800">' + (p.developer || '') + '</p><p class="text-sm text-gray-400">' + (p.role || '') + ' • ' + (p.note || '') + '</p></div><div class="text-right"><p class="text-lg font-bold text-blue-600">$' + (p.amount || 0).toLocaleString() + '</p><p class="text-xs text-gray-400">' + (p.date ? new Date(p.date).toLocaleDateString() : '') + '</p></div></div></div></div>';
+            }).join('');
+            container.innerHTML = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl mb-4 border border-blue-200"><span class="font-medium text-blue-700">Total Paid to Team</span><span class="text-xl font-bold text-blue-700">$' + totalPaid.toLocaleString() + '</span></div><div class="relative"><div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400 to-indigo-400"></div><div class="space-y-4">' + rows + '</div></div>';
+        }
+
+        // ==================== RENDER ACTIVITIES ====================
+        function renderActivities() {
+            var el = document.getElementById('activityList');
+            if (!el) return;
+            el.innerHTML = activities.map(function(a) {
+                return '<div class="flex gap-4"><div class="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center text-lg flex-shrink-0">' + (a.icon || '📌') + '</div><div><p class="text-gray-800"><span class="font-semibold">' + a.user + '</span> ' + a.action + '</p><p class="text-xs text-gray-400 mt-1">' + a.time + '</p></div></div>';
+            }).join('');
+        }
+
+        // ==================== RENDER REMARKS ====================
+        function renderRemarks() {
+            var el = document.getElementById('remarksList');
+            if (!el) return;
+            el.innerHTML = remarks.map(function(r) {
+                return '<div class="p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border border-amber-100"><div class="flex justify-between text-xs mb-2"><span class="font-semibold text-amber-700">' + r.user + '</span><span class="text-amber-500">' + r.time + '</span></div><p class="text-gray-700">' + r.text + '</p></div>';
+            }).join('');
+        }
+
+        // ==================== API LOADERS ====================
+        async function loadProject() {
+            try {
+                var res = await fetch('/api/projects/' + projectId, { headers: HEADERS });
+                var data = await res.json();
+                if (data.success && data.data) {
+                    project = data.data;
+
+                    // Update header
+                    document.getElementById('projectTitle').textContent = project.name || 'Untitled Project';
+                    document.getElementById('projectClient').textContent = project.client || 'No Client';
+
+                    var priorityMap = { low: 'Low Priority', medium: 'Medium Priority', high: 'High Priority', critical: 'Critical Priority' };
+                    var priorityColors = { low: 'green', medium: 'blue', high: 'orange', critical: 'red' };
+                    var p = project.priority || 'medium';
+                    var pColor = priorityColors[p] || 'blue';
+                    var prEl = document.getElementById('projectPriority');
+                    prEl.className = 'px-3 py-1 text-sm font-medium rounded-lg bg-' + pColor + '-100 text-' + pColor + '-700 border border-' + pColor + '-200';
+                    prEl.textContent = priorityMap[p] || 'Medium Priority';
+                    document.getElementById('projectProgress').textContent = (project.progress || 0) + '% Complete';
+
+                    // Map stages
+                    var gradients = ['stage-gradient-1', 'stage-gradient-2', 'stage-gradient-3', 'stage-gradient-4', 'stage-gradient-5', 'stage-gradient-6', 'stage-gradient-7'];
+                    stages = (project.stages || []).map(function(s, idx) {
+                        return {
+                            id: String(s._id || s.id || idx),
+                            name: s.name || 'Unknown',
+                            status: s.status || 'pending',
+                            gradient: s.gradient || gradients[idx % 7],
+                            icon: s.icon || '📋',
+                            assigned: s.assignedName || (s.assigned && s.assigned.name ? s.assigned.name : '') || 'Unassigned',
+                            deadline: s.deadline || null,
+                            summary: s.summary || '',
+                            type: s.type || 'checklist',
+                            approved: s.approved || false,
+                            items: (s.items || []).map(function(item) {
+                                return { id: String(item._id || item.id || Math.random()), text: item.text || 'Item', done: item.done || false };
+                            }),
+                            repoUrl: s.repoUrl || '',
+                            liveUrl: s.liveUrl || '',
+                            linkedBackend: s.linkedBackend || '',
+                            health: s.health || 'pending',
+                            hostingProvider: s.hostingProvider || '',
+                            domainUrl: s.domainUrl || '',
+                            sslStatus: s.sslStatus || 'pending',
+                            deliveries: (s.deliveries || []).map(function(d, di) {
+                                return { id: String(d._id || d.id || di), name: d.name || ('Delivery ' + (di + 1)), approved: d.approved || false, date: d.date || null };
+                            })
+                        };
+                    });
+
+                    console.log('Stages loaded:', stages.length);
+                    renderStages();
+                }
+            } catch (err) {
+                console.error('Failed to load project:', err);
+                document.getElementById('stagesContainer').innerHTML = '<p class="p-6 text-red-500">Error loading project: ' + err.message + '</p>';
+            }
+        }
+
+        async function loadTasks() {
+            try {
+                var res = await fetch('/api/tasks?project=' + projectId, { headers: HEADERS });
+                var data = await res.json();
+                if (data.success) {
+                    tasks = (data.data || []).map(function(t) {
+                        return {
+                            id: t._id, role: t.role, title: t.title, description: t.description || '',
+                            deadline: t.deadline, status: t.status,
+                            assignee: t.assigneeName || (t.assignee && t.assignee.name ? t.assignee.name : '') || 'Unassigned',
+                            startedAt: t.startedAt || null, completedAt: t.completedAt || null
+                        };
+                    });
+                }
+                renderTasks();
+            } catch (err) {
+                console.error('Failed to load tasks:', err);
+                renderTasks();
+            }
+        }
+
+        async function loadActivities() {
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/activities', { headers: HEADERS });
+                var data = await res.json();
+                if (data.success && data.data) {
+                    activities = data.data.map(function(a) {
+                        return { user: a.userName || (a.user && a.user.name ? a.user.name : 'System'), action: a.action, time: formatTimeAgo(a.createdAt), icon: a.icon || '📌' };
+                    });
+                } else { activities = []; }
+            } catch (err) { activities = []; }
+            renderActivities();
+        }
+
+        async function loadPayments() {
+            try {
+                var cpRes = await fetch('/api/payments/client/' + projectId, { headers: HEADERS });
+                var cpData = await cpRes.json();
+                clientPayments = (cpData.success && cpData.data) ? cpData.data : [];
+            } catch (err) { clientPayments = []; }
+
+            try {
+                var dpRes = await fetch('/api/payments/developer/project/' + projectId, { headers: HEADERS });
+                var dpData = await dpRes.json();
+                devPayments = (dpData.success && dpData.data) ? dpData.data : [];
+            } catch (err) { devPayments = []; }
+
+            renderClientPayments();
+            renderDevPayments();
+        }
+
+        async function loadRemarks() {
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/remarks', { headers: HEADERS });
+                var data = await res.json();
+                if (data.success && data.data) {
+                    remarks = data.data.map(function(r) {
+                        return { user: r.userName || (r.user && r.user.name ? r.user.name : 'Anonymous'), text: r.text || r.content, time: formatTimeAgo(r.createdAt) };
+                    });
+                } else { remarks = []; }
+            } catch (err) { remarks = []; }
+            renderRemarks();
+        }
+
+        // ==================== STAGE ACTIONS ====================
+        async function toggleChecklistItem(stageId, itemId) {
+            var stage = stages.find(function(s) { return s.id === stageId; });
+            if (!stage) return;
+            var item = stage.items.find(function(i) { return i.id === itemId; });
+            if (!item) return;
+            item.done = !item.done;
+            renderStages();
+
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId + '/items/' + itemId, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ done: item.done })
+                });
+                if (res.ok) {
+                    addLocalActivity((item.done ? 'completed' : 'unchecked') + ' "' + item.text + '"', item.done ? '✅' : '⏪');
+                } else { item.done = !item.done; renderStages(); }
+            } catch (err) { item.done = !item.done; renderStages(); }
+        }
+
+        async function approveStage(stageId) {
+            var stage = stages.find(function(s) { return s.id === stageId; });
+            if (!stage) return;
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ approved: true, status: 'completed' })
+                });
+                if (res.ok) {
+                    stage.approved = true;
+                    stage.status = 'completed';
+                    renderStages();
+                    addLocalActivity('approved ' + stage.name + ' stage', '✅');
+                }
+            } catch (err) { console.error('Failed to approve stage:', err); }
+        }
+
+        async function saveLinks(stageId) {
+            var stage = stages.find(function(s) { return s.id === stageId; });
+            if (!stage) return;
+            var repoUrl = document.getElementById('repo-' + stageId).value;
+            var liveUrl = document.getElementById('live-' + stageId).value;
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ repoUrl: repoUrl, liveUrl: liveUrl, health: liveUrl ? 'success' : 'pending' })
+                });
+                if (res.ok) {
+                    stage.repoUrl = repoUrl; stage.liveUrl = liveUrl;
+                    if (liveUrl) stage.health = 'success';
+                    renderStages();
+                    addLocalActivity('updated ' + stage.name + ' URLs', '🔗');
+                    alert('Links saved!');
+                }
+            } catch (err) { alert('Failed to save links'); }
+        }
+
+        async function markReady(stageId) {
+            var stage = stages.find(function(s) { return s.id === stageId; });
+            if (!stage) return;
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ status: 'completed', health: 'success' })
+                });
+                if (res.ok) {
+                    stage.status = 'completed'; stage.health = 'success';
+                    renderStages();
+                    addLocalActivity('marked ' + stage.name + ' as ready', '🚀');
+                }
+            } catch (err) { alert('Failed to mark as ready'); }
+        }
+
+        async function saveHosting(stageId) {
+            var stage = stages.find(function(s) { return s.id === stageId; });
+            if (!stage) return;
+            var hostingProvider = document.getElementById('hosting-' + stageId).value;
+            var domainUrl = document.getElementById('domain-' + stageId).value;
+            var sslStatus = document.getElementById('ssl-' + stageId).checked ? 'active' : 'pending';
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ hostingProvider: hostingProvider, domainUrl: domainUrl, sslStatus: sslStatus })
+                });
+                if (res.ok) {
+                    stage.hostingProvider = hostingProvider; stage.domainUrl = domainUrl; stage.sslStatus = sslStatus;
+                    addLocalActivity('updated hosting configuration', '☁️');
+                    alert('Hosting details saved!');
+                }
+            } catch (err) { alert('Failed to save hosting details'); }
+        }
+
+        async function toggleDelivery(stageId, deliveryId) {
+            var stage = stages.find(function(s) { return s.id === stageId; });
+            if (!stage) return;
+            var delivery = stage.deliveries.find(function(d) { return d.id === deliveryId; });
+            if (!delivery) return;
+            delivery.approved = !delivery.approved;
+            if (delivery.approved) delivery.date = new Date().toLocaleDateString();
+            renderStages();
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ deliveries: stage.deliveries })
+                });
+                if (res.ok) {
+                    addLocalActivity((delivery.approved ? 'approved' : 'unapproved') + ' ' + delivery.name, delivery.approved ? '✅' : '⏪');
+                } else { delivery.approved = !delivery.approved; renderStages(); }
+            } catch (err) { delivery.approved = !delivery.approved; renderStages(); }
+        }
+
+        // ==================== TASK ACTIONS ====================
+        function updateDeveloperDropdown() {
+            var selectedRole = document.getElementById('taskRole').value;
+            var devDropdown = document.getElementById('taskDeveloper');
+            devDropdown.innerHTML = '<option value="">Select Developer</option>';
+            if (!selectedRole || !project || !project.team) return;
+
+            var teamMembers = project.team.filter(function(m) { return m.role === selectedRole; });
+            if (teamMembers.length === 0) {
+                devDropdown.innerHTML = '<option value="">No developers with this role</option>';
+                return;
+            }
+            teamMembers.forEach(function(member) {
+                var opt = document.createElement('option');
+                opt.value = (typeof member.user === 'object' && member.user) ? member.user._id : member.user;
+                opt.textContent = member.name;
+                devDropdown.appendChild(opt);
+            });
+        }
+
+        async function addTask() {
+            var role = document.getElementById('taskRole').value;
+            var developerId = document.getElementById('taskDeveloper').value;
+            var devDropdown = document.getElementById('taskDeveloper');
+            var developerName = devDropdown.options[devDropdown.selectedIndex].text;
+            var title = document.getElementById('taskTitle').value;
+            var deadline = document.getElementById('taskDeadline').value;
+            var description = document.getElementById('taskDescription').value;
+            if (!role || !developerId || !title || !deadline) { alert('Please fill role, developer, title, and deadline'); return; }
+
+            try {
+                var res = await fetch('/api/tasks', {
+                    method: 'POST', headers: HEADERS,
+                    body: JSON.stringify({ project: projectId, title: title, description: description, role: role, assignee: developerId, deadline: deadline })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    document.getElementById('taskRole').value = '';
+                    document.getElementById('taskDeveloper').innerHTML = '<option value="">Select Developer</option>';
+                    document.getElementById('taskTitle').value = '';
+                    document.getElementById('taskDeadline').value = '';
+                    document.getElementById('taskDescription').value = '';
+                    await loadTasks();
+                    addLocalActivity('assigned task "' + title + '" to ' + (developerName || role), '📝');
+                } else { alert(data.error || 'Failed to create task'); }
+            } catch (err) { alert('Failed to create task: ' + err.message); }
+        }
+
+        async function startTaskAPI(taskId) {
+            try {
+                var res = await fetch('/api/tasks/' + taskId + '/start', { method: 'PUT', headers: HEADERS });
+                var data = await res.json();
+                if (data.success) {
+                    await loadTasks();
+                    var task = tasks.find(function(t) { return t.id === taskId; });
+                    addLocalActivity('started "' + (task ? task.title : 'task') + '"', '▶️');
+                } else { alert(data.error || 'Failed to start task'); }
+            } catch (err) { alert('Failed to start task'); }
+        }
+
+        async function completeTaskAPI(taskId) {
+            try {
+                var res = await fetch('/api/tasks/' + taskId + '/complete', { method: 'PUT', headers: HEADERS });
+                var data = await res.json();
+                if (data.success) {
+                    await loadTasks();
+                    var task = tasks.find(function(t) { return t.id === taskId; });
+                    addLocalActivity('completed "' + (task ? task.title : 'task') + '"', '✅');
+                } else { alert(data.error || 'Failed to complete task'); }
+            } catch (err) { alert('Failed to complete task'); }
+        }
+
+        // ==================== PAYMENT / REMARK ACTIONS ====================
+        function addClientPayment() {
+            var amount = parseFloat(document.getElementById('newPaymentAmount').value);
+            var date = document.getElementById('newPaymentDate').value;
+            if (!amount || !date) { alert('Enter amount and date'); return; }
+            clientPayments.push({ id: Date.now(), label: 'Payment ' + (clientPayments.length + 1), amount: amount, date: date, status: 'received' });
+            document.getElementById('newPaymentAmount').value = '';
+            document.getElementById('newPaymentDate').value = '';
+            renderClientPayments();
+            addLocalActivity('received client payment $' + amount.toLocaleString(), '💰');
+        }
+
+        function markPaymentReceived(id) {
+            var payment = clientPayments.find(function(p) { return String(p._id || p.id) === String(id); });
+            if (payment) {
+                payment.status = 'received';
+                payment.date = new Date().toISOString().split('T')[0];
+                renderClientPayments();
+                addLocalActivity('marked ' + (payment.label || 'payment') + ' as received', '💰');
+            }
+        }
+
+        function addDevPayment() {
+            var developer = document.getElementById('devPaymentRole').value;
+            var amount = parseFloat(document.getElementById('devPaymentAmount').value);
+            var date = document.getElementById('devPaymentDate').value;
+            if (!developer || !amount || !date) { alert('Fill all fields'); return; }
+            devPayments.unshift({ id: Date.now(), developer: developer, role: '', amount: amount, date: date, note: 'Payment' });
+            document.getElementById('devPaymentRole').value = '';
+            document.getElementById('devPaymentAmount').value = '';
+            document.getElementById('devPaymentDate').value = '';
+            renderDevPayments();
+            addLocalActivity('paid $' + amount.toLocaleString() + ' to ' + developer, '💸');
+        }
+
+        function addRemark() {
+            var text = document.getElementById('remarkInput').value.trim();
+            if (!text) return;
+            remarks.unshift({ user: USER.name || 'User', text: text, time: 'Just now' });
+            document.getElementById('remarkInput').value = '';
+            renderRemarks();
+            addLocalActivity('added a remark', '💬');
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login?logout=true';
+        }
+
+        // ==================== INIT ====================
+        async function init() {
+            if (!TOKEN || !USER.name) { window.location.href = '/login'; return; }
+
+            document.getElementById('userName').textContent = USER.name;
+            document.getElementById('userInitials').textContent = USER.name.split(' ').map(function(n) { return n[0]; }).join('');
+
+            if (USER.role !== 'admin') {
+                document.querySelectorAll('.admin-only').forEach(function(el) { el.style.display = 'none'; });
+            }
+            if (USER.role === 'developer') {
+                document.querySelectorAll('.admin-subadmin-only').forEach(function(el) { el.style.display = 'none'; });
+            }
+
+            if (!projectId) {
+                document.getElementById('stagesContainer').innerHTML = '<p class="p-6 text-red-500">No project ID provided in URL.</p>';
+                return;
+            }
+
+            await loadProject();
+            await loadTasks();
+            await loadActivities();
+            await loadPayments();
+            await loadRemarks();
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Work | Project Control System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .card-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .card-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .card-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .card-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .card-gradient-6 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .tab-active { border-bottom: 2px solid #6366f1; color: #4f46e5; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">ProjectControl</span>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a class='px-4 py-2 rounded-lg bg-indigo-50 text-indigo-700 font-medium transition-all' href='/my-work'>
+                        My Work
+                    </a>
+                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-subadmin-only' href='/projects'>
+                        Projects
+                    </a>
+                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only' href='/add-project'>
+                        Add Project
+                    </a>
+                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only' href='/users'>
+                        Users
+                    </a>
+                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-subadmin-only' href='/documents'>
+                        Documents
+                    </a>
+                </div>
+
+                <!-- User Section -->
+                <div class="flex items-center space-x-4">
+                    <a class='flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-all' href='/profile'>
+                        <div class="w-9 h-9 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                            <span id="userInitials">AK</span>
+                        </div>
+                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Ahmed Khan</span>
+                    </a>
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Logout">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Page Header with Tabs -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">My Work</h1>
+                <p class="text-gray-500 mt-1">Tasks, calendar & time tracking</p>
+            </div>
+            <!-- View Tabs -->
+            <div class="flex bg-white rounded-xl p-1 shadow-sm border border-gray-100">
+                <button onclick="switchTab('tasks')" id="tab-tasks" class="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-100 text-indigo-700">
+                    📋 Tasks
+                </button>
+                <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-gray-100">
+                    📅 Calendar
+                </button>
+                <button onclick="switchTab('stats')" id="tab-stats" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-gray-100">
+                    📊 Dashboard
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== TASKS VIEW ==================== -->
+        <div id="view-tasks">
+            <!-- Quick Stats Row -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Pending</p>
+                    <p class="text-2xl font-bold text-amber-600 mt-1" id="stat-pending">0</p>
+                </div>
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">In Progress</p>
+                    <p class="text-2xl font-bold text-blue-600 mt-1" id="stat-inprogress">0</p>
+                </div>
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Completed</p>
+                    <p class="text-2xl font-bold text-emerald-600 mt-1" id="stat-completed">0</p>
+                </div>
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                    <p class="text-xs text-gray-500 uppercase tracking-wide">Blocked</p>
+                    <p class="text-2xl font-bold text-red-600 mt-1" id="stat-blocked">0</p>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="tasksLoading" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
+                <div class="inline-block">
+                    <svg class="animate-spin h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </div>
+                <p class="mt-4 text-gray-600">Loading tasks...</p>
+            </div>
+
+            <!-- Work Items List -->
+            <div class="space-y-4 hidden" id="workItemsContainer">
+                <div id="workItems"></div>
+            </div>
+        </div>
+
+        <!-- ==================== CALENDAR VIEW ==================== -->
+        <div id="view-calendar" class="hidden">
+            <!-- Calendar Header -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <div class="flex items-center justify-between mb-6">
+                    <button onclick="changeMonth(-1)" class="p-2 hover:bg-gray-100 rounded-lg transition-all">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                    <h2 class="text-xl font-bold text-gray-900" id="calendarMonth">February 2026</h2>
+                    <button onclick="changeMonth(1)" class="p-2 hover:bg-gray-100 rounded-lg transition-all">
+                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Calendar Grid -->
+                <div class="grid grid-cols-7 gap-1 mb-2">
+                    <div class="text-center text-xs font-medium text-gray-500 py-2">Sun</div>
+                    <div class="text-center text-xs font-medium text-gray-500 py-2">Mon</div>
+                    <div class="text-center text-xs font-medium text-gray-500 py-2">Tue</div>
+                    <div class="text-center text-xs font-medium text-gray-500 py-2">Wed</div>
+                    <div class="text-center text-xs font-medium text-gray-500 py-2">Thu</div>
+                    <div class="text-center text-xs font-medium text-gray-500 py-2">Fri</div>
+                    <div class="text-center text-xs font-medium text-gray-500 py-2">Sat</div>
+                </div>
+                <div class="grid grid-cols-7 gap-1" id="calendarGrid"></div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="flex flex-wrap gap-4 mb-6">
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <span class="text-sm text-gray-600">Overdue</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                    <span class="text-sm text-gray-600">Due Today</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                    <span class="text-sm text-gray-600">Upcoming</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+                    <span class="text-sm text-gray-600">Completed</span>
+                </div>
+            </div>
+
+            <!-- Selected Day Tasks -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4" id="selectedDayTitle">Select a date</h3>
+                <div id="selectedDayTasks" class="space-y-3">
+                    <p class="text-gray-500 text-center py-4">Click on a date to see tasks</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== DASHBOARD/STATS VIEW ==================== -->
+        <div id="view-stats" class="hidden">
+            <!-- Overview Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Productivity Score -->
+                <div class="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-indigo-100">Productivity Score</p>
+                        <span class="text-3xl">📈</span>
+                    </div>
+                    <p class="text-4xl font-bold" id="productivityScore">0%</p>
+                    <p class="text-sm text-indigo-200 mt-2">Based on completed tasks this week</p>
+                </div>
+                
+                <!-- Total Time This Week -->
+                <div class="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-emerald-100">Total Tasks</p>
+                        <span class="text-3xl">📋</span>
+                    </div>
+                    <p class="text-4xl font-bold" id="weekTotalTime">0</p>
+                    <p class="text-sm text-emerald-200 mt-2">Across all projects</p>
+                </div>
+                
+                <!-- Tasks Completed -->
+                <div class="bg-gradient-to-br from-amber-500 to-orange-600 rounded-2xl p-6 text-white shadow-lg">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-amber-100">Tasks Completed</p>
+                        <span class="text-3xl">✅</span>
+                    </div>
+                    <p class="text-4xl font-bold" id="tasksCompletedWeek">0</p>
+                    <p class="text-sm text-amber-200 mt-2">This week</p>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Daily Time Chart -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">📊 Task Status Overview</h3>
+                    <div class="flex items-end justify-between h-48 gap-2" id="dailyTimeChart">
+                        <!-- Chart bars will be rendered here -->
+                    </div>
+                </div>
+                
+                <!-- Project Distribution -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">🎯 Tasks by Project</h3>
+                    <div class="space-y-4" id="projectTimeList">
+                        <!-- Project time distribution will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Log History -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">📝 Recently Completed</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-left text-sm text-gray-500 border-b border-gray-100">
+                                <th class="pb-3 font-medium">Completed</th>
+                                <th class="pb-3 font-medium">Task</th>
+                                <th class="pb-3 font-medium">Project</th>
+                                <th class="pb-3 font-medium">Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timeLogTable" class="divide-y divide-gray-100">
+                            <!-- Time logs will be rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        // ==================== DATA ====================
+        let workItems = [];
+        let currentUser = {};
+        let currentCalendarDate = new Date();
+
+        const gradients = ['card-gradient-1', 'card-gradient-2', 'card-gradient-3', 'card-gradient-4', 'card-gradient-5', 'card-gradient-6'];
+
+        const statusConfig = {
+            completed: { dot: 'bg-emerald-500', bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Completed' },
+            pending: { dot: 'bg-amber-500', bg: 'bg-amber-50', text: 'text-amber-700', label: 'Pending' },
+            blocked: { dot: 'bg-red-500', bg: 'bg-red-50', text: 'text-red-700', label: 'Blocked' },
+            'in-progress': { dot: 'bg-blue-500', bg: 'bg-blue-50', text: 'text-blue-700', label: 'In Progress' }
+        };
+
+        const priorityConfig = {
+            critical: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-200' },
+            high: { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200' },
+            medium: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200' },
+            low: { bg: 'bg-gray-100', text: 'text-gray-600', border: 'border-gray-200' }
+        };
+
+        // ==================== API CALLS ====================
+        async function loadWorkItems() {
+            try {
+                document.getElementById('tasksLoading').style.display = 'block';
+                document.getElementById('workItemsContainer').classList.add('hidden');
+                
+                const response = await fetch('/api/tasks/my', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const data = await response.json();
+                
+                // Transform API data to match our structure
+                const tasksArray = data.data || data.tasks || data || [];
+                workItems = (Array.isArray(tasksArray) ? tasksArray : []).map((task, index) => ({
+                    id: task._id || task.id,
+                    projectName: task.projectName || 'Untitled Project',
+                    projectId: task.projectId || task.project?._id || '',
+                    stageName: task.stageName || task.stage?.name || 'Pending',
+                    pendingAction: task.title || task.description || task.name || 'Task',
+                    deadline: task.dueDate || task.deadline || new Date().toISOString().split('T')[0],
+                    status: (task.status || 'pending').toLowerCase(),
+                    priority: (task.priority || 'medium').toLowerCase(),
+                    assignee: task.assignee?.name || task.assignedTo || currentUser.name || 'Unassigned',
+                    gradient: gradients[index % gradients.length],
+                    startedAt: task.startedAt || null,
+                    completedAt: task.completedAt || null
+                }));
+                
+                console.log('Loaded tasks:', workItems);
+                
+                document.getElementById('tasksLoading').style.display = 'none';
+                document.getElementById('workItemsContainer').classList.remove('hidden');
+                
+                renderWorkItems();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                document.getElementById('tasksLoading').innerHTML = `
+                    <div class="text-center">
+                        <p class="text-red-600 font-medium mb-2">Failed to load tasks</p>
+                        <p class="text-gray-500 text-sm">${error.message}</p>
+                        <button onclick="loadWorkItems()" class="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // ==================== TAB SWITCHING ====================
+        function switchTab(tab) {
+            ['tasks', 'calendar', 'stats'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('bg-indigo-100', 'text-indigo-700');
+                document.getElementById(`tab-${t}`).classList.add('text-gray-600');
+            });
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('bg-indigo-100', 'text-indigo-700');
+            document.getElementById(`tab-${tab}`).classList.remove('text-gray-600');
+            
+            if (tab === 'calendar') renderCalendar();
+            if (tab === 'stats') renderDashboard();
+        }
+
+        // ==================== DURATION HELPERS ====================
+        function formatDuration(startedAt, completedAt) {
+            if (!startedAt) return '—';
+            const start = new Date(startedAt);
+            const end = completedAt ? new Date(completedAt) : new Date();
+            const totalSec = Math.floor((end - start) / 1000);
+            if (totalSec <= 0) return '—';
+            const days = Math.floor(totalSec / 86400);
+            const hours = Math.floor((totalSec % 86400) / 3600);
+            const minutes = Math.floor((totalSec % 3600) / 60);
+            if (days > 0) return `${days}d ${hours}h`;
+            if (hours > 0) return `${hours}h ${minutes}m`;
+            return `${minutes}m`;
+        }
+
+        function formatDateTime(dt) {
+            if (!dt) return '—';
+            return new Date(dt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
+
+        // ==================== TASK ACTIONS (API) ====================
+        async function startTask(taskId) {
+            try {
+                const res = await fetch(`/api/tasks/${taskId}/start`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await loadWorkItems();
+                } else {
+                    alert(data.error || 'Failed to start task');
+                }
+            } catch (err) {
+                alert('Failed to start task');
+            }
+        }
+
+        async function completeTask(taskId) {
+            try {
+                const res = await fetch(`/api/tasks/${taskId}/complete`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await loadWorkItems();
+                } else {
+                    alert(data.error || 'Failed to complete task');
+                }
+            } catch (err) {
+                alert('Failed to complete task');
+            }
+        }
+
+        // ==================== WORK ITEMS ====================
+        function getDaysUntil(dateStr) {
+            const today = new Date(); 
+            today.setHours(0, 0, 0, 0);
+            const deadline = new Date(dateStr);
+            return Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+        }
+
+        function formatDeadline(dateStr) {
+            const days = getDaysUntil(dateStr);
+            if (days < 0) return { text: `${Math.abs(days)} days overdue`, class: 'text-red-600 font-medium' };
+            if (days === 0) return { text: 'Due today', class: 'text-amber-600 font-medium' };
+            if (days === 1) return { text: 'Due tomorrow', class: 'text-amber-600' };
+            if (days <= 3) return { text: `${days} days left`, class: 'text-amber-500' };
+            return { text: `${days} days left`, class: 'text-gray-500' };
+        }
+
+        function getMyWorkItems() {
+            if (currentUser.role === 'developer') {
+                return workItems.filter(item => item.assignee === currentUser.name && item.status !== 'completed');
+            }
+            return workItems.filter(item => item.status !== 'completed');
+        }
+
+        function updateStats() {
+            const myItems = getMyWorkItems();
+            const allItems = currentUser.role === 'developer' ? 
+                workItems.filter(item => item.assignee === currentUser.name) : workItems;
+            
+            document.getElementById('stat-pending').textContent = myItems.filter(i => i.status === 'pending').length;
+            document.getElementById('stat-inprogress').textContent = myItems.filter(i => i.status === 'in-progress').length;
+            document.getElementById('stat-completed').textContent = allItems.filter(i => i.status === 'completed').length;
+            document.getElementById('stat-blocked').textContent = myItems.filter(i => i.status === 'blocked').length;
+        }
+
+        function renderWorkItems() {
+            const container = document.getElementById('workItems');
+            const myItems = getMyWorkItems();
+            
+            if (myItems.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center">
+                        <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">All caught up! 🎉</h3>
+                        <p class="text-gray-500">No pending tasks. Great work!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = myItems.map(item => {
+                const status = statusConfig[item.status] || statusConfig['pending'];
+                const priority = priorityConfig[item.priority] || priorityConfig['medium'];
+                const deadline = formatDeadline(item.deadline);
+                const isDeveloper = currentUser.role === 'developer';
+                const duration = formatDuration(item.startedAt, item.completedAt);
+                
+                // Action buttons based on status
+                let actionBtn = '';
+                if (item.status === 'pending') {
+                    actionBtn = `
+                        <button onclick="startTask('${item.id}')" class="px-3 py-2 bg-blue-100 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-200 transition-all flex items-center gap-1.5" title="Start Task">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <span class="hidden sm:inline">Start</span>
+                        </button>`;
+                } else if (item.status === 'in-progress') {
+                    actionBtn = `
+                        <button onclick="completeTask('${item.id}')" class="px-3 py-2 bg-emerald-100 text-emerald-700 text-sm font-medium rounded-lg hover:bg-emerald-200 transition-all flex items-center gap-1.5" title="Complete Task">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            <span class="hidden sm:inline">Complete</span>
+                        </button>`;
+                }
+                
+                // Time info
+                let timeInfo = '';
+                if (item.status === 'in-progress' && item.startedAt) {
+                    timeInfo = `
+                        <div class="text-center px-3 py-2 bg-blue-50 rounded-lg">
+                            <p class="text-xs text-blue-500 uppercase">Working</p>
+                            <p class="text-sm font-bold text-blue-700">${duration}</p>
+                        </div>`;
+                } else if (item.status === 'completed' && item.startedAt) {
+                    timeInfo = `
+                        <div class="text-center px-3 py-2 bg-emerald-50 rounded-lg">
+                            <p class="text-xs text-emerald-500 uppercase">Duration</p>
+                            <p class="text-sm font-bold text-emerald-700">${duration}</p>
+                        </div>`;
+                }
+                
+                return `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                        <div class="flex flex-col lg:flex-row">
+                            <div class="${item.gradient} w-full lg:w-2 h-2 lg:h-auto"></div>
+                            <div class="flex-1 p-5">
+                                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-3 mb-2">
+                                            <h3 class="text-lg font-semibold text-gray-900">${item.projectName}</h3>
+                                            <span class="px-2.5 py-0.5 text-xs font-medium rounded-full ${priority.bg} ${priority.text} ${priority.border} border capitalize">${item.priority}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <span class="w-2 h-2 rounded-full ${status.dot}"></span>
+                                            <span class="text-sm font-medium text-indigo-600">${item.stageName}</span>
+                                            ${!isDeveloper ? `<span class="text-sm text-gray-400">• ${item.assignee}</span>` : ''}
+                                        </div>
+                                        <p class="text-gray-600">${item.pendingAction}</p>
+                                        ${item.startedAt ? `<p class="text-xs text-gray-400 mt-1">Started: ${formatDateTime(item.startedAt)}${item.completedAt ? ' • Completed: ' + formatDateTime(item.completedAt) : ''}</p>` : ''}
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-4">
+                                        ${timeInfo}
+                                        
+                                        <!-- Deadline -->
+                                        <div class="text-right">
+                                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Deadline</p>
+                                            <p class="${deadline.class} text-sm">${deadline.text}</p>
+                                        </div>
+                                        
+                                        <!-- Status -->
+                                        <div class="px-3 py-1.5 rounded-lg ${status.bg}">
+                                            <span class="text-xs font-medium ${status.text}">${status.label}</span>
+                                        </div>
+                                        
+                                        <!-- Actions -->
+                                        <div class="flex gap-2">
+                                            ${actionBtn}
+                                            ${!isDeveloper ? `
+                                                <a href="/project-detail?id=${item.projectId}" class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-medium rounded-lg hover:shadow-lg transition-all">Open</a>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==================== CALENDAR ====================
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+            
+            document.getElementById('calendarMonth').textContent = 
+                currentCalendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            let html = '';
+            
+            for (let i = 0; i < firstDay; i++) {
+                html += '<div class="h-24 p-1"></div>';
+            }
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                const dayDate = new Date(year, month, day);
+                const isToday = dayDate.getTime() === today.getTime();
+                const dayTasks = workItems.filter(t => t.deadline === dateStr);
+                
+                html += `
+                    <div onclick="selectCalendarDay('${dateStr}')" 
+                         class="h-24 p-1 border border-gray-100 rounded-lg cursor-pointer hover:bg-gray-50 transition-all ${isToday ? 'bg-indigo-50 border-indigo-200' : ''}">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-sm font-medium ${isToday ? 'text-indigo-600' : 'text-gray-700'}">${day}</span>
+                            ${dayTasks.length > 0 ? `<span class="text-xs bg-gray-200 text-gray-600 rounded-full px-1.5">${dayTasks.length}</span>` : ''}
+                        </div>
+                        <div class="space-y-0.5 overflow-hidden max-h-16">
+                            ${dayTasks.slice(0, 3).map(task => {
+                                let dotColor = 'bg-blue-500';
+                                if (task.status === 'completed') dotColor = 'bg-emerald-500';
+                                else if (getDaysUntil(task.deadline) < 0) dotColor = 'bg-red-500';
+                                else if (getDaysUntil(task.deadline) === 0) dotColor = 'bg-amber-500';
+                                return `<div class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full ${dotColor}"></span><span class="text-xs text-gray-600 truncate">${task.projectName.substring(0, 12)}</span></div>`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            grid.innerHTML = html;
+        }
+
+        function changeMonth(delta) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        function selectCalendarDay(dateStr) {
+            const dayTasks = workItems.filter(t => t.deadline === dateStr);
+            const dateObj = new Date(dateStr);
+            
+            document.getElementById('selectedDayTitle').textContent = 
+                dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+            
+            if (dayTasks.length === 0) {
+                document.getElementById('selectedDayTasks').innerHTML = '<p class="text-gray-500 text-center py-4">No tasks due on this date</p>';
+                return;
+            }
+            
+            document.getElementById('selectedDayTasks').innerHTML = dayTasks.map(task => {
+                const status = statusConfig[task.status] || statusConfig['pending'];
+                return `
+                    <div class="flex items-center justify-between p-3 rounded-xl border border-gray-100 hover:bg-gray-50">
+                        <div class="flex items-center gap-3">
+                            <span class="w-3 h-3 rounded-full ${status.dot}"></span>
+                            <div>
+                                <p class="font-medium text-gray-900">${task.projectName}</p>
+                                <p class="text-sm text-gray-500">${task.pendingAction}</p>
+                            </div>
+                        </div>
+                        <span class="px-2.5 py-1 text-xs font-medium rounded-lg ${status.bg} ${status.text}">${status.label}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==================== DASHBOARD ====================
+        function renderDashboard() {
+            // Task completion chart - show status distribution
+            const statusCounts = { pending: 0, 'in-progress': 0, completed: 0, blocked: 0 };
+            workItems.forEach(t => { statusCounts[t.status] = (statusCounts[t.status] || 0) + 1; });
+            const total = workItems.length || 1;
+            
+            const barData = [
+                { label: 'Pending', count: statusCounts.pending, color: 'from-amber-400 to-amber-500' },
+                { label: 'In Progress', count: statusCounts['in-progress'], color: 'from-blue-400 to-blue-500' },
+                { label: 'Completed', count: statusCounts.completed, color: 'from-emerald-400 to-emerald-500' },
+                { label: 'Blocked', count: statusCounts.blocked, color: 'from-red-400 to-red-500' }
+            ];
+            const maxCount = Math.max(...barData.map(b => b.count), 1);
+            
+            document.getElementById('dailyTimeChart').innerHTML = barData.map(bar => {
+                const height = (bar.count / maxCount) * 100;
+                return `
+                    <div class="flex-1 flex flex-col items-center">
+                        <div class="w-full flex flex-col items-center justify-end h-40">
+                            <span class="text-xs text-gray-500 mb-1">${bar.count}</span>
+                            <div class="w-full max-w-[40px] rounded-t-lg bg-gradient-to-t ${bar.color}" 
+                                 style="height: ${Math.max(height, 5)}%"></div>
+                        </div>
+                        <span class="text-xs text-gray-500 mt-2 text-center">${bar.label}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            // Project distribution
+            const projectCounts = {};
+            workItems.forEach(t => { projectCounts[t.projectName] = (projectCounts[t.projectName] || 0) + 1; });
+            const colors = ['bg-indigo-500', 'bg-emerald-500', 'bg-amber-500', 'bg-red-500', 'bg-purple-500'];
+            
+            document.getElementById('projectTimeList').innerHTML = Object.entries(projectCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5)
+                .map(([project, count], i) => {
+                    const percent = Math.round((count / total) * 100);
+                    return `
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="font-medium text-gray-700">${project}</span>
+                                <span class="text-gray-500">${count} tasks (${percent}%)</span>
+                            </div>
+                            <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="${colors[i]} h-full rounded-full" style="width: ${percent}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            
+            // Recent completed tasks as log
+            const completedTasks = workItems
+                .filter(t => t.completedAt)
+                .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
+                .slice(0, 10);
+            
+            document.getElementById('timeLogTable').innerHTML = completedTasks.map(t => `
+                <tr class="text-sm">
+                    <td class="py-3 text-gray-600">${new Date(t.completedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</td>
+                    <td class="py-3 text-gray-900 font-medium">${t.pendingAction}</td>
+                    <td class="py-3 text-gray-600">${t.projectName}</td>
+                    <td class="py-3"><span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-xs font-medium">${formatDuration(t.startedAt, t.completedAt)}</span></td>
+                </tr>
+            `).join('') || '<tr><td colspan="4" class="py-4 text-center text-gray-400">No completed tasks yet</td></tr>';
+            
+            const completedCount = statusCounts.completed;
+            document.getElementById('weekTotalTime').textContent = `${completedCount} done`;
+            document.getElementById('tasksCompletedWeek').textContent = completedCount;
+            
+            const score = Math.round((completedCount / total) * 100);
+            document.getElementById('productivityScore').textContent = score + '%';
+        }
+
+        // ==================== UTILITY ====================
+        function logout() {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.href = '/login';
+        }
+
+        async function init() {
+            currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!currentUser.name) { 
+                window.location.href = '/login'; 
+                return; 
+            }
+            
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userInitials').textContent = currentUser.name.split(' ').map(n => n[0]).join('');
+            
+            if (currentUser.role !== 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            }
+            if (currentUser.role === 'developer') {
+                document.querySelectorAll('.admin-subadmin-only').forEach(el => el.style.display = 'none');
+            }
+            
+            await loadWorkItems();
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Project Control System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">ProjectControl</span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">My Work</a>
+                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-subadmin">Projects</a>
+                    <a href="/add-project" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-only">Add Project</a>
+                    <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-only">Users</a>
+                    <a href="/documents" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-subadmin">Documents</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <a href="/profile" class="flex items-center space-x-3 bg-indigo-50 rounded-lg px-2 py-1">
+                        <div class="w-9 h-9 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                            <span id="userInitials">AK</span>
+                        </div>
+                        <span class="hidden sm:block text-sm font-medium text-indigo-700" id="userName">Admin</span>
+                    </a>
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Profile Header Card -->
+        <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 rounded-3xl p-8 text-white mb-8 shadow-xl">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="w-28 h-28 bg-white/20 rounded-full flex items-center justify-center text-5xl font-bold backdrop-blur-sm border-4 border-white/30" id="profileAvatar">
+                    AK
+                </div>
+                <div class="text-center md:text-left">
+                    <h1 class="text-3xl font-bold" id="profileName">Loading...</h1>
+                    <p class="text-white/80 text-lg" id="profileEmail">loading@email.com</p>
+                    <div class="mt-3 flex flex-wrap justify-center md:justify-start gap-2">
+                        <span class="px-4 py-1.5 bg-white/20 rounded-full text-sm font-medium capitalize" id="profileRole">Developer</span>
+                        <span class="px-4 py-1.5 bg-white/20 rounded-full text-sm font-medium" id="profileRate">$0/hr</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-2xl font-bold text-gray-900" id="statProjects">0</div>
+                <div class="text-sm text-gray-500">Projects</div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-2xl font-bold text-gray-900" id="statTasksCompleted">0</div>
+                <div class="text-sm text-gray-500">Tasks Completed</div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-2xl font-bold text-gray-900" id="statHours">0h</div>
+                <div class="text-sm text-gray-500">Total Hours</div>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-2xl font-bold text-emerald-600" id="statEarnings">$0</div>
+                <div class="text-sm text-gray-500">Total Earnings</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Profile Info -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-6">👤 Profile Information</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="text-gray-500">Full Name</span>
+                        <span class="font-medium text-gray-900" id="infoName">-</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="text-gray-500">Email</span>
+                        <span class="font-medium text-gray-900" id="infoEmail">-</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="text-gray-500">Phone</span>
+                        <span class="font-medium text-gray-900" id="infoPhone">-</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="text-gray-500">Role</span>
+                        <span class="font-medium text-gray-900 capitalize" id="infoRole">-</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="text-gray-500">Hourly Rate</span>
+                        <span class="font-medium text-gray-900" id="infoRate">-</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3">
+                        <span class="text-gray-500">Member Since</span>
+                        <span class="font-medium text-gray-900" id="infoJoined">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Payments -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-6">💰 Recent Payments</h3>
+                
+                <div id="paymentsList" class="space-y-3">
+                    <p class="text-gray-500 text-center py-6">Loading payments...</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-6">📊 Recent Activity</h3>
+            
+            <div id="activityList" class="space-y-4">
+                <p class="text-gray-500 text-center py-6">Loading activity...</p>
+            </div>
+        </div>
+
+        <!-- My Projects -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-6">
+            <h3 class="text-lg font-bold text-gray-900 mb-6">📁 My Projects</h3>
+            
+            <div id="projectsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <p class="text-gray-500 text-center py-6 col-span-full">Loading projects...</p>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        let profile = null;
+        let payments = [];
+        let projects = [];
+        let timelogs = [];
+
+        const profileGradients = [
+            'from-blue-500 to-indigo-600',
+            'from-purple-500 to-pink-600',
+            'from-emerald-500 to-teal-600',
+            'from-amber-500 to-orange-600',
+            'from-rose-500 to-red-600'
+        ];
+
+        async function loadProfile() {
+            try {
+                const result = await api.getMe();
+                if (result.success) {
+                    profile = result.data;
+                    renderProfile();
+                }
+            } catch (error) {
+                console.error('Load profile error:', error);
+            }
+        }
+
+        async function loadPayments() {
+            try {
+                if (!profile || !profile._id) return;
+                const result = await api.getPayments({ developer: profile._id });
+                if (result.success) {
+                    payments = (result.data || []).filter(p => p.type === 'developer');
+                    renderPayments();
+                }
+            } catch (error) {
+                console.error('Load payments error:', error);
+            }
+        }
+
+        async function loadProjects() {
+            try {
+                const result = await api.getProjects();
+                if (result.success) {
+                    projects = result.data || [];
+                    renderProjects();
+                }
+            } catch (error) {
+                console.error('Load projects error:', error);
+            }
+        }
+
+        async function loadTimelogs() {
+            try {
+                const result = await api.getMyTimeLogs();
+                if (result.success) {
+                    timelogs = result.data || [];
+                    updateStats();
+                }
+            } catch (error) {
+                console.error('Load timelogs error:', error);
+            }
+        }
+
+        async function loadTasks() {
+            try {
+                const result = await api.getMyTasks();
+                if (result.success) {
+                    const tasks = result.data || [];
+                    const completed = tasks.filter(t => t.status === 'completed').length;
+                    document.getElementById('statTasksCompleted').textContent = completed;
+                    renderActivity(tasks);
+                }
+            } catch (error) {
+                console.error('Load tasks error:', error);
+            }
+        }
+
+        function renderProfile() {
+            const initials = profile.name?.split(' ').map(n => n[0]).join('').substring(0, 2) || 'U';
+            
+            // Header
+            document.getElementById('profileAvatar').textContent = initials;
+            document.getElementById('profileName').textContent = profile.name;
+            document.getElementById('profileEmail').textContent = profile.email;
+            document.getElementById('profileRole').textContent = profile.role;
+            document.getElementById('profileRate').textContent = `$${profile.hourlyRate || 0}/hr`;
+            
+            // Nav
+            document.getElementById('userInitials').textContent = initials;
+            document.getElementById('userName').textContent = profile.name;
+            
+            // Info panel
+            document.getElementById('infoName').textContent = profile.name;
+            document.getElementById('infoEmail').textContent = profile.email;
+            document.getElementById('infoPhone').textContent = profile.phone || '-';
+            document.getElementById('infoRole').textContent = profile.role;
+            document.getElementById('infoRate').textContent = `$${profile.hourlyRate || 0}/hr`;
+            document.getElementById('infoJoined').textContent = formatDate(profile.createdAt);
+            
+            // Role-based nav
+            if (profile.role !== 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            }
+            if (profile.role === 'developer') {
+                document.querySelectorAll('.admin-subadmin').forEach(el => el.style.display = 'none');
+            }
+        }
+
+        function updateStats() {
+            // Calculate total hours
+            const totalMinutes = timelogs.reduce((sum, log) => sum + (log.duration || 0), 0);
+            const hours = Math.floor(totalMinutes / 60);
+            const mins = totalMinutes % 60;
+            document.getElementById('statHours').textContent = `${hours}h ${mins}m`;
+            
+            // Calculate earnings (from payments)
+            const totalEarnings = payments.reduce((sum, p) => sum + (p.status === 'paid' ? p.amount : 0), 0);
+            document.getElementById('statEarnings').textContent = formatCurrency(totalEarnings);
+        }
+
+        function renderPayments() {
+            const container = document.getElementById('paymentsList');
+            
+            if (payments.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-6">No payments yet</p>';
+                return;
+            }
+            
+            // Update earnings stat
+            const totalEarnings = payments.reduce((sum, p) => sum + (p.status === 'paid' ? p.amount : 0), 0);
+            document.getElementById('statEarnings').textContent = formatCurrency(totalEarnings);
+            
+            container.innerHTML = payments.slice(0, 5).map(p => `
+                <div class="flex items-center justify-between p-3 border border-gray-100 rounded-xl">
+                    <div>
+                        <p class="font-medium text-gray-900">${formatCurrency(p.amount)}</p>
+                        <p class="text-sm text-gray-500">${p.project?.name || 'Project'} • ${formatDate(p.date || p.createdAt)}</p>
+                    </div>
+                    <span class="px-2 py-1 text-xs font-medium rounded-lg ${p.status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${p.status}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderProjects() {
+            const container = document.getElementById('projectsList');
+            
+            // Update stat
+            document.getElementById('statProjects').textContent = projects.length;
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-6 col-span-full">No projects assigned</p>';
+                return;
+            }
+            
+            container.innerHTML = projects.slice(0, 6).map((p, i) => {
+                const gradient = profileGradients[i % profileGradients.length];
+                return `
+                    <a href="/project-detail?id=${p._id}" class="block p-4 rounded-xl border border-gray-100 hover:shadow-md transition-all">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center text-white font-bold">
+                                ${p.name?.charAt(0) || 'P'}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-medium text-gray-900 truncate">${p.name}</h4>
+                                <p class="text-sm text-gray-500">${p.client?.name || 'Client'}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">${p.progress || 0}% complete</span>
+                            <span class="px-2 py-0.5 rounded-full text-xs font-medium ${getStatusClass(p.status)}">${p.status || 'active'}</span>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        function renderActivity(tasks) {
+            const container = document.getElementById('activityList');
+            
+            // Get recent completed tasks as activity
+            const recentTasks = tasks
+                .filter(t => t.updatedAt)
+                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+                .slice(0, 5);
+            
+            if (recentTasks.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-6">No recent activity</p>';
+                return;
+            }
+            
+            const statusLabels = {
+                'pending': 'was assigned',
+                'in-progress': 'started working on',
+                'completed': 'completed',
+                'blocked': 'marked as blocked'
+            };
+            
+            container.innerHTML = recentTasks.map(task => `
+                <div class="flex items-start gap-4 pb-4 border-b border-gray-100 last:border-0">
+                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-gray-900">
+                            <span class="font-medium">${statusLabels[task.status] || 'updated'}</span> 
+                            "${task.title}"
+                        </p>
+                        <p class="text-sm text-gray-500">${formatDateTime(task.updatedAt)}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                'active': 'bg-emerald-100 text-emerald-700',
+                'completed': 'bg-blue-100 text-blue-700',
+                'on-hold': 'bg-amber-100 text-amber-700',
+                'cancelled': 'bg-red-100 text-red-700'
+            };
+            return classes[status] || classes['active'];
+        }
+
+        function logout() {
+            api.logout();
+            window.location.href = '/login';
+        }
+
+        async function init() {
+            if (!api.isLoggedIn()) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            profile = api.getUser();
+            if (!profile || !profile.name) {
+                window.location.href = '/login';
+                return;
+            }
+            renderProfile();
+            
+            // Load all data
+            await Promise.all([
+                loadProfile(),
+                loadProjects(),
+                loadPayments(),
+                loadTimelogs(),
+                loadTasks()
+            ]);
+        }
+
+        init();
+    </script>
+</body>
+</html>

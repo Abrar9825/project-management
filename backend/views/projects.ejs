@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Project Control System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .card-gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .card-gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .card-gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .card-gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .card-gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .card-gradient-6 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .card-gradient-7 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+        .card-gradient-8 { background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">ProjectControl</span>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all">
+                        My Work
+                    </a>
+                    <a href="/projects" class="px-4 py-2 rounded-lg bg-indigo-50 text-indigo-700 font-medium transition-all">
+                        Projects
+                    </a>
+                    <a href="/add-project" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">
+                        Add Project
+                    </a>
+                    <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">
+                        Users
+                    </a>
+                    <a href="/documents" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-subadmin-only">
+                        Documents
+                    </a>
+                </div>
+
+                <!-- User Section -->
+                <div class="flex items-center space-x-4">
+                    <a href="/profile" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-all">
+                        <div class="w-9 h-9 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                            <span id="userInitials">AK</span>
+                        </div>
+                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Ahmed Khan</span>
+                    </a>
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Logout">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Page Header -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Projects</h1>
+                <p class="text-gray-500 mt-1">Overview of all active projects</p>
+            </div>
+            <a href="/add-project" class="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium rounded-xl hover:shadow-lg transform hover:-translate-y-0.5 transition-all admin-only">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                New Project
+            </a>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8" id="statsOverview">
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center">
+                <p class="text-3xl font-bold text-gray-900" id="stat-total">0</p>
+                <p class="text-sm text-gray-500 mt-1">Total Projects</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center">
+                <p class="text-3xl font-bold text-emerald-600" id="stat-healthy">0</p>
+                <p class="text-sm text-gray-500 mt-1">On Track</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center">
+                <p class="text-3xl font-bold text-blue-600" id="stat-active">0</p>
+                <p class="text-sm text-gray-500 mt-1">In Progress</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center">
+                <p class="text-3xl font-bold text-amber-600" id="stat-atrisk">0</p>
+                <p class="text-sm text-gray-500 mt-1">At Risk</p>
+            </div>
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 text-center col-span-2 lg:col-span-1">
+                <p class="text-3xl font-bold text-red-600" id="stat-critical">0</p>
+                <p class="text-sm text-gray-500 mt-1">Critical</p>
+            </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" id="projectsGrid">
+            <div class="flex items-center justify-center py-12 col-span-full">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
+                <span class="ml-3 text-gray-600">Loading projects...</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- API Script -->
+    <script src="/js/api.js"></script>
+    <script>
+        let projects = [];
+        let currentUser = null;
+        
+        const cardGradients = ['card-gradient-1', 'card-gradient-2', 'card-gradient-3', 'card-gradient-4', 'card-gradient-5', 'card-gradient-6', 'card-gradient-7', 'card-gradient-8'];
+
+        const projectStatusConfig = {
+            'active': { dot: 'bg-blue-500', label: 'In Progress', textColor: 'text-blue-600' },
+            'completed': { dot: 'bg-emerald-500', label: 'Completed', textColor: 'text-emerald-600' },
+            'on-hold': { dot: 'bg-amber-500', label: 'On Hold', textColor: 'text-amber-600' },
+            'cancelled': { dot: 'bg-red-500', label: 'Cancelled', textColor: 'text-red-600' }
+        };
+
+        const healthConfig = {
+            'healthy': { dot: 'bg-emerald-500', label: 'On Track', textColor: 'text-emerald-600' },
+            'at-risk': { dot: 'bg-amber-500', label: 'At Risk', textColor: 'text-amber-600' },
+            'critical': { dot: 'bg-red-500', label: 'Critical', textColor: 'text-red-600' }
+        };
+
+        const projectPriorityConfig = {
+            'critical': { bg: 'bg-red-100', text: 'text-red-700' },
+            'high': { bg: 'bg-orange-100', text: 'text-orange-700' },
+            'medium': { bg: 'bg-blue-100', text: 'text-blue-700' },
+            'low': { bg: 'bg-gray-100', text: 'text-gray-600' }
+        };
+
+        // Load projects from API
+        async function loadProjects() {
+            try {
+                const result = await api.getProjects();
+                if (result.success) {
+                    projects = result.data || [];
+                    renderProjects();
+                    updateStats();
+                } else {
+                    document.getElementById('projectsGrid').innerHTML = `
+                        <div class="col-span-full text-center py-12">
+                            <p class="text-red-600">Failed to load projects: ${result.error}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Load projects error:', error);
+                document.getElementById('projectsGrid').innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-red-600">Connection failed. Is server running?</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('stat-total').textContent = projects.length;
+            document.getElementById('stat-healthy').textContent = projects.filter(p => p.health === 'healthy').length;
+            document.getElementById('stat-active').textContent = projects.filter(p => p.status === 'active').length;
+            document.getElementById('stat-atrisk').textContent = projects.filter(p => p.health === 'at-risk').length;
+            document.getElementById('stat-critical').textContent = projects.filter(p => p.health === 'critical').length;
+        }
+
+        // Render projects
+        function renderProjects() {
+            const container = document.getElementById('projectsGrid');
+            
+            if (projects.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">No projects yet</h3>
+                        <p class="text-gray-500 mb-4">Create your first project to get started</p>
+                        <a href="/add-project" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 admin-only">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Create Project
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = projects.map((project, index) => {
+                const health = healthConfig[project.health] || healthConfig['healthy'];
+                const priority = projectPriorityConfig[project.priority] || projectPriorityConfig['medium'];
+                const gradient = cardGradients[index % cardGradients.length];
+                const progress = project.progress || 0;
+                const teamSize = project.team?.length || 0;
+                const currentStage = project.stages?.find(s => s.status === 'in-progress')?.name || 'Not Started';
+                
+                return `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
+                        <!-- Gradient Header -->
+                        <div class="${gradient} p-5">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">${project.name}</h3>
+                                    <p class="text-white/80 text-sm mt-1">${project.client?.name || 'No Client'}</p>
+                                </div>
+                                <span class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white/20 text-white capitalize backdrop-blur-sm">
+                                    ${project.priority || 'medium'}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="p-5">
+                            <!-- Status & Stage -->
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2.5 h-2.5 rounded-full ${health.dot} animate-pulse"></span>
+                                    <span class="text-sm font-medium ${health.textColor}">${health.label}</span>
+                                </div>
+                                <span class="text-sm text-gray-500">Stage: <span class="font-medium text-gray-700">${currentStage}</span></span>
+                            </div>
+                            
+                            <!-- Progress Bar -->
+                            <div class="mb-4">
+                                <div class="flex justify-between text-sm mb-1.5">
+                                    <span class="text-gray-500">Progress</span>
+                                    <span class="font-semibold text-gray-700">${progress}%</span>
+                                </div>
+                                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div class="h-full ${gradient} rounded-full transition-all" style="width: ${progress}%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Footer Info -->
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <div class="flex -space-x-2">
+                                        ${Array(Math.min(teamSize, 3)).fill(0).map((_, i) => `
+                                            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 border-2 border-white flex items-center justify-center text-xs font-medium text-white">
+                                                ${String.fromCharCode(65 + i)}
+                                            </div>
+                                        `).join('')}
+                                        ${teamSize > 3 ? `
+                                            <div class="w-7 h-7 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium text-gray-600">
+                                                +${teamSize - 3}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <span class="text-xs text-gray-400">${teamSize} members</span>
+                                </div>
+                                
+                                <a href="/project-detail?id=${project._id}" 
+                                   class="px-4 py-2 text-sm font-medium text-indigo-600 hover:text-white hover:bg-indigo-600 border border-indigo-200 hover:border-indigo-600 rounded-lg transition-all">
+                                    View
+                                </a>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="flex gap-2 pt-3 border-t border-gray-100 admin-subadmin-only">
+                                <a href="/document-center?id=${project._id}" 
+                                   class="flex-1 text-center px-3 py-2 text-xs font-medium text-teal-700 bg-teal-50 hover:bg-teal-100 rounded-lg transition-all">
+                                    📄 Doc Center
+                                </a>
+                                <a href="/client-portal?id=${project._id}" 
+                                   class="flex-1 text-center px-3 py-2 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-all">
+                                    👤 Client Portal
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Init
+        async function init() {
+            if (!api.isLoggedIn()) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            currentUser = api.getUser();
+            if (!currentUser || !currentUser.name) {
+                window.location.href = '/login';
+                return;
+            }
+            
+            // Developers should only see My Work
+            if (currentUser.role === 'developer') {
+                window.location.href = '/my-work';
+                return;
+            }
+            
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userInitials').textContent = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+            
+            if (currentUser.role !== 'admin') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            }
+            
+            await loadProjects();
+        }
+
+        init();
+    </script>
+</body>
+</html>

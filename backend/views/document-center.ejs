@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Center | Agency Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',300:'#5eead4',400:'#2dd4bf',500:'#008080',600:'#0d9488',700:'#0f766e',800:'#115e59',900:'#134e4a' },
+                        oxford: { 50:'#f0f4f8',100:'#d9e2ec',200:'#bcccdc',300:'#9fb3c8',400:'#829ab1',500:'#627d98',600:'#486581',700:'#334e68',800:'#243b53',900:'#102a43' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .doc-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,128,128,0.12); }
+        .status-draft { background: #fef3c7; color: #92400e; }
+        .status-final { background: #dbeafe; color: #1e40af; }
+        .status-approved { background: #d1fae5; color: #065f46; }
+        .status-sent { background: #ede9fe; color: #5b21b6; }
+        .gen-btn:hover { transform: scale(1.02); }
+        .tab-active { border-bottom: 3px solid #008080; color: #008080; font-weight: 600; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-700 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <span class="text-xl font-bold text-oxford-900">AgencyControl</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">My Work</a>
+                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">Projects</a>
+                    <a href="/documents" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">Documents</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/profile" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1">
+                        <div class="w-9 h-9 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold text-sm"><span id="userInitials">AK</span></div>
+                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Admin</span>
+                    </a>
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg" title="Logout">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Back + Title -->
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <a href="/projects" class="text-teal-600 hover:text-teal-700 text-sm font-medium mb-2 inline-block">&larr; Back to Projects</a>
+                <h1 class="text-3xl font-bold text-oxford-900">Document Center</h1>
+                <p class="text-gray-500 mt-1" id="projectLabel">Loading project...</p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="generateAllDocs()" class="gen-btn px-5 py-2.5 bg-gradient-to-r from-teal-500 to-teal-700 text-white font-medium rounded-xl hover:shadow-lg transition-all flex items-center gap-2 admin-only">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    AI Generate All
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-200 mb-6 overflow-x-auto">
+            <button onclick="filterDocs('all')" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap tab-active" data-tab="all">All Documents</button>
+            <button onclick="filterDocs('contract')" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="contract">Contracts</button>
+            <button onclick="filterDocs('welcome-doc')" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="welcome-doc">Welcome</button>
+            <button onclick="filterDocs('payment-plan')" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="payment-plan">Payment</button>
+            <button onclick="filterDocs('fulfillment-plan')" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="fulfillment-plan">Fulfillment</button>
+            <button onclick="filterDocs('tracking-sheet')" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="tracking-sheet">Tracking</button>
+            <button onclick="filterDocs('monthly-report')" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="monthly-report">Reports</button>
+            <button onclick="filterDocs('handover')" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="handover">Handover</button>
+            <button onclick="filterDocs('maintenance-agreement')" class="tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-teal-600 whitespace-nowrap" data-tab="maintenance-agreement">Maintenance</button>
+        </div>
+
+        <!-- Quick Generate Buttons -->
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 mb-8 admin-only" id="quickGenerate">
+            <button onclick="generateDoc('contract')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">📝</div>
+                <div class="text-xs font-semibold text-oxford-700">Contract</div>
+            </button>
+            <button onclick="generateDoc('welcome-doc')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">🎉</div>
+                <div class="text-xs font-semibold text-oxford-700">Welcome Doc</div>
+            </button>
+            <button onclick="generateDoc('payment-plan')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">💰</div>
+                <div class="text-xs font-semibold text-oxford-700">Payment Plan</div>
+            </button>
+            <button onclick="generateDoc('fulfillment-plan')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">📋</div>
+                <div class="text-xs font-semibold text-oxford-700">Fulfillment</div>
+            </button>
+            <button onclick="generateDoc('tracking-sheet')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">📊</div>
+                <div class="text-xs font-semibold text-oxford-700">Tracking</div>
+            </button>
+            <button onclick="generateDoc('monthly-report')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">📈</div>
+                <div class="text-xs font-semibold text-oxford-700">Monthly Report</div>
+            </button>
+            <button onclick="generateDoc('client-access-sheet')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">🔐</div>
+                <div class="text-xs font-semibold text-oxford-700">Client Access</div>
+            </button>
+            <button onclick="generateDoc('handover')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">📦</div>
+                <div class="text-xs font-semibold text-oxford-700">Handover Kit</div>
+            </button>
+            <button onclick="generateDoc('maintenance-agreement')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">🔧</div>
+                <div class="text-xs font-semibold text-oxford-700">Maintenance</div>
+            </button>
+            <button onclick="generateDoc('stage-summary')" class="gen-btn p-3 bg-white border-2 border-dashed border-teal-200 rounded-xl hover:border-teal-500 hover:bg-teal-50 transition-all text-center">
+                <div class="text-2xl mb-1">📑</div>
+                <div class="text-xs font-semibold text-oxford-700">Stage Summary</div>
+            </button>
+        </div>
+
+        <!-- Documents Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="documentsGrid">
+            <div class="flex items-center justify-center py-16 col-span-full">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-teal-600"></div>
+                <span class="ml-3 text-gray-500">Loading documents...</span>
+            </div>
+        </div>
+
+        <!-- Empty state -->
+        <div id="emptyState" class="hidden text-center py-16">
+            <div class="text-6xl mb-4">📄</div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No documents yet</h3>
+            <p class="text-gray-500 mb-6">Click "AI Generate All" to auto-generate all documents from project data.</p>
+        </div>
+    </main>
+
+    <!-- Document Preview Modal -->
+    <div id="docPreviewModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between p-6 border-b">
+                <h2 class="text-xl font-bold text-oxford-900" id="modalTitle">Document Preview</h2>
+                <button onclick="closeModal()" class="p-2 hover:bg-gray-100 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6" id="modalContent"></div>
+            <div class="flex items-center justify-end gap-3 p-4 border-t bg-gray-50">
+                <button onclick="downloadPDF()" class="px-4 py-2 bg-oxford-700 text-white rounded-lg hover:bg-oxford-800 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Download PDF
+                </button>
+                <button onclick="sendDocToClient()" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 admin-only flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    Send to Client
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stage Selection Modal (for stage summary) -->
+    <div id="stageSelectModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <h3 class="text-lg font-bold text-oxford-900 mb-4">Select Stage for Summary</h3>
+            <div id="stageSelectList" class="space-y-2 mb-4"></div>
+            <button onclick="document.getElementById('stageSelectModal').classList.add('hidden')" class="w-full py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">Cancel</button>
+        </div>
+    </div>
+
+    <script src="/js/api.js"></script>
+    <script>
+        let projectId = new URLSearchParams(window.location.search).get('id');
+        let allDocuments = [];
+        let currentDoc = null;
+        let currentFilter = 'all';
+        let projectData = null;
+
+        const docTypeLabels = {
+            'contract': { icon: '📝', label: 'Contract Agreement', color: 'bg-blue-50 text-blue-700' },
+            'welcome-doc': { icon: '🎉', label: 'Welcome Document', color: 'bg-green-50 text-green-700' },
+            'payment-plan': { icon: '💰', label: 'Payment Plan', color: 'bg-yellow-50 text-yellow-700' },
+            'client-access-sheet': { icon: '🔐', label: 'Client Access Sheet', color: 'bg-purple-50 text-purple-700' },
+            'fulfillment-plan': { icon: '📋', label: 'Fulfillment Plan', color: 'bg-indigo-50 text-indigo-700' },
+            'tracking-sheet': { icon: '📊', label: 'Tracking Sheet', color: 'bg-cyan-50 text-cyan-700' },
+            'monthly-report': { icon: '📈', label: 'Monthly Report', color: 'bg-orange-50 text-orange-700' },
+            'stage-summary': { icon: '📑', label: 'Stage Summary', color: 'bg-pink-50 text-pink-700' },
+            'handover': { icon: '📦', label: 'Handover Kit', color: 'bg-emerald-50 text-emerald-700' },
+            'maintenance-agreement': { icon: '🔧', label: 'Maintenance Agreement', color: 'bg-slate-50 text-slate-700' },
+            'feedback-request': { icon: '⭐', label: 'Feedback Request', color: 'bg-amber-50 text-amber-700' },
+            'requirement': { icon: '📝', label: 'Requirement Document', color: 'bg-blue-50 text-blue-700' },
+            'quotation': { icon: '🧾', label: 'Quotation', color: 'bg-green-50 text-green-700' },
+            'agreement': { icon: '📄', label: 'Agreement', color: 'bg-blue-50 text-blue-700' },
+            'design-brief': { icon: '🎨', label: 'Design Brief', color: 'bg-pink-50 text-pink-700' }
+        };
+
+        async function init() {
+            if (!projectId) { alert('No project ID provided'); return; }
+            await checkAuth();
+            await loadProject();
+            await loadDocuments();
+        }
+
+        async function checkAuth() {
+            try {
+                const user = JSON.parse(localStorage.getItem('user'));
+                if (user) {
+                    document.getElementById('userName').textContent = user.name;
+                    document.getElementById('userInitials').textContent = user.name.split(' ').map(n=>n[0]).join('').toUpperCase();
+                    if (!['admin','subadmin'].includes(user.role)) {
+                        document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+                    }
+                }
+            } catch(e) {}
+        }
+
+        async function loadProject() {
+            try {
+                const res = await api.getProject(projectId);
+                projectData = res.data;
+                document.getElementById('projectLabel').textContent = `${projectData.name} — ${projectData.client}`;
+            } catch(e) {
+                document.getElementById('projectLabel').textContent = 'Error loading project';
+            }
+        }
+
+        async function loadDocuments() {
+            try {
+                const res = await api.getDocumentCenter(projectId);
+                allDocuments = res.data || [];
+                renderDocuments();
+            } catch(e) {
+                document.getElementById('documentsGrid').innerHTML = '<p class="col-span-full text-center text-red-500">Error loading documents</p>';
+            }
+        }
+
+        function filterDocs(type) {
+            currentFilter = type;
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('tab-active');
+                if (btn.dataset.tab === type) btn.classList.add('tab-active');
+            });
+            renderDocuments();
+        }
+
+        function renderDocuments() {
+            const filtered = currentFilter === 'all' ? allDocuments : allDocuments.filter(d => d.type === currentFilter);
+            const grid = document.getElementById('documentsGrid');
+            const empty = document.getElementById('emptyState');
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.innerHTML = filtered.map(doc => {
+                const info = docTypeLabels[doc.type] || { icon: '📄', label: doc.type, color: 'bg-gray-50 text-gray-700' };
+                const statusClass = `status-${doc.status}`;
+                const date = new Date(doc.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+                return `
+                <div class="doc-card bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden transition-all duration-200 cursor-pointer" onclick="viewDoc('${doc._id}')">
+                    <div class="p-5">
+                        <div class="flex items-start justify-between mb-3">
+                            <span class="text-3xl">${info.icon}</span>
+                            <span class="px-2.5 py-1 text-xs font-semibold rounded-full ${statusClass}">${doc.status}</span>
+                        </div>
+                        <h3 class="font-semibold text-oxford-900 mb-1 line-clamp-2">${doc.title}</h3>
+                        <span class="inline-block px-2 py-0.5 text-xs font-medium rounded ${info.color} mb-3">${info.label}</span>
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <span>${doc.generatedByName || 'System'}</span>
+                            <span>${date}</span>
+                        </div>
+                    </div>
+                    <div class="flex border-t border-gray-100 divide-x divide-gray-100">
+                        <button onclick="event.stopPropagation(); viewDoc('${doc._id}')" class="flex-1 py-2.5 text-xs font-medium text-teal-600 hover:bg-teal-50 transition-all">View</button>
+                        <button onclick="event.stopPropagation(); regenerateDoc('${doc.type}')" class="flex-1 py-2.5 text-xs font-medium text-oxford-600 hover:bg-gray-50 transition-all admin-only">Regenerate</button>
+                        <button onclick="event.stopPropagation(); sendToClientDoc('${doc._id}')" class="flex-1 py-2.5 text-xs font-medium text-purple-600 hover:bg-purple-50 transition-all admin-only">Send</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        async function generateDoc(type) {
+            if (type === 'stage-summary') {
+                showStageSelect();
+                return;
+            }
+            try {
+                showToast('Generating document...');
+                await api.generateDocument(projectId, type);
+                await loadDocuments();
+                showToast('Document generated successfully!', 'success');
+            } catch(e) {
+                showToast('Error generating document: ' + e.message, 'error');
+            }
+        }
+
+        function showStageSelect() {
+            if (!projectData || !projectData.stages) return;
+            const list = document.getElementById('stageSelectList');
+            list.innerHTML = projectData.stages.map(s => `
+                <button onclick="generateStageSummary('${s._id}')" class="w-full text-left p-3 rounded-xl border hover:border-teal-400 hover:bg-teal-50 transition-all flex items-center gap-3">
+                    <span class="text-xl">${s.icon || '📌'}</span>
+                    <div>
+                        <div class="font-semibold text-sm text-oxford-900">${s.name}</div>
+                        <div class="text-xs text-gray-500">${s.status}</div>
+                    </div>
+                </button>
+            `).join('');
+            document.getElementById('stageSelectModal').classList.remove('hidden');
+        }
+
+        async function generateStageSummary(stageId) {
+            document.getElementById('stageSelectModal').classList.add('hidden');
+            try {
+                showToast('Generating stage summary...');
+                await api.fetch(`/generator/${projectId}/generate/stage-summary`, 'POST', { stageId });
+                await loadDocuments();
+                showToast('Stage Summary generated!', 'success');
+            } catch(e) {
+                showToast('Error: ' + e.message, 'error');
+            }
+        }
+
+        async function generateAllDocs() {
+            if (!confirm('Generate all documents for this project? This will create Contract, Welcome Doc, Payment Plan, Client Access Sheet, Fulfillment Plan, and Tracking Sheet.')) return;
+            try {
+                showToast('Generating all documents...');
+                await api.generateAllDocuments(projectId);
+                await loadDocuments();
+                showToast('All documents generated successfully!', 'success');
+            } catch(e) {
+                showToast('Error: ' + e.message, 'error');
+            }
+        }
+
+        async function regenerateDoc(type) {
+            if (!confirm(`Regenerate ${docTypeLabels[type]?.label || type}? This will replace the existing document.`)) return;
+            try {
+                showToast('Regenerating...');
+                await api.regenerateDocument(projectId, type);
+                await loadDocuments();
+                showToast('Document regenerated!', 'success');
+            } catch(e) {
+                showToast('Error: ' + e.message, 'error');
+            }
+        }
+
+        async function viewDoc(docId) {
+            try {
+                const res = await api.fetch(`/documents/${docId}`);
+                currentDoc = res.data;
+                document.getElementById('modalTitle').textContent = currentDoc.title;
+                renderDocContent(currentDoc);
+                document.getElementById('docPreviewModal').classList.remove('hidden');
+            } catch(e) {
+                showToast('Error loading document', 'error');
+            }
+        }
+
+        function renderDocContent(doc) {
+            const container = document.getElementById('modalContent');
+            let content;
+            try { content = JSON.parse(doc.content); } catch(e) { content = null; }
+
+            if (!content) {
+                container.innerHTML = `<div class="prose max-w-none">${doc.content || '<p class="text-gray-400">No content available</p>'}</div>`;
+                return;
+            }
+
+            // Dynamic client info from project data
+            const clientName = projectData?.clientDetails?.name || projectData?.client || '';
+            const clientCompany = projectData?.clientDetails?.company || '';
+            const clientEmail = projectData?.clientDetails?.email || projectData?.clientAccess?.clientEmail || '';
+            const clientPhone = projectData?.clientDetails?.phone || projectData?.clientAccess?.clientPhone || '';
+            const projectName = projectData?.name || doc.projectName || '';
+
+            let html = `<div class="space-y-6">`;
+            // KINNOVANCE Logo Header
+            html += `<div class="text-center border-b pb-4 mb-4">
+                <div class="flex items-center justify-center gap-3 mb-3">
+                    <img src="/images/logo.svg" alt="KINNOVANCE" class="h-12 w-auto" onerror="this.style.display='none'">
+                    <span class="text-2xl font-bold tracking-wide" style="color:#1a1a2e;">KINNOVANCE</span>
+                </div>
+                <h1 class="text-2xl font-bold text-oxford-900">${content.title || doc.title}</h1>
+                <p class="text-sm text-gray-500 mt-1">Generated: ${new Date(content.generatedDate || doc.createdAt).toLocaleDateString()}</p>
+                ${clientName ? `<p class="text-sm text-gray-600 mt-1">Client: <strong>${clientName}</strong>${clientCompany ? ' — ' + clientCompany : ''}</p>` : ''}
+                ${projectName ? `<p class="text-sm text-gray-600">Project: <strong>${projectName}</strong></p>` : ''}
+            </div>`;
+
+            if (content.sections) {
+                html += renderSections(content.sections);
+            }
+
+            // KINNOVANCE Footer
+            html += `<div class="border-t border-gray-200 mt-8 pt-4 text-center">
+                <p class="text-xs text-gray-400">This document is generated by <strong class="text-gray-600">KINNOVANCE</strong></p>
+                <p class="text-xs text-gray-400 mt-1">Confidential — For authorized use only</p>
+            </div>`;
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function renderSections(sections, depth = 0) {
+            let html = '';
+            for (const [key, value] of Object.entries(sections)) {
+                const title = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).replace(/_/g, ' ');
+                
+                if (value === null || value === undefined) continue;
+
+                if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+                    html += `<div class="flex justify-between py-2 border-b border-gray-100">
+                        <span class="text-sm font-medium text-gray-600">${title}</span>
+                        <span class="text-sm text-oxford-900">${formatValue(value)}</span>
+                    </div>`;
+                } else if (Array.isArray(value)) {
+                    html += `<div class="mb-4">
+                        <h${Math.min(depth+3, 6)} class="text-sm font-semibold text-oxford-800 mb-2">${title}</h${Math.min(depth+3, 6)}>`;
+                    if (value.length === 0) {
+                        html += `<p class="text-sm text-gray-400 italic">None</p>`;
+                    } else if (typeof value[0] === 'string') {
+                        html += `<ul class="list-disc list-inside space-y-1">`;
+                        value.forEach(v => { html += `<li class="text-sm text-gray-700">${v}</li>`; });
+                        html += `</ul>`;
+                    } else if (typeof value[0] === 'object') {
+                        html += `<div class="overflow-x-auto"><table class="min-w-full text-sm">
+                            <thead><tr class="bg-gray-50">`;
+                        const keys = Object.keys(value[0]).filter(k => k !== '_id');
+                        keys.forEach(k => { html += `<th class="px-3 py-2 text-left font-medium text-gray-600 text-xs">${k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase())}</th>`; });
+                        html += `</tr></thead><tbody>`;
+                        value.forEach(row => {
+                            html += `<tr class="border-b border-gray-50">`;
+                            keys.forEach(k => { html += `<td class="px-3 py-2 text-gray-700">${formatValue(row[k])}</td>`; });
+                            html += `</tr>`;
+                        });
+                        html += `</tbody></table></div>`;
+                    }
+                    html += `</div>`;
+                } else if (typeof value === 'object') {
+                    html += `<div class="bg-gray-50 rounded-xl p-4 mb-4">
+                        <h${Math.min(depth+3, 6)} class="text-sm font-semibold text-oxford-800 mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-teal-500 rounded-full"></span>${title}
+                        </h${Math.min(depth+3, 6)}>
+                        ${renderSections(value, depth + 1)}
+                    </div>`;
+                }
+            }
+            return html;
+        }
+
+        function formatValue(val) {
+            if (val === null || val === undefined) return '—';
+            if (typeof val === 'boolean') return val ? '✅ Yes' : '❌ No';
+            if (typeof val === 'number') return val.toLocaleString();
+            if (typeof val === 'string' && val.match(/^\d{4}-\d{2}-\d{2}/)) {
+                return new Date(val).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            }
+            return val;
+        }
+
+        function closeModal() {
+            document.getElementById('docPreviewModal').classList.add('hidden');
+            currentDoc = null;
+        }
+
+        async function sendDocToClient() {
+            if (!currentDoc) return;
+            try {
+                await api.sendDocToClient(currentDoc._id);
+                showToast('Document sent to client!', 'success');
+                closeModal();
+                await loadDocuments();
+            } catch(e) {
+                showToast('Error sending document', 'error');
+            }
+        }
+
+        async function sendToClientDoc(docId) {
+            try {
+                await api.sendDocToClient(docId);
+                showToast('Document sent to client!', 'success');
+                await loadDocuments();
+            } catch(e) {
+                showToast('Error sending document', 'error');
+            }
+        }
+
+        function downloadPDF() {
+            if (!currentDoc) return;
+            const clientName = projectData?.clientDetails?.name || projectData?.client || '';
+            const clientCompany = projectData?.clientDetails?.company || '';
+            const projectName = projectData?.name || currentDoc.projectName || '';
+            // Generate printable version for PDF download
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html><head><title>${currentDoc.title}</title>
+                <style>
+                    body { font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 40px; color: #1a1a2e; }
+                    .logo-header { text-align: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 3px solid #008080; }
+                    .logo-header img { height: 48px; margin-bottom: 8px; }
+                    .logo-header .company-name { font-size: 22px; font-weight: 700; letter-spacing: 2px; color: #1a1a2e; }
+                    .logo-header .doc-title { font-size: 18px; color: #008080; margin-top: 8px; }
+                    .logo-header .client-info { font-size: 12px; color: #627d98; margin-top: 4px; }
+                    h1 { color: #008080; border-bottom: 3px solid #008080; padding-bottom: 10px; }
+                    h2 { color: #334e68; margin-top: 24px; }
+                    h3 { color: #486581; }
+                    table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
+                    th { background: #f0fdfa; color: #008080; }
+                    ul { padding-left: 20px; }
+                    li { margin: 4px 0; }
+                    .meta { color: #829ab1; font-size: 12px; }
+                    .footer { text-align: center; margin-top: 40px; padding-top: 16px; border-top: 2px solid #e2e8f0; font-size: 11px; color: #829ab1; }
+                    .footer strong { color: #334e68; }
+                    @media print { .no-print { display: none; } }
+                </style></head><body>
+                <div class="logo-header">
+                    <img src="/images/logo.svg" alt="KINNOVANCE" onerror="this.style.display='none'">
+                    <div class="company-name">KINNOVANCE</div>
+                    <div class="doc-title">${currentDoc.title}</div>
+                    ${clientName ? '<div class="client-info">Client: ' + clientName + (clientCompany ? ' — ' + clientCompany : '') + '</div>' : ''}
+                    ${projectName ? '<div class="client-info">Project: ' + projectName + '</div>' : ''}
+                </div>
+                ${document.getElementById('modalContent').innerHTML}
+                <div class="footer">
+                    <p>This document is generated by <strong>KINNOVANCE</strong></p>
+                    <p>Confidential — For authorized use only</p>
+                </div>
+                <scr` + `ipt>window.print();<\/scr` + `ipt>
+                </body></html>
+            `);
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            const colors = { info: 'bg-teal-600', success: 'bg-green-600', error: 'bg-red-600' };
+            toast.className = `fixed bottom-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-xl shadow-lg z-50 transition-all duration-300`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+
+        init();
+    </script>
+</body>
+</html>

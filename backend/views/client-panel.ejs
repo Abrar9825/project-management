@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Panel | ProjectControl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        teal: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',300:'#5eead4',400:'#2dd4bf',500:'#14b8a6',600:'#008080',700:'#0f766e' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <nav class="bg-white border-b border-gray-100 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-700 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944"/></svg>
+                    </div>
+                    <span class="text-xl font-bold text-gray-800">ProjectControl - Client Portal</span>
+                </div>
+                <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 rounded-lg">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Project Header -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2" id="projectName">Loading...</h1>
+            <div class="flex items-center gap-6 text-gray-600">
+                <div>
+                    <p class="text-xs text-gray-400 uppercase">Status</p>
+                    <span class="px-3 py-1 text-sm font-medium rounded-full bg-teal-100 text-teal-700" id="projectStatus">Active</span>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase">Progress</p>
+                    <p class="text-lg font-bold text-teal-600" id="projectProgress">0%</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400 uppercase">Budget</p>
+                    <p class="text-lg font-bold text-gray-900" id="projectBudget">$0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Status -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">💳 Payment Status</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
+                    <p class="text-sm text-gray-600">Paid</p>
+                    <p class="text-2xl font-bold text-emerald-600" id="paymentPaid">$0</p>
+                </div>
+                <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                    <p class="text-sm text-gray-600">Pending</p>
+                    <p class="text-2xl font-bold text-amber-600" id="paymentPending">$0</p>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <p class="text-sm text-gray-600">Total</p>
+                    <p class="text-2xl font-bold text-gray-900" id="paymentTotal">$0</p>
+                </div>
+            </div>
+            <div class="space-y-2" id="paymentsList"></div>
+        </div>
+
+        <!-- Project Phases/Stages -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">📊 Project Phases</h2>
+            <div class="space-y-3" id="phasesList"></div>
+        </div>
+
+        <!-- Pending Items from Client -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">⏳ Items Pending From You</h2>
+            <div id="pendingFromClientList"></div>
+        </div>
+
+        <!-- Work Blockers -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6" id="blockersSection" style="display:none;">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">🚧 Work Blockers</h2>
+            <div id="blockersList" class="space-y-2"></div>
+        </div>
+
+        <!-- Completed Deliverables -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">✅ Completed Deliverables</h2>
+            <div id="completedList"></div>
+        </div>
+
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script>
+        const projectId = new URLSearchParams(window.location.search).get('id');
+        const TOKEN = localStorage.getItem('token');
+        const USER = JSON.parse(localStorage.getItem('user') || '{}');
+        const HEADERS = { 'Authorization': 'Bearer ' + TOKEN, 'Content-Type': 'application/json' };
+
+        function formatDate(d) {
+            if(!d) return '—';
+            return new Date(d).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+        }
+
+        async function load() {
+            if(!TOKEN || !projectId) { window.location.href = '/login'; return; }
+
+            try {
+                const res = await fetch('/api/projects/'+projectId+'/client-view', {headers:HEADERS});
+                const data = await res.json();
+                
+                if(data.success && data.data) {
+                    const proj = data.data;
+                    document.getElementById('projectName').textContent = proj.projectName || 'Project';
+                    document.getElementById('projectProgress').textContent = proj.overallProgress + '%';
+                    document.getElementById('projectBudget').textContent = '$' + (proj.totalBudget || 0).toLocaleString();
+
+                    // Payment status
+                    const paid = proj.payments?.received || 0;
+                    const pending = proj.payments?.pending || 0;
+                    const total = proj.payments?.total || 0;
+                    document.getElementById('paymentPaid').textContent = '$' + paid.toLocaleString();
+                    document.getElementById('paymentPending').textContent = '$' + pending.toLocaleString();
+                    document.getElementById('paymentTotal').textContent = '$' + total.toLocaleString();
+
+                    // Payment history
+                    const paymentHtml = (proj.payments?.details || []).map(p => {
+                        const status = p.status === 'received' ? 'emerald' : 'amber';
+                        return `<div class="flex justify-between items-center p-3 rounded-lg bg-${status}-50 border border-${status}-200">
+                            <span>${p.label}</span>
+                            <div class="text-right">
+                                <p class="font-bold text-${status}-700">$${p.amount?.toLocaleString()}</p>
+                                <p class="text-xs text-gray-500">${p.status}</p>
+                            </div>
+                        </div>`;
+                    }).join('');
+                    document.getElementById('paymentsList').innerHTML = paymentHtml || '<p class="text-gray-500 text-sm">No payments recorded</p>';
+
+                    // Phases
+                    const phaseHtml = (proj.phases || []).map(phase => {
+                        const colors = {completed:'emerald','in-progress':'blue',pending:'gray',blocked:'red'};
+                        const c = colors[phase.status] || 'gray';
+                        return `<div class="flex items-center justify-between p-4 rounded-xl bg-${c}-50 border border-${c}-200">
+                            <div>
+                                <p class="font-semibold text-gray-900">${phase.name}</p>
+                                <p class="text-sm text-gray-500">${phase.completionRate || 0}% complete</p>
+                            </div>
+                            <span class="px-3 py-1 text-sm font-medium rounded-full bg-${c}-100 text-${c}-700 capitalize">${phase.status}</span>
+                        </div>`;
+                    }).join('');
+                    document.getElementById('phasesList').innerHTML = phaseHtml || '<p class="text-gray-500">No phases</p>';
+
+                    // Pending from client
+                    const pendingHtml = (proj.pendingFromClient || []).map(p => {
+                        return `<div class="flex items-center gap-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
+                            <span class="text-amber-500 text-lg">⏳</span>
+                            <div>
+                                <p class="font-semibold text-gray-900">${p.label}</p>
+                                <p class="text-xs text-gray-500">Stage: ${p.stageName}</p>
+                            </div>
+                        </div>`;
+                    }).join('');
+                    document.getElementById('pendingFromClientList').innerHTML = pendingHtml || '<p class="text-gray-500 text-sm">Nothing pending from you!</p>';
+
+                    // Blockers
+                    if(proj.blockerReasons && proj.blockerReasons.length > 0) {
+                        document.getElementById('blockersSection').style.display = 'block';
+                        const blockerHtml = proj.blockerReasons.map(b => {
+                            const colors = {blocked:'red',waiting:'amber',info:'blue'};
+                            const c = colors[b.severity] || 'gray';
+                            return `<div class="flex items-center gap-3 p-3 bg-${c}-50 rounded-lg border border-${c}-200">
+                                <span class="text-${c}-500 text-lg">${b.severity==='blocked'?'🔴':b.severity==='waiting'?'🟡':'🔵'}</span>
+                                <div>
+                                    <p class="font-semibold text-gray-900">${b.label}</p>
+                                    <p class="text-xs text-gray-500">Stage: ${b.stageName}</p>
+                                </div>
+                            </div>`;
+                        }).join('');
+                        document.getElementById('blockersList').innerHTML = blockerHtml;
+                    }
+
+                    // Completed
+                    const completedHtml = (proj.completedByClient || []).map(c => {
+                        return `<div class="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
+                            <span class="text-emerald-500 text-lg">✅</span>
+                            <div>
+                                <p class="font-semibold text-gray-900">${c.label}</p>
+                                <p class="text-xs text-gray-500">${formatDate(c.receivedAt)}</p>
+                            </div>
+                        </div>`;
+                    }).join('');
+                    document.getElementById('completedList').innerHTML = completedHtml || '<p class="text-gray-500 text-sm">No deliverables completed yet</p>';
+                }
+            } catch(e) {
+                console.error(e);
+                alert('Failed to load project data');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+
+        load();
+    </script>
+</body>
+</html>
