@@ -3,7 +3,8 @@
  * Project Control System - Frontend API Layer
  */
 
-const API_BASE_URL = 'http://localhost:5000/api';
+// Use relative path for API calls (works on both localhost and production)
+const API_BASE_URL = '/api';
 
 // ==================== AUTH TOKEN MANAGEMENT ====================
 const api = {

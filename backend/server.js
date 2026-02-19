@@ -43,8 +43,10 @@ app.use(cookieParser());
 
 // Enable CORS
 app.use(cors({
-    origin: '*',
-    credentials: true
+    origin: process.env.FRONTEND_URL || '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Dev logging middleware
