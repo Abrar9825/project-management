@@ -1,5 +1,6 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:5000/api';
+// Use relative path for API calls (works on both localhost and production)
+const API_BASE_URL = '/api';
 
 // API Helper Functions
 const api = {
