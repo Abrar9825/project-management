@@ -114,6 +114,14 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     Activity & Remarks
                 </button>
+                <button onclick="switchTab('meetings')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="meetings">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    Meetings
+                </button>
+                <button onclick="switchTab('assets')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="assets">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                    Assets
+                </button>
             </div>
         </div>
     </div>
@@ -178,17 +186,27 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Client Payments
                     </h2>
-                    <p class="text-emerald-100 text-sm" id="clientPaymentTotal">Total: $50,000</p>
+                    <p class="text-emerald-100 text-sm" id="clientPaymentTotal">Total: ₹0</p>
                 </div>
                 <div class="p-6" id="clientPaymentsList"></div>
                 
                 <!-- Add Payment (Admin) -->
                 <div class="px-6 pb-6 admin-only">
-                    <div class="flex gap-3">
-                        <input type="number" id="newPaymentAmount" placeholder="Amount" class="flex-1 px-4 py-2 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
-                        <input type="date" id="newPaymentDate" class="px-4 py-2 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
-                        <button onclick="addClientPayment()" class="px-5 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">
-                            Add
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <select id="newPaymentLabel" class="px-4 py-2 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                            <option value="Advance Payment">Advance Payment</option>
+                            <option value="1st Milestone">1st Milestone</option>
+                            <option value="2nd Milestone">2nd Milestone</option>
+                            <option value="3rd Milestone">3rd Milestone</option>
+                            <option value="4th Milestone">4th Milestone</option>
+                            <option value="5th Milestone">5th Milestone</option>
+                            <option value="Final Payment">Final Payment</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="number" id="newPaymentAmount" placeholder="Amount (₹)" class="px-4 py-2 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                        <input type="date" id="newPaymentDate" class="px-4 py-2 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 text-sm">
+                        <button onclick="addClientPayment()" class="px-5 py-2 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all text-sm">
+                            Add Payment
                         </button>
                     </div>
                 </div>
@@ -209,18 +227,14 @@
                 
                 <!-- Add Dev Payment (Admin) -->
                 <div class="px-6 pb-6 admin-only">
-                    <div class="grid grid-cols-4 gap-2">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
                         <select id="devPaymentRole" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
-                            <option value="">Developer</option>
-                            <option value="Bilal Ahmed">Bilal (Frontend)</option>
-                            <option value="Omer Farooq">Omer (Backend)</option>
-                            <option value="Fatima Noor">Fatima (Design)</option>
-                            <option value="Nadia Hussain">Nadia (QA)</option>
+                            <option value="">Select Developer...</option>
                         </select>
-                        <input type="number" id="devPaymentAmount" placeholder="Amount" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
+                        <input type="number" id="devPaymentAmount" placeholder="Amount (₹)" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
                         <input type="date" id="devPaymentDate" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
                         <button onclick="addDevPayment()" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
-                            Add
+                            Pay Developer
                         </button>
                     </div>
                 </div>
@@ -267,8 +281,167 @@
             </div>
         </div>
 
+        <!-- ==================== TAB 6: MEETINGS ==================== -->
+        <div class="tab-content" id="tab-meetings">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6 admin-only">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        Schedule Meeting
+                    </h3>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Meeting Title *</label>
+                            <input type="text" id="mtgTitle" placeholder="e.g. Weekly Check-in" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Meeting Type</label>
+                            <select id="mtgType" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                <option value="google-meet">Google Meet</option>
+                                <option value="zoom">Zoom</option>
+                                <option value="teams">Microsoft Teams</option>
+                                <option value="phone-call">Phone Call</option>
+                                <option value="in-person">In Person</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Meeting Link</label>
+                            <input type="url" id="mtgLink" placeholder="https://meet.google.com/..." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Date & Time *</label>
+                            <input type="datetime-local" id="mtgDate" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Duration (minutes)</label>
+                            <input type="number" id="mtgDuration" value="30" min="5" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Stage (optional)</label>
+                            <select id="mtgStage" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                                <option value="">General</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="text-xs font-semibold text-gray-600 mb-1 block">Agenda (optional)</label>
+                        <textarea id="mtgAgenda" rows="2" placeholder="Meeting agenda..." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 text-sm"></textarea>
+                    </div>
+                    <button onclick="scheduleMeeting()" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-xl hover:shadow-lg transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Schedule Meeting
+                    </button>
+                </div>
+            </div>
+            <!-- Meetings List -->
+            <div class="space-y-4" id="meetingsList">
+                <div class="text-center text-gray-400 py-12">Loading meetings...</div>
+            </div>
+        </div>
+
+        <!-- ==================== TAB 7: ASSETS ==================== -->
+        <div class="tab-content" id="tab-assets">
+            <!-- Assets Summary Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-blue-100 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-gray-900" id="assetTotalCount">0</p>
+                            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Total Requests</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-amber-100 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-amber-600" id="assetPendingCount">0</p>
+                            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Pending</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-11 h-11 rounded-xl bg-emerald-100 flex items-center justify-center">
+                            <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-emerald-600" id="assetReceivedCount">0</p>
+                            <p class="text-xs font-medium text-gray-500 uppercase tracking-wide">Received</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Send New Asset Request -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6 admin-only">
+                <div class="bg-gradient-to-r from-violet-600 to-purple-700 px-6 py-4">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Send Asset Request to Client
+                    </h3>
+                    <p class="text-violet-200 text-sm">Request files, logos, content, API keys etc. from the client</p>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Stage *</label>
+                            <select id="globalAssetStage" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 text-sm bg-white"></select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Asset Name *</label>
+                            <input type="text" id="globalAssetLabel" placeholder="e.g. Company Logo, Brand Guide" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 text-sm">
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Type</label>
+                            <select id="globalAssetType" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 text-sm bg-white">
+                                <option value="logo">Logo</option>
+                                <option value="content">Content</option>
+                                <option value="brand-guide">Brand Guide</option>
+                                <option value="api-keys">API Keys</option>
+                                <option value="approval">Approval</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs font-semibold text-gray-600 mb-1 block">Note (optional)</label>
+                            <input type="text" id="globalAssetNote" placeholder="Any instructions..." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 text-sm">
+                        </div>
+                    </div>
+                    <button onclick="sendGlobalAssetRequest()" class="px-6 py-2.5 bg-gradient-to-r from-violet-600 to-purple-700 text-white font-semibold rounded-xl hover:shadow-lg transition-all flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                        Send Request
+                    </button>
+                </div>
+            </div>
+
+            <!-- All Asset Requests List -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-gray-900">All Asset Requests</h3>
+                    <div class="flex gap-2">
+                        <button onclick="filterAssets('all')" class="asset-filter-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-gray-900 text-white" data-filter="all">All</button>
+                        <button onclick="filterAssets('pending')" class="asset-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200" data-filter="pending">Pending</button>
+                        <button onclick="filterAssets('received')" class="asset-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200" data-filter="received">Received</button>
+                    </div>
+                </div>
+                <div class="divide-y divide-gray-100" id="assetsTabList">
+                    <div class="text-center py-12 text-gray-400">Loading assets...</div>
+                </div>
+            </div>
+        </div>
+
     </main>
 
+    <script src="/js/api.js"></script>
     <script>
         // ==================== GLOBALS ====================
         const projectId = new URLSearchParams(window.location.search).get('id');
@@ -289,8 +462,10 @@
         let stages = [];
         let clientPayments = [];
         let devPayments = [];
+        let teamMembers = [];
         let activities = [];
         let remarks = [];
+        let editingMeetingId = null;
 
         const statusConfig = {
             completed: { dot: 'bg-emerald-500', label: 'Completed', bg: 'bg-emerald-50', text: 'text-emerald-700' },
@@ -349,6 +524,9 @@
                 var ip = stages.find(function(s) { return s.status === 'in-progress'; });
                 if (ip) setTimeout(function() { toggleStage(ip.id); }, 200);
             }
+            if (tabName === 'assets') {
+                renderAssetsTab();
+            }
         }
 
         // ==================== TOGGLE STAGE ====================
@@ -393,6 +571,14 @@
                 return;
             }
 
+            // Preserve expanded state before re-rendering
+            var expandedIds = [];
+            var existingCards = container.querySelectorAll('.stage-card.expanded');
+            for (var e = 0; e < existingCards.length; e++) {
+                var cardId = existingCards[e].id.replace('stage-', '');
+                expandedIds.push(cardId);
+            }
+
             var html = '';
             for (var i = 0; i < stages.length; i++) {
                 var stage = stages[i];
@@ -416,7 +602,7 @@
                         var textClass = item.done ? 'line-through text-gray-400' : 'text-gray-700';
                         var checkMark = item.done ? '<span class="ml-auto text-emerald-500 font-bold">✓</span>' : '';
                         itemsHtml += '<label class="flex items-center gap-3 p-3 rounded-xl ' + itemBg + ' cursor-pointer transition-all hover:shadow-sm">' +
-                            '<input type="checkbox" ' + checkedAttr + ' ' + disabledAttr + ' onchange="toggleChecklistItem(\'' + sid + '\', \'' + iid + '\')" class="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">' +
+                            '<input type="checkbox" ' + checkedAttr + ' ' + disabledAttr + ' onchange="event.stopPropagation(); toggleChecklistItem(\'' + sid + '\', \'' + iid + '\')" class="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">' +
                             '<span class="' + textClass + '">' + item.text + '</span>' + checkMark + '</label>';
                     }
                     contentHtml = '<div class="space-y-3 mb-4">' + itemsHtml + '</div>';
@@ -429,18 +615,19 @@
                 } else if (stage.type === 'development') {
                     var healthStatus = statusConfig[stage.health] || statusConfig['pending'];
                     var healthBorderColor = stage.health === 'success' ? 'border-emerald-200' : 'border-amber-200';
-                    var linkedBackendHtml = '';
-                    if (stage.name === 'Frontend') {
-                        linkedBackendHtml = '<div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Linked Backend</label><select class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white"><option value="">Select backend</option><option value="backend-1">Backend API v1</option></select></div>';
-                    }
-                    var markReadyDisabled = !stage.liveUrl ? ' opacity-50 cursor-not-allowed" disabled' : '"';
+                    var repoUrl = stage.repoUrl || '';
+                    var liveUrl = stage.liveUrl || '';
                     contentHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">' +
-                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Repository URL</label><input type="url" id="repo-' + sid + '" value="' + (stage.repoUrl || '') + '" placeholder="https://github.com/..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div>' +
-                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Live URL</label><input type="url" id="live-' + sid + '" value="' + (stage.liveUrl || '') + '" placeholder="https://..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div>' +
-                        '</div>' + linkedBackendHtml +
-                        '<div class="flex items-center justify-between p-4 rounded-xl ' + healthStatus.bg + ' border ' + healthBorderColor + ' mb-4"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full ' + healthStatus.dot + ' animate-pulse"></span><span class="font-medium ' + healthStatus.text + '">Health: ' + healthStatus.label + '</span></div></div>' +
-                        '<div class="flex gap-3"><button onclick="saveLinks(\'' + sid + '\')" class="px-5 py-2.5 bg-indigo-100 text-indigo-700 font-medium rounded-xl hover:bg-indigo-200 transition-all">Save Links</button>' +
-                        '<button onclick="markReady(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all' + markReadyDisabled + '>Mark as Ready</button></div>';
+                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Repository URL</label><input type="url" id="repo-' + sid + '" value="' + repoUrl + '" placeholder="https://github.com/..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div>' +
+                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Live URL</label><input type="url" id="live-' + sid + '" value="' + liveUrl + '" placeholder="https://..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div>' +
+                        '</div>' +
+                        '<div class="flex items-center justify-between p-4 rounded-xl ' + healthStatus.bg + ' border ' + healthBorderColor + ' mb-4"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full ' + healthStatus.dot + ' animate-pulse"></span><span class="font-medium ' + healthStatus.text + '">Health: ' + healthStatus.label + '</span></div></div>';
+                    if (stage.status === 'completed') {
+                        contentHtml += '<div class="px-4 py-3 bg-emerald-100 rounded-xl text-emerald-700 font-medium flex items-center gap-2 border border-emerald-200"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Development Completed</div>';
+                    } else {
+                        contentHtml += '<div class="flex gap-3"><button onclick="saveLinks(\'' + sid + '\')" class="px-5 py-2.5 bg-indigo-100 text-indigo-700 font-medium rounded-xl hover:bg-indigo-200 transition-all">Save Links</button>' +
+                            '<button onclick="markReady(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Mark as Ready</button></div>';
+                    }
 
                 } else if (stage.type === 'hosting') {
                     var selProvider = stage.hostingProvider || '';
@@ -449,8 +636,9 @@
                     contentHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">' +
                         '<div><label class="block text-sm font-medium text-gray-700 mb-2">Hosting Provider</label><select id="hosting-' + sid + '" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white"><option value="">Select provider</option><option value="aws"' + (selProvider === 'aws' ? ' selected' : '') + '>AWS</option><option value="vercel"' + (selProvider === 'vercel' ? ' selected' : '') + '>Vercel</option><option value="digitalocean"' + (selProvider === 'digitalocean' ? ' selected' : '') + '>DigitalOcean</option><option value="heroku"' + (selProvider === 'heroku' ? ' selected' : '') + '>Heroku</option><option value="custom"' + (selProvider === 'custom' ? ' selected' : '') + '>Custom Server</option></select></div>' +
                         '<div><label class="block text-sm font-medium text-gray-700 mb-2">Domain URL</label><input type="url" id="domain-' + sid + '" value="' + selDomain + '" placeholder="https://example.com" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div></div>' +
-                        '<div class="flex items-center gap-4 mb-4"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ssl-' + sid + '" ' + sslChecked + ' class="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="text-gray-700">SSL Certificate Installed</span></label></div>' +
-                        '<button onclick="saveHosting(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Save Hosting Details</button>';
+                        '<div class="flex items-center gap-4 mb-4"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ssl-' + sid + '" ' + sslChecked + ' onclick="event.stopPropagation()" class="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="text-gray-700">SSL Certificate Installed</span></label></div>' +
+                        '<div class="flex gap-3"><button onclick="saveHosting(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Save Hosting Details</button>' +
+                        '<button onclick="markReady(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Mark as Ready</button></div>';
 
                 } else if (stage.type === 'delivery') {
                     var delsHtml = '';
@@ -466,12 +654,65 @@
                             '<div class="flex items-center gap-4"><div class="w-12 h-12 rounded-full ' + delCircleBg + ' flex items-center justify-center text-white font-bold text-lg">' + delCircleText + '</div>' +
                             '<div><p class="font-semibold text-gray-900">' + del.name + '</p><p class="text-sm text-gray-500">' + (del.date || 'Not scheduled') + '</p></div></div>' +
                             '<label class="flex items-center gap-3 cursor-pointer"><span class="text-sm font-medium text-gray-600">Approved</span>' +
-                            '<div class="relative"><input type="checkbox" ' + delChecked + ' onchange="toggleDelivery(\'' + sid + '\', \'' + did + '\')" class="sr-only peer">' +
+                            '<div class="relative"><input type="checkbox" ' + delChecked + ' onchange="event.stopPropagation(); toggleDelivery(\'' + sid + '\', \'' + did + '\')" class="sr-only peer">' +
                             '<div class="w-12 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-emerald-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[\'\'] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>' +
                             '</div></label></div>';
                     }
-                    contentHtml = '<div class="space-y-4">' + delsHtml + '</div>';
+                    var allDeliveriesApproved = deliveries.length > 0 && deliveries.every(function(d) { return d.approved; });
+                    contentHtml = '<div class="space-y-4 mb-4">' + delsHtml + '</div>';
+                    if (stage.status === 'completed') {
+                        contentHtml += '<div class="px-4 py-3 bg-emerald-100 rounded-xl text-emerald-700 font-medium flex items-center gap-2 border border-emerald-200"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Delivery Completed</div>';
+                    } else {
+                        contentHtml += '<button onclick="markReady(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all' + (allDeliveriesApproved ? '' : ' opacity-50 cursor-not-allowed') + '"' + (allDeliveriesApproved ? '' : ' disabled title="Approve all deliveries first"') + '>Mark Delivery Complete</button>';
+                    }
                 }
+
+                // Asset Requests section for every stage
+                var assets = stage.assetRequests || [];
+                var assetsHtml = '<div class="mt-4 pt-4 border-t border-gray-100 admin-only">' +
+                    '<div class="flex items-center justify-between mb-3">' +
+                        '<h4 class="text-sm font-bold text-gray-700 flex items-center gap-2"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg> Asset Requests</h4>' +
+                        '<button onclick="event.stopPropagation(); toggleAssetForm(\'' + sid + '\')" class="text-xs font-semibold text-blue-600 hover:text-blue-800 flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Add Request</button>' +
+                    '</div>';
+                // Inline add form (hidden by default)
+                assetsHtml += '<div id="assetForm-' + sid + '" class="hidden mb-3 p-3 bg-blue-50 rounded-xl border border-blue-200">' +
+                    '<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">' +
+                        '<input type="text" id="assetLabel-' + sid + '" placeholder="Asset name (e.g. Logo Files)" class="px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500">' +
+                        '<select id="assetType-' + sid + '" class="px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500 bg-white">' +
+                            '<option value="logo">Logo</option><option value="content">Content</option><option value="brand-guide">Brand Guide</option><option value="api-keys">API Keys</option><option value="approval">Approval</option><option value="other">Other</option>' +
+                        '</select>' +
+                        '<input type="text" id="assetNote-' + sid + '" placeholder="Note (optional)" class="px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500">' +
+                    '</div>' +
+                    '<button onclick="event.stopPropagation(); addAssetRequest(\'' + sid + '\')" class="px-4 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors">Send Request</button>' +
+                '</div>';
+                // List existing
+                if (assets.length > 0) {
+                    for (var a = 0; a < assets.length; a++) {
+                        var ast = assets[a];
+                        var astStatusBg = ast.status === 'received' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : ast.status === 'rejected' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-amber-100 text-amber-700 border-amber-200';
+                        var astIcon = ast.status === 'received' ? '<svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' :
+                            '<svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+                        var fileLink = ast.fileUrl ? '<a href="' + ast.fileUrl + '" target="_blank" download class="text-xs text-blue-600 hover:underline flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> ' + (ast.fileName || 'Download') + '</a>' : '';
+                        assetsHtml += '<div class="flex items-center justify-between p-3 rounded-xl border ' + astStatusBg + ' mb-2">' +
+                            '<div class="flex items-center gap-3">' + astIcon +
+                                '<div><p class="text-sm font-semibold">' + ast.label + '</p>' +
+                                    '<p class="text-xs opacity-75">' + (ast.type || 'other') + (ast.note ? ' — ' + ast.note : '') + '</p>' +
+                                    fileLink +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="flex items-center gap-2">' +
+                                '<span class="px-2.5 py-1 text-xs font-bold rounded-lg capitalize">' + ast.status + '</span>' +
+                                '<button onclick="event.stopPropagation(); deleteAssetRequest(\'' + sid + '\', \'' + ast.id + '\', \'' + (ast.label || '').replace(/'/g, "\\'") + '\')" class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete">' +
+                                    '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
+                                '</button>' +
+                            '</div>' +
+                        '</div>';
+                    }
+                } else {
+                    assetsHtml += '<p class="text-xs text-gray-400 italic">No asset requests for this stage</p>';
+                }
+                assetsHtml += '</div>';
+                contentHtml += assetsHtml;
 
                 // Build card
                 html += '<div class="stage-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="stage-' + sid + '">' +
@@ -501,25 +742,105 @@
             }
 
             container.innerHTML = html;
+
+            // Restore expanded state after re-rendering
+            for (var r = 0; r < expandedIds.length; r++) {
+                var card = document.getElementById('stage-' + expandedIds[r]);
+                if (card) card.classList.add('expanded');
+            }
         }
 
         // ==================== RENDER CLIENT PAYMENTS ====================
         function renderClientPayments() {
             var container = document.getElementById('clientPaymentsList');
             if (!container) return;
+
+            if (clientPayments.length === 0) {
+                container.innerHTML = '<div class="text-center py-8"><p class="text-gray-400 mb-4">No payment records found for this project</p><button onclick="generatePaymentSchedule()" class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold rounded-xl hover:shadow-lg transition-all admin-only">Generate Payment Schedule</button></div>';
+                document.getElementById('clientPaymentTotal').textContent = 'Total: ₹0';
+                return;
+            }
+
             var total = clientPayments.reduce(function(s, p) { return s + (p.amount || 0); }, 0);
             var received = clientPayments.filter(function(p) { return p.status === 'received'; }).reduce(function(s, p) { return s + (p.amount || 0); }, 0);
-            document.getElementById('clientPaymentTotal').textContent = 'Total: $' + total.toLocaleString();
+            document.getElementById('clientPaymentTotal').textContent = 'Total: ₹' + total.toLocaleString() + ' | Received: ₹' + received.toLocaleString();
             var rows = clientPayments.map(function(p, i) {
+                var id = p._id || p.id;
                 var isReceived = p.status === 'received';
                 var border = isReceived ? 'bg-white border border-emerald-200' : 'bg-gray-50 border-2 border-dashed border-gray-300';
                 var circleBg = isReceived ? 'bg-emerald-500' : 'bg-gray-300';
-                var circleText = isReceived ? '✓' : String(i + 1);
+                var circleText = isReceived ? '&#10003;' : String(i + 1);
                 var amountColor = isReceived ? 'text-emerald-600' : 'text-gray-400';
-                var markBtn = !isReceived ? '<button onclick="markPaymentReceived(\'' + (p._id || p.id) + '\')" class="text-xs text-indigo-600 hover:underline font-medium admin-only">Mark Received</button>' : '';
-                return '<div class="flex items-center justify-between p-4 rounded-xl ' + border + '"><div class="flex items-center gap-4"><div class="w-10 h-10 rounded-full ' + circleBg + ' flex items-center justify-center text-white font-bold">' + circleText + '</div><div><p class="font-semibold text-gray-800">' + (p.label || 'Payment') + '</p><p class="text-sm text-gray-400">' + (p.date ? new Date(p.date).toLocaleDateString() : 'Not received') + '</p></div></div><div class="text-right"><p class="text-lg font-bold ' + amountColor + '">$' + (p.amount || 0).toLocaleString() + '</p>' + markBtn + '</div></div>';
+                var adminBtns = '<div class="flex gap-2 mt-1 admin-only">' +
+                    (!isReceived ? '<button onclick="markPaymentReceived(\'' + id + '\')" class="text-xs text-indigo-600 hover:underline font-medium">Mark Received</button>' : '') +
+                    '<button onclick="editClientPaymentRow(\'' + id + '\')" class="text-xs text-blue-500 hover:underline font-medium">Edit</button>' +
+                    '<button onclick="deleteClientPayment(\'' + id + '\')" class="text-xs text-red-400 hover:underline font-medium">Delete</button>' +
+                    '</div>';
+                return '<div id="cpRow-' + id + '" class="flex items-center justify-between p-4 rounded-xl ' + border + '">' +
+                    '<div class="flex items-center gap-4">' +
+                        '<div class="w-10 h-10 rounded-full ' + circleBg + ' flex items-center justify-center text-white font-bold">' + circleText + '</div>' +
+                        '<div>' +
+                            '<p class="font-semibold text-gray-800">' + (p.label || 'Payment') + '</p>' +
+                            '<p class="text-sm text-gray-400">' + (p.date ? new Date(p.date).toLocaleDateString() : 'Not received') + '</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="text-right">' +
+                        '<p class="text-lg font-bold ' + amountColor + '">₹' + (p.amount || 0).toLocaleString() + '</p>' +
+                        adminBtns +
+                    '</div>' +
+                '</div>';
             }).join('');
-            container.innerHTML = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl mb-4 border border-emerald-200"><span class="font-medium text-emerald-700">Received</span><span class="text-xl font-bold text-emerald-700">$' + received.toLocaleString() + ' / $' + total.toLocaleString() + '</span></div><div class="space-y-3">' + rows + '</div>';
+            container.innerHTML = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-xl mb-4 border border-emerald-200"><span class="font-medium text-emerald-700">Received</span><span class="text-xl font-bold text-emerald-700">₹' + received.toLocaleString() + ' / ₹' + total.toLocaleString() + '</span></div><div class="space-y-3">' + rows + '</div>';
+        }
+
+        function editClientPaymentRow(id) {
+            var p = clientPayments.find(function(x) { return String(x._id || x.id) === String(id); });
+            if (!p) return;
+            var row = document.getElementById('cpRow-' + id);
+            if (!row) return;
+            var dateVal = p.date ? p.date.split('T')[0] : '';
+            var labelOptions = ['Advance Payment','1st Milestone','2nd Milestone','3rd Milestone','4th Milestone','5th Milestone','Final Payment','Other'].map(function(l) {
+                return '<option value="' + l + '"' + (p.label === l ? ' selected' : '') + '>' + l + '</option>';
+            }).join('');
+            row.innerHTML = '<div class="flex flex-wrap items-center gap-2 w-full">' +
+                '<select id="editCpLabel-' + id + '" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-400">' + labelOptions + '</select>' +
+                '<input type="number" id="editCpAmount-' + id + '" value="' + (p.amount || '') + '" placeholder="Amount" class="w-28 px-3 py-1.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-400">' +
+                '<input type="date" id="editCpDate-' + id + '" value="' + dateVal + '" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-emerald-400">' +
+                '<button onclick="saveClientPaymentEdit(\'' + id + '\')" class="px-4 py-1.5 bg-emerald-500 text-white rounded-lg text-sm font-semibold hover:bg-emerald-600">Save</button>' +
+                '<button onclick="renderClientPayments()" class="px-4 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm font-semibold hover:bg-gray-200">Cancel</button>' +
+            '</div>';
+        }
+
+        async function saveClientPaymentEdit(id) {
+            var label = document.getElementById('editCpLabel-' + id).value;
+            var amount = parseFloat(document.getElementById('editCpAmount-' + id).value);
+            var date = document.getElementById('editCpDate-' + id).value;
+            if (!amount || !date) { alert('Amount and date are required'); return; }
+            try {
+                var res = await fetch('/api/payments/client/' + id, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ label: label, amount: amount, date: date })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    var p = clientPayments.find(function(x) { return String(x._id || x.id) === String(id); });
+                    if (p) { p.label = label; p.amount = amount; p.date = date; }
+                    renderClientPayments();
+                    addLocalActivity('updated client payment ' + label + ' to ₹' + amount.toLocaleString(), '✏️');
+                } else { alert(data.error || 'Failed to save'); }
+            } catch (err) { alert('Failed to save payment'); }
+        }
+
+        async function deleteClientPayment(id) {
+            if (!confirm('Delete this payment record?')) return;
+            try {
+                var res = await fetch('/api/payments/client/' + id, { method: 'DELETE', headers: HEADERS });
+                var data = await res.json();
+                if (data.success) {
+                    clientPayments = clientPayments.filter(function(p) { return String(p._id || p.id) !== String(id); });
+                    renderClientPayments();
+                } else { alert(data.error || 'Failed to delete'); }
+            } catch (err) { alert('Failed to delete payment'); }
         }
 
         // ==================== RENDER DEV PAYMENTS ====================
@@ -527,10 +848,96 @@
             var container = document.getElementById('devPaymentsList');
             if (!container) return;
             var totalPaid = devPayments.reduce(function(s, p) { return s + (p.amount || 0); }, 0);
+            if (devPayments.length === 0) {
+                container.innerHTML = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl mb-4 border border-blue-200"><span class="font-medium text-blue-700">Total Paid to Team</span><span class="text-xl font-bold text-blue-700">₹0</span></div><div class="text-center py-6 text-gray-400 text-sm">No developer payments recorded yet</div>';
+                return;
+            }
             var rows = devPayments.map(function(p) {
-                return '<div class="relative pl-12"><div class="absolute left-3 w-4 h-4 rounded-full bg-blue-500 border-4 border-white shadow"></div><div class="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 border border-gray-100 hover:shadow-sm transition-all"><div class="flex justify-between items-start"><div><p class="font-semibold text-gray-800">' + (p.developer || '') + '</p><p class="text-sm text-gray-400">' + (p.role || '') + ' • ' + (p.note || '') + '</p></div><div class="text-right"><p class="text-lg font-bold text-blue-600">$' + (p.amount || 0).toLocaleString() + '</p><p class="text-xs text-gray-400">' + (p.date ? new Date(p.date).toLocaleDateString() : '') + '</p></div></div></div></div>';
+                var id = p._id || p.id;
+                var devName = p.developerName || p.developer || 'Unknown';
+                return '<div id="dpRow-' + id + '" class="relative pl-12">' +
+                    '<div class="absolute left-3 w-4 h-4 rounded-full bg-blue-500 border-4 border-white shadow"></div>' +
+                    '<div class="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 border border-gray-100 hover:shadow-sm transition-all">' +
+                        '<div class="flex justify-between items-start">' +
+                            '<div>' +
+                                '<p class="font-semibold text-gray-800">' + devName + '</p>' +
+                                '<p class="text-sm text-gray-400">' + (p.role || '') + (p.note ? ' • ' + p.note : '') + '</p>' +
+                            '</div>' +
+                            '<div class="text-right">' +
+                                '<p class="text-lg font-bold text-blue-600">₹' + (p.amount || 0).toLocaleString() + '</p>' +
+                                '<p class="text-xs text-gray-400">' + (p.date ? new Date(p.date).toLocaleDateString() : '') + '</p>' +
+                                '<div class="flex gap-2 mt-1 justify-end admin-only">' +
+                                    '<button onclick="editDevPaymentRow(\'' + id + '\')" class="text-xs text-blue-500 hover:underline font-medium">Edit</button>' +
+                                    '<button onclick="deleteDevPaymentRow(\'' + id + '\')" class="text-xs text-red-400 hover:underline font-medium">Delete</button>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
             }).join('');
-            container.innerHTML = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl mb-4 border border-blue-200"><span class="font-medium text-blue-700">Total Paid to Team</span><span class="text-xl font-bold text-blue-700">$' + totalPaid.toLocaleString() + '</span></div><div class="relative"><div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400 to-indigo-400"></div><div class="space-y-4">' + rows + '</div></div>';
+            container.innerHTML = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl mb-4 border border-blue-200"><span class="font-medium text-blue-700">Total Paid to Team</span><span class="text-xl font-bold text-blue-700">₹' + totalPaid.toLocaleString() + '</span></div><div class="relative"><div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400 to-indigo-400"></div><div class="space-y-4" id="devPaymentsRows">' + rows + '</div></div>';
+        }
+
+        function editDevPaymentRow(id) {
+            var p = devPayments.find(function(x) { return String(x._id || x.id) === String(id); });
+            if (!p) return;
+            var row = document.getElementById('dpRow-' + id);
+            if (!row) return;
+            var dateVal = p.date ? new Date(p.date).toISOString().split('T')[0] : '';
+            var memberOptions = teamMembers.map(function(m) {
+                var isSel = String(p.developer) === String(m._id);
+                return '<option value="' + m._id + '"' + (isSel ? ' selected' : '') + '>' + m.name + (m.designation ? ' — ' + m.designation : '') + '</option>';
+            }).join('');
+            row.innerHTML = '<div class="absolute left-3 w-4 h-4 rounded-full bg-blue-500 border-4 border-white shadow"></div>' +
+                '<div class="bg-white rounded-xl p-4 border-2 border-blue-300 shadow-sm">' +
+                    '<div class="flex flex-wrap items-center gap-2">' +
+                        '<select id="editDpDev-' + id + '" class="flex-1 min-w-[160px] px-3 py-1.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-400">' +
+                            '<option value="">Select Member</option>' + memberOptions +
+                        '</select>' +
+                        '<input type="number" id="editDpAmount-' + id + '" value="' + (p.amount || '') + '" placeholder="Amount" class="w-28 px-3 py-1.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-400">' +
+                        '<input type="date" id="editDpDate-' + id + '" value="' + dateVal + '" class="px-3 py-1.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-400">' +
+                        '<input type="text" id="editDpNote-' + id + '" value="' + (p.note || '') + '" placeholder="Note" class="w-24 px-3 py-1.5 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-400">' +
+                        '<button onclick="saveDevPaymentEdit(\'' + id + '\')" class="px-4 py-1.5 bg-blue-500 text-white rounded-lg text-sm font-semibold hover:bg-blue-600">Save</button>' +
+                        '<button onclick="renderDevPayments()" class="px-4 py-1.5 bg-gray-100 text-gray-600 rounded-lg text-sm font-semibold hover:bg-gray-200">Cancel</button>' +
+                    '</div>' +
+                '</div>';
+        }
+
+        async function saveDevPaymentEdit(id) {
+            var developerId = document.getElementById('editDpDev-' + id).value;
+            var amount = parseFloat(document.getElementById('editDpAmount-' + id).value);
+            var date = document.getElementById('editDpDate-' + id).value;
+            var note = document.getElementById('editDpNote-' + id).value;
+            if (!amount || !date) { alert('Amount and date are required'); return; }
+            var devMember = teamMembers.find(function(m) { return String(m._id) === String(developerId); });
+            try {
+                var res = await fetch('/api/payments/developer/' + id, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ developer: developerId || undefined, role: (devMember && (devMember.designation || devMember.role)) || '', amount: amount, date: date, note: note })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    var p = devPayments.find(function(x) { return String(x._id || x.id) === String(id); });
+                    if (p) {
+                        if (developerId && devMember) { p.developer = developerId; p.developerName = devMember.name; p.role = devMember.designation || devMember.role || ''; }
+                        p.amount = amount; p.date = date; p.note = note;
+                    }
+                    renderDevPayments();
+                    addLocalActivity('updated developer payment ₹' + amount.toLocaleString(), '✏️');
+                } else { alert(data.error || 'Failed to save'); }
+            } catch (err) { alert('Failed to save payment'); }
+        }
+
+        async function deleteDevPaymentRow(id) {
+            if (!confirm('Delete this developer payment?')) return;
+            try {
+                var res = await fetch('/api/payments/developer/' + id, { method: 'DELETE', headers: HEADERS });
+                var data = await res.json();
+                if (data.success) {
+                    devPayments = devPayments.filter(function(p) { return String(p._id || p.id) !== String(id); });
+                    renderDevPayments();
+                } else { alert(data.error || 'Failed to delete'); }
+            } catch (err) { alert('Failed to delete payment'); }
         }
 
         // ==================== RENDER ACTIVITIES ====================
@@ -598,11 +1005,17 @@
                             sslStatus: s.sslStatus || 'pending',
                             deliveries: (s.deliveries || []).map(function(d, di) {
                                 return { id: String(d._id || d.id || di), name: d.name || ('Delivery ' + (di + 1)), approved: d.approved || false, date: d.date || null };
+                            }),
+                            assetRequests: (s.assetRequests || []).map(function(ar) {
+                                return { id: String(ar._id || ar.id), label: ar.label || '', type: ar.type || 'other', status: ar.status || 'pending', fileName: ar.fileName || '', fileUrl: ar.fileUrl || '', note: ar.note || '' };
                             })
                         };
                     });
 
                     console.log('Stages loaded:', stages.length);
+                    console.log('Asset requests per stage:', stages.map(function(s) {
+                        return { stage: s.name, assetsCount: s.assetRequests?.length || 0, assets: s.assetRequests };
+                    }));
                     renderStages();
                 }
             } catch (err) {
@@ -717,35 +1130,70 @@
             if (!stage) return;
             var repoUrl = document.getElementById('repo-' + stageId).value;
             var liveUrl = document.getElementById('live-' + stageId).value;
+            if (!repoUrl && !liveUrl) {
+                alert('Please enter at least one URL (Repository or Live)');
+                return;
+            }
             try {
+                var newStatus = stage.status === 'pending' ? 'in-progress' : stage.status;
                 var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
                     method: 'PUT', headers: HEADERS,
-                    body: JSON.stringify({ repoUrl: repoUrl, liveUrl: liveUrl, health: liveUrl ? 'success' : 'pending' })
+                    body: JSON.stringify({ repoUrl: repoUrl, liveUrl: liveUrl, health: liveUrl ? 'success' : 'pending', status: newStatus })
                 });
+                var data = await res.json();
                 if (res.ok) {
                     stage.repoUrl = repoUrl; stage.liveUrl = liveUrl;
+                    stage.status = newStatus;
                     if (liveUrl) stage.health = 'success';
                     renderStages();
                     addLocalActivity('updated ' + stage.name + ' URLs', '🔗');
-                    alert('Links saved!');
+                    alert('Links saved successfully!');
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to save links'));
+                    console.error('API Error:', data);
                 }
-            } catch (err) { alert('Failed to save links'); }
+            } catch (err) { 
+                alert('Failed to save links: ' + err.message);
+                console.error('Error:', err);
+            }
         }
 
         async function markReady(stageId) {
+            console.log('🔵 markReady called with stageId:', stageId, 'Type:', typeof stageId);
             var stage = stages.find(function(s) { return s.id === stageId; });
-            if (!stage) return;
+            if (!stage) {
+                console.error('❌ Stage not found in local array. Available stages:', stages.map(s => ({ name: s.name, id: s.id })));
+                return;
+            }
+            console.log('✅ Found stage:', stage.name, 'Current status:', stage.status);
+            if (!TOKEN) {
+                alert('❌ Session expired! Please login again.');
+                window.location.href = '/login';
+                return;
+            }
             try {
+                console.log('🚀 Sending API call - Project:', projectId, 'Stage:', stageId, 'Payload: { status: completed, health: success }');
                 var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
                     method: 'PUT', headers: HEADERS,
                     body: JSON.stringify({ status: 'completed', health: 'success' })
                 });
+                console.log('📨 API Response Status:', res.status, 'OK?:', res.ok);
+                var data = await res.json();
+                console.log('📥 API Response Data:', data);
                 if (res.ok) {
                     stage.status = 'completed'; stage.health = 'success';
+                    console.log('✏️ Local stage updated:', { name: stage.name, status: stage.status, health: stage.health });
                     renderStages();
                     addLocalActivity('marked ' + stage.name + ' as ready', '🚀');
+                    alert('✅ Stage marked as ready!');
+                } else {
+                    alert('❌ Error: ' + (data.error || 'Failed to mark stage as ready'));
+                    console.error('API Error:', data);
                 }
-            } catch (err) { alert('Failed to mark as ready'); }
+            } catch (err) { 
+                alert('❌ Failed to mark as ready: ' + err.message);
+                console.error('Error:', err);
+            }
         }
 
         async function saveHosting(stageId) {
@@ -754,17 +1202,28 @@
             var hostingProvider = document.getElementById('hosting-' + stageId).value;
             var domainUrl = document.getElementById('domain-' + stageId).value;
             var sslStatus = document.getElementById('ssl-' + stageId).checked ? 'active' : 'pending';
+            console.log('Saving hosting - Provider:', hostingProvider, 'Domain:', domainUrl, 'SSL:', sslStatus);
             try {
                 var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
                     method: 'PUT', headers: HEADERS,
-                    body: JSON.stringify({ hostingProvider: hostingProvider, domainUrl: domainUrl, sslStatus: sslStatus })
+                    body: JSON.stringify({ hostingProvider: hostingProvider, domainUrl: domainUrl, sslStatus: sslStatus, status: 'in-progress' })
                 });
+                var data = await res.json();
+                console.log('saveHosting response:', res.status, data);
                 if (res.ok) {
                     stage.hostingProvider = hostingProvider; stage.domainUrl = domainUrl; stage.sslStatus = sslStatus;
+                    stage.status = 'in-progress';
+                    renderStages();
                     addLocalActivity('updated hosting configuration', '☁️');
-                    alert('Hosting details saved!');
+                    alert('✅ Hosting details saved!');
+                } else {
+                    alert('❌ Error: ' + (data.error || 'Failed to save hosting details'));
+                    console.error('API Error:', data);
                 }
-            } catch (err) { alert('Failed to save hosting details'); }
+            } catch (err) { 
+                alert('❌ Failed to save hosting details: ' + err.message);
+                console.error('Error:', err);
+            }
         }
 
         async function toggleDelivery(stageId, deliveryId) {
@@ -859,38 +1318,103 @@
         }
 
         // ==================== PAYMENT / REMARK ACTIONS ====================
-        function addClientPayment() {
+        async function addClientPayment() {
+            var label = document.getElementById('newPaymentLabel').value || 'Payment';
             var amount = parseFloat(document.getElementById('newPaymentAmount').value);
             var date = document.getElementById('newPaymentDate').value;
             if (!amount || !date) { alert('Enter amount and date'); return; }
-            clientPayments.push({ id: Date.now(), label: 'Payment ' + (clientPayments.length + 1), amount: amount, date: date, status: 'received' });
-            document.getElementById('newPaymentAmount').value = '';
-            document.getElementById('newPaymentDate').value = '';
-            renderClientPayments();
-            addLocalActivity('received client payment $' + amount.toLocaleString(), '💰');
+            try {
+                var res = await fetch('/api/payments/client', {
+                    method: 'POST', headers: HEADERS,
+                    body: JSON.stringify({ project: projectId, projectName: (project && project.name) || '', label: label, amount: amount, date: date })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    document.getElementById('newPaymentAmount').value = '';
+                    document.getElementById('newPaymentDate').value = '';
+                    await loadPayments();
+                    addLocalActivity('added client payment ' + label + ' ₹' + amount.toLocaleString(), '💰');
+                } else { alert(data.error || 'Failed to add payment'); }
+            } catch (err) { alert('Failed to add payment'); }
         }
 
-        function markPaymentReceived(id) {
+        async function markPaymentReceived(id) {
             var payment = clientPayments.find(function(p) { return String(p._id || p.id) === String(id); });
-            if (payment) {
-                payment.status = 'received';
-                payment.date = new Date().toISOString().split('T')[0];
-                renderClientPayments();
-                addLocalActivity('marked ' + (payment.label || 'payment') + ' as received', '💰');
+            if (!payment) return;
+            try {
+                var res = await fetch('/api/payments/client/' + id, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ status: 'received', date: new Date().toISOString().split('T')[0] })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    payment.status = 'received';
+                    payment.date = data.data.date || new Date().toISOString().split('T')[0];
+                    renderClientPayments();
+                    addLocalActivity('marked ' + (payment.label || 'payment') + ' as received', '💰');
+                } else {
+                    alert('Error updating payment: ' + (data.error || 'Unknown'));
+                }
+            } catch (err) {
+                alert('Failed to update payment');
             }
         }
 
-        function addDevPayment() {
-            var developer = document.getElementById('devPaymentRole').value;
+        async function addDevPayment() {
+            var developerId = document.getElementById('devPaymentRole').value;
             var amount = parseFloat(document.getElementById('devPaymentAmount').value);
             var date = document.getElementById('devPaymentDate').value;
-            if (!developer || !amount || !date) { alert('Fill all fields'); return; }
-            devPayments.unshift({ id: Date.now(), developer: developer, role: '', amount: amount, date: date, note: 'Payment' });
-            document.getElementById('devPaymentRole').value = '';
-            document.getElementById('devPaymentAmount').value = '';
-            document.getElementById('devPaymentDate').value = '';
-            renderDevPayments();
-            addLocalActivity('paid $' + amount.toLocaleString() + ' to ' + developer, '💸');
+            if (!developerId || !amount || !date) { alert('Fill all fields'); return; }
+            var devMember = teamMembers.find(function(m) { return m._id === developerId; });
+            try {
+                var res = await fetch('/api/payments/developer', {
+                    method: 'POST', headers: HEADERS,
+                    body: JSON.stringify({ project: projectId, developer: developerId, role: (devMember && (devMember.designation || devMember.role)) || '', amount: amount, date: date, note: 'Payment' })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    document.getElementById('devPaymentRole').value = '';
+                    document.getElementById('devPaymentAmount').value = '';
+                    document.getElementById('devPaymentDate').value = '';
+                    await loadPayments();
+                    addLocalActivity('paid ₹' + amount.toLocaleString() + ' to ' + (devMember ? devMember.name : 'developer'), '💸');
+                } else { alert(data.error || 'Failed to add payment'); }
+            } catch (err) { alert('Failed to add payment'); }
+        }
+
+        async function loadTeamMembers() {
+            try {
+                var res = await fetch('/api/users', { headers: HEADERS });
+                var data = await res.json();
+                teamMembers = (data.success && data.data) ? data.data : [];
+                var sel = document.getElementById('devPaymentRole');
+                if (!sel) return;
+                sel.innerHTML = '<option value="">Select Team Member...</option>' +
+                    teamMembers.map(function(m) {
+                        var label = m.designation || m.role || '';
+                        return '<option value="' + m._id + '">' + m.name + (label ? ' — ' + label : '') + '</option>';
+                    }).join('');
+            } catch (err) { /* silently fail */ }
+        }
+
+        async function generatePaymentSchedule() {
+            if (!project || !project.totalAmount || project.totalAmount <= 0) {
+                alert('No total amount set for this project. Please update the project with totalAmount first.');
+                return;
+            }
+            if (!confirm('Generate payment schedule based on project settings?\n\nTotal: ₹' + project.totalAmount.toLocaleString() + '\nAdvance: ' + (project.advancePercent || 25) + '%\nMilestones: ' + (project.milestones || 3))) return;
+            try {
+                var res = await fetch('/api/payments/client/generate/' + projectId, {
+                    method: 'POST', headers: HEADERS
+                });
+                var data = await res.json();
+                if (data.success) {
+                    await loadPayments();
+                    addLocalActivity('generated payment schedule', '💳');
+                } else {
+                    alert(data.error || 'Failed to generate');
+                }
+            } catch (err) { alert('Failed to generate payment schedule'); }
         }
 
         function addRemark() {
@@ -906,6 +1430,377 @@
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             window.location.href = '/login?logout=true';
+        }
+
+        // ==================== ASSET REQUESTS ====================
+        function toggleAssetForm(stageId) {
+            var form = document.getElementById('assetForm-' + stageId);
+            if (form) form.classList.toggle('hidden');
+        }
+
+        async function addAssetRequest(stageId) {
+            var label = document.getElementById('assetLabel-' + stageId).value.trim();
+            if (!label) { alert('Please enter asset name'); return; }
+            var type = document.getElementById('assetType-' + stageId).value;
+            var note = document.getElementById('assetNote-' + stageId).value.trim();
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId + '/asset-requests', {
+                    method: 'POST', headers: HEADERS,
+                    body: JSON.stringify({ label: label, type: type, note: note })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    showToast('Asset request sent!', 'success');
+                    await loadProject();
+                    renderAssetsTab();
+                } else {
+                    showToast(data.error || 'Failed to add request', 'error');
+                }
+            } catch(e) {
+                showToast('Error adding asset request', 'error');
+            }
+        }
+
+        // ==================== ASSETS TAB ====================
+        var currentAssetFilter = 'all';
+
+        function getAllAssets() {
+            var all = [];
+            console.log('getAllAssets called with stages:', stages.length, stages);
+            stages.forEach(function(stage) {
+                console.log('Stage:', stage.name, 'assetRequests:', stage.assetRequests);
+                (stage.assetRequests || []).forEach(function(ar) {
+                    all.push({
+                        stageId: stage.id,
+                        stageName: stage.name,
+                        stageIcon: stage.icon,
+                        assetId: ar.id,
+                        label: ar.label,
+                        type: ar.type || 'other',
+                        status: ar.status || 'pending',
+                        fileName: ar.fileName || '',
+                        fileUrl: ar.fileUrl || '',
+                        note: ar.note || ''
+                    });
+                });
+            });
+            console.log('getAllAssets returning:', all);
+            return all;
+        }
+
+        function renderAssetsTab() {
+            var allAssets = getAllAssets();
+            console.log('renderAssetsTab called - All assets:', allAssets);
+            var pending = allAssets.filter(function(a) { return a.status === 'pending'; });
+            var received = allAssets.filter(function(a) { return a.status === 'received'; });
+
+            document.getElementById('assetTotalCount').textContent = allAssets.length;
+            document.getElementById('assetPendingCount').textContent = pending.length;
+            document.getElementById('assetReceivedCount').textContent = received.length;
+
+            // Populate stage dropdown
+            var stageSelect = document.getElementById('globalAssetStage');
+            if (stageSelect) {
+                stageSelect.innerHTML = '';
+                stages.forEach(function(s) {
+                    stageSelect.innerHTML += '<option value="' + s.id + '">' + s.name + '</option>';
+                });
+            }
+
+            // Filter
+            var filtered = allAssets;
+            if (currentAssetFilter === 'pending') filtered = pending;
+            else if (currentAssetFilter === 'received') filtered = received;
+
+            var container = document.getElementById('assetsTabList');
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center py-16">' +
+                    '<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>' +
+                    '<p class="text-gray-400 font-medium">No asset requests' + (currentAssetFilter !== 'all' ? ' with status "' + currentAssetFilter + '"' : '') + '</p>' +
+                    '<p class="text-gray-300 text-sm mt-1">Send an asset request to the client using the form above</p>' +
+                '</div>';
+                return;
+            }
+
+            var html = '';
+            var typeIcons = {
+                logo: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>',
+                content: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+                'brand-guide': '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>',
+                'api-keys': '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>',
+                approval: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+                other: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>'
+            };
+            var typeBg = {
+                logo: 'bg-pink-100 text-pink-600',
+                content: 'bg-sky-100 text-sky-600',
+                'brand-guide': 'bg-violet-100 text-violet-600',
+                'api-keys': 'bg-orange-100 text-orange-600',
+                approval: 'bg-emerald-100 text-emerald-600',
+                other: 'bg-gray-100 text-gray-600'
+            };
+
+            filtered.forEach(function(a) {
+                var statusBadge = a.status === 'received'
+                    ? '<span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-100 text-emerald-700">Received</span>'
+                    : a.status === 'rejected'
+                    ? '<span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-red-100 text-red-700">Rejected</span>'
+                    : '<span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-amber-100 text-amber-700">Pending</span>';
+
+                var fileSection = '';
+                if (a.status === 'received' && a.fileUrl) {
+                    fileSection = '<a href="' + a.fileUrl + '" target="_blank" download="' + (a.fileName || 'asset') + '" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">' +
+                        '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>' +
+                        (a.fileName || 'Download') + '</a>';
+                } else if (a.status === 'received' && !a.fileUrl) {
+                    fileSection = '<span class="text-xs text-gray-400 italic">Marked done (no file)</span>';
+                }
+
+                html += '<div class="asset-item flex items-center justify-between p-5 hover:bg-gray-50 transition-colors" data-status="' + a.status + '">' +
+                    '<div class="flex items-center gap-4 flex-1 min-w-0">' +
+                        '<div class="w-10 h-10 rounded-xl ' + (typeBg[a.type] || typeBg.other) + ' flex items-center justify-center flex-shrink-0">' +
+                            (typeIcons[a.type] || typeIcons.other) +
+                        '</div>' +
+                        '<div class="min-w-0 flex-1">' +
+                            '<div class="flex items-center gap-2 flex-wrap">' +
+                                '<p class="font-semibold text-gray-900 text-sm">' + a.label + '</p>' +
+                                statusBadge +
+                            '</div>' +
+                            '<div class="flex items-center gap-3 mt-1">' +
+                                '<span class="text-xs text-gray-400">' + a.stageName + '</span>' +
+                                '<span class="text-xs text-gray-300">|</span>' +
+                                '<span class="text-xs text-gray-400 capitalize">' + a.type.replace('-', ' ') + '</span>' +
+                                (a.note ? '<span class="text-xs text-gray-300">|</span><span class="text-xs text-gray-500">' + a.note + '</span>' : '') +
+                            '</div>' +
+                            (fileSection ? '<div class="mt-2">' + fileSection + '</div>' : '') +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="flex items-center gap-2 ml-4 flex-shrink-0">' +
+                        '<button onclick="deleteAssetRequest(\'' + a.stageId + '\', \'' + a.assetId + '\', \'' + a.label.replace(/'/g, "\\'") + '\')" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete">' +
+                            '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
+                        '</button>' +
+                    '</div>' +
+                '</div>';
+            });
+
+            container.innerHTML = html;
+        }
+
+        function filterAssets(filter) {
+            currentAssetFilter = filter;
+            document.querySelectorAll('.asset-filter-btn').forEach(function(btn) {
+                if (btn.dataset.filter === filter) {
+                    btn.className = 'asset-filter-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-gray-900 text-white';
+                } else {
+                    btn.className = 'asset-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200';
+                }
+            });
+            renderAssetsTab();
+        }
+
+        async function sendGlobalAssetRequest() {
+            var stageId = document.getElementById('globalAssetStage').value;
+            var label = document.getElementById('globalAssetLabel').value.trim();
+            if (!stageId) { showToast('Please select a stage', 'error'); return; }
+            if (!label) { showToast('Please enter asset name', 'error'); return; }
+            var type = document.getElementById('globalAssetType').value;
+            var note = document.getElementById('globalAssetNote').value.trim();
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId + '/asset-requests', {
+                    method: 'POST', headers: HEADERS,
+                    body: JSON.stringify({ label: label, type: type, note: note })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    showToast('Asset request sent to client!', 'success');
+                    document.getElementById('globalAssetLabel').value = '';
+                    document.getElementById('globalAssetNote').value = '';
+                    await loadProject();
+                    renderAssetsTab();
+                } else {
+                    showToast(data.error || 'Failed to send request', 'error');
+                }
+            } catch(e) {
+                showToast('Error sending asset request', 'error');
+            }
+        }
+
+        async function deleteAssetRequest(stageId, assetId, label) {
+            if (!confirm('Delete asset request "' + label + '"? This will also delete any uploaded file.')) return;
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId + '/asset-requests/' + assetId, {
+                    method: 'DELETE', headers: HEADERS
+                });
+                var data = await res.json();
+                if (data.success) {
+                    showToast('Asset request deleted', 'success');
+                    await loadProject();
+                    renderAssetsTab();
+                } else {
+                    showToast(data.error || 'Failed to delete', 'error');
+                }
+            } catch(e) {
+                showToast('Error deleting asset request', 'error');
+            }
+        }
+
+        // ==================== MEETINGS ====================
+        function showToast(message, type) {
+            type = type || 'info';
+            var toast = document.createElement('div');
+            var colors = { info: 'bg-blue-600', success: 'bg-emerald-600', error: 'bg-red-600' };
+            toast.className = 'fixed bottom-4 right-4 ' + (colors[type] || colors.info) + ' text-white px-6 py-3 rounded-xl shadow-2xl z-50 font-medium text-sm';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(function() { toast.style.opacity = '0'; toast.style.transition = 'opacity 0.3s'; setTimeout(function() { toast.remove(); }, 300); }, 3000);
+        }
+
+        async function loadMeetings() {
+            try {
+                var res = await api.getMeetings(projectId);
+                var meetings = res.data || [];
+                var grid = document.getElementById('meetingsList');
+                if (meetings.length === 0) {
+                    grid.innerHTML = '<div class="text-center py-16"><svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><p class="text-gray-400 font-medium">No meetings scheduled</p><p class="text-gray-300 text-sm mt-1">Schedule a meeting above to get started</p></div>';
+                    return;
+                }
+                var colors = ['from-blue-600 to-blue-800', 'from-indigo-600 to-indigo-800', 'from-violet-600 to-violet-800', 'from-emerald-600 to-emerald-800'];
+                grid.innerHTML = meetings.map(function(m, i) {
+                    var dt = new Date(m.scheduledAt);
+                    var isPast = dt < new Date();
+                    var statusBadge = m.status === 'completed' ? '<span class="px-2.5 py-1 text-xs font-bold bg-emerald-100 text-emerald-700 rounded-lg">Completed</span>' :
+                        isPast ? '<span class="px-2.5 py-1 text-xs font-bold bg-gray-100 text-gray-600 rounded-lg">Past</span>' :
+                        '<span class="px-2.5 py-1 text-xs font-bold bg-blue-100 text-blue-700 rounded-lg">Scheduled</span>';
+
+                    return '<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">' +
+                        '<div class="h-1.5 bg-gradient-to-r ' + colors[i % colors.length] + '"></div>' +
+                        '<div class="p-5">' +
+                            '<div class="flex items-center justify-between mb-3">' +
+                                '<h4 class="font-bold text-gray-900">' + m.title + '</h4>' +
+                                '<div class="flex items-center gap-2">' +
+                                    statusBadge +
+                                    '<span class="px-2.5 py-1 text-xs font-bold bg-gray-50 text-gray-600 rounded-lg">' + (m.type || 'google-meet') + '</span>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="flex items-center gap-2 text-sm text-gray-500 mb-2">' +
+                                '<svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>' +
+                                '<span>' + dt.toLocaleString('en-US', {weekday:'short', month:'short', day:'numeric', year:'numeric', hour:'2-digit', minute:'2-digit'}) + '</span>' +
+                                '<span class="text-gray-300">|</span>' +
+                                '<span>' + (m.duration || 30) + ' min</span>' +
+                            '</div>' +
+                            (m.stage ? '<span class="inline-block px-2 py-0.5 text-xs font-medium bg-indigo-50 text-indigo-700 rounded mb-2">' + m.stage + '</span>' : '') +
+                            (m.agenda ? '<p class="text-xs text-gray-500 bg-gray-50 rounded-lg p-3 mt-2 mb-3">' + m.agenda + '</p>' : '') +
+                            '<div class="flex items-center gap-2 mt-3">' +
+                                (m.meetingLink ? '<a href="' + m.meetingLink + '" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg> Join</a>' : '') +
+                                (m.meetingLink ? '<button onclick="copyMeetingLink(\'' + m.meetingLink + '\')" class="inline-flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg> Copy Link</button>' : '') +
+                                '<button onclick="editMeeting(\'' + m._id + '\',\'' + (m.title || '').replace(/'/g, "\\'") + '\',\'' + (m.type || 'google-meet') + '\',\'' + (m.meetingLink || '').replace(/'/g, "\\'") + '\',\'' + (m.scheduledAt || '') + '\',' + (m.duration || 30) + ',\'' + (m.stage || '').replace(/'/g, "\\'") + '\',\'' + (m.agenda || '').replace(/'/g, "\\'") + '\')" class="inline-flex items-center gap-1 px-3 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg text-sm font-medium transition-colors admin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Edit</button>' +
+                                '<button onclick="deleteMeeting(\'' + m._id + '\')" class="inline-flex items-center gap-1 px-3 py-2 text-red-500 hover:bg-red-50 rounded-lg text-sm font-medium transition-colors admin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Delete</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+                }).join('');
+            } catch(e) {
+                document.getElementById('meetingsList').innerHTML = '<div class="text-center py-12"><p class="text-red-400 font-medium">Error loading meetings</p></div>';
+            }
+        }
+
+        async function scheduleMeeting() {
+            var title = document.getElementById('mtgTitle').value.trim();
+            var scheduledAt = document.getElementById('mtgDate').value;
+            if (!title || !scheduledAt) { alert('Please enter meeting title and date/time'); return; }
+
+            var meetingData = {
+                project: projectId,
+                title: title,
+                type: document.getElementById('mtgType').value,
+                meetingLink: document.getElementById('mtgLink').value.trim(),
+                scheduledAt: new Date(scheduledAt).toISOString(),
+                duration: parseInt(document.getElementById('mtgDuration').value) || 30,
+                stage: document.getElementById('mtgStage').value,
+                agenda: document.getElementById('mtgAgenda').value.trim()
+            };
+
+            try {
+                if (editingMeetingId) {
+                    await api.updateMeeting(editingMeetingId, meetingData);
+                    showToast('Meeting updated!', 'success');
+                    cancelEditMeeting();
+                } else {
+                    await api.createMeeting(meetingData);
+                    showToast('Meeting scheduled!', 'success');
+                }
+                document.getElementById('mtgTitle').value = '';
+                document.getElementById('mtgLink').value = '';
+                document.getElementById('mtgDate').value = '';
+                document.getElementById('mtgAgenda').value = '';
+                document.getElementById('mtgDuration').value = '30';
+                await loadMeetings();
+            } catch(e) {
+                showToast('Error: ' + e.message, 'error');
+            }
+        }
+
+        function editMeeting(id, title, type, link, scheduledAt, duration, stage, agenda) {
+            editingMeetingId = id;
+            document.getElementById('mtgTitle').value = title || '';
+            document.getElementById('mtgType').value = type || 'google-meet';
+            document.getElementById('mtgLink').value = link || '';
+            if (scheduledAt) {
+                var dt = new Date(scheduledAt);
+                var local = new Date(dt.getTime() - dt.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+                document.getElementById('mtgDate').value = local;
+            }
+            document.getElementById('mtgDuration').value = duration || 30;
+            document.getElementById('mtgStage').value = stage || '';
+            document.getElementById('mtgAgenda').value = agenda || '';
+
+            // Update button text and show cancel
+            var btn = document.querySelector('#tab-meetings button[onclick="scheduleMeeting()"]');
+            if (btn) btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Update Meeting';
+            // Add cancel button if not exists
+            if (!document.getElementById('cancelEditMtgBtn')) {
+                var cancelBtn = document.createElement('button');
+                cancelBtn.id = 'cancelEditMtgBtn';
+                cancelBtn.className = 'px-4 py-2.5 bg-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-300 transition-all ml-2';
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.onclick = cancelEditMeeting;
+                btn.parentNode.insertBefore(cancelBtn, btn.nextSibling);
+            }
+            // Scroll to form
+            document.getElementById('mtgTitle').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('mtgTitle').focus();
+        }
+
+        function cancelEditMeeting() {
+            editingMeetingId = null;
+            document.getElementById('mtgTitle').value = '';
+            document.getElementById('mtgLink').value = '';
+            document.getElementById('mtgDate').value = '';
+            document.getElementById('mtgAgenda').value = '';
+            document.getElementById('mtgDuration').value = '30';
+            var btn = document.querySelector('#tab-meetings button[onclick="scheduleMeeting()"]');
+            if (btn) btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> Schedule Meeting';
+            var cancelBtn = document.getElementById('cancelEditMtgBtn');
+            if (cancelBtn) cancelBtn.remove();
+        }
+
+        async function deleteMeeting(id) {
+            if (!confirm('Delete this meeting?')) return;
+            try {
+                await api.deleteMeeting(id);
+                showToast('Meeting deleted', 'success');
+                await loadMeetings();
+            } catch(e) {
+                showToast('Error deleting meeting', 'error');
+            }
+        }
+
+        function copyMeetingLink(link) {
+            navigator.clipboard.writeText(link).then(function() {
+                showToast('Meeting link copied!', 'success');
+            }).catch(function() {
+                prompt('Copy this meeting link:', link);
+            });
         }
 
         // ==================== INIT ====================
@@ -932,6 +1827,21 @@
             await loadActivities();
             await loadPayments();
             await loadRemarks();
+            await loadTeamMembers();
+            await loadMeetings();
+
+            // populate meeting stage dropdown
+            if (project && project.stages) {
+                var mtgStageEl = document.getElementById('mtgStage');
+                if (mtgStageEl) {
+                    project.stages.forEach(function(s) {
+                        var opt = document.createElement('option');
+                        opt.value = s.name;
+                        opt.textContent = s.name;
+                        mtgStageEl.appendChild(opt);
+                    });
+                }
+            }
         }
 
         init();

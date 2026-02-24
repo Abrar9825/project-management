@@ -7,6 +7,7 @@ const {
     addClientPayment,
     updateClientPayment,
     deleteClientPayment,
+    generatePaymentSchedule,
     getDeveloperPaymentsByProject,
     getMyPayments,
     addDeveloperPayment,
@@ -28,7 +29,6 @@ const clientPaymentValidation = [
 const developerPaymentValidation = [
     body('project').notEmpty().withMessage('Project is required'),
     body('developer').notEmpty().withMessage('Developer is required'),
-    body('role').isIn(['Frontend Dev', 'Backend Dev', 'Designer', 'QA', 'DevOps', 'Project Manager']).withMessage('Invalid role'),
     body('amount').isNumeric().withMessage('Valid amount is required')
 ];
 
@@ -37,6 +37,7 @@ router.use(protect);
 
 // Client payment routes (Admin only)
 router.get('/client/:projectId', adminOnly, getClientPayments);
+router.post('/client/generate/:projectId', adminOnly, generatePaymentSchedule);
 router.post('/client', adminOnly, clientPaymentValidation, handleValidation, addClientPayment);
 router.put('/client/:id', adminOnly, updateClientPayment);
 router.delete('/client/:id', adminOnly, deleteClientPayment);

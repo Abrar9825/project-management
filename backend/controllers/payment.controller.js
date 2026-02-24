@@ -4,6 +4,72 @@ const { Activity } = require('../models/Activity.model');
 
 // ==================== CLIENT PAYMENTS ====================
 
+// @desc    Generate payment schedule for existing project
+// @route   POST /api/payments/client/generate/:projectId
+// @access  Private/Admin
+exports.generatePaymentSchedule = async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.projectId);
+        if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
+
+        // Check if payments already exist
+        const existing = await ClientPayment.find({ project: project._id });
+        if (existing.length > 0) {
+            return res.status(400).json({ success: false, error: 'Payment records already exist for this project. Delete them first to regenerate.' });
+        }
+
+        const totalAmount = project.totalAmount || 0;
+        if (totalAmount <= 0) {
+            return res.status(400).json({ success: false, error: 'Project has no totalAmount set. Update the project first.' });
+        }
+
+        const advPct = project.advancePercent || 25;
+        const numMilestones = project.milestones || 3;
+        const advanceAmount = Math.round(totalAmount * advPct / 100);
+        const remaining = totalAmount - advanceAmount;
+        const milestoneAmount = Math.round(remaining / numMilestones);
+
+        const paymentRecords = [];
+        paymentRecords.push({
+            project: project._id,
+            projectName: project.name,
+            label: 'Advance Payment',
+            amount: advanceAmount,
+            status: 'pending',
+            createdBy: req.user.id
+        });
+
+        const milestoneLabels = ['1st Milestone', '2nd Milestone', '3rd Milestone', '4th Milestone', '5th Milestone'];
+        for (let i = 0; i < numMilestones; i++) {
+            const isLast = (i === numMilestones - 1);
+            const amt = isLast ? (remaining - milestoneAmount * (numMilestones - 1)) : milestoneAmount;
+            paymentRecords.push({
+                project: project._id,
+                projectName: project.name,
+                label: milestoneLabels[i] || 'Final Payment',
+                amount: amt,
+                status: 'pending',
+                createdBy: req.user.id
+            });
+        }
+
+        const payments = await ClientPayment.insertMany(paymentRecords);
+
+        await Activity.create({
+            project: project._id,
+            user: req.user.id,
+            userName: req.user.name,
+            action: `generated payment schedule (${payments.length} payments, total ₹${totalAmount})`,
+            icon: '💳',
+            type: 'payment'
+        });
+
+        res.status(201).json({ success: true, data: payments });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
 // @desc    Get all client payments for a project
 // @route   GET /api/payments/client/:projectId
 // @access  Private/Admin

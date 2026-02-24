@@ -1,6 +1,21 @@
 const express = require('express');
 const { body } = require('express-validator');
+const path = require('path');
+const multer = require('multer');
 const router = express.Router();
+
+// Multer setup for asset uploads
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '..', 'public', 'uploads'));
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, 'asset-' + uniqueSuffix + ext);
+    }
+});
+const upload = multer({ storage: storage, limits: { fileSize: 50 * 1024 * 1024 } }); // 50MB limit
 
 const {
     getProjects,
@@ -24,6 +39,7 @@ const {
     getProjectHealth,
     addAssetRequest,
     updateAssetRequest,
+    deleteAssetRequest,
     getStagePdfData,
     getClientView,
     toggleStageVisibility,
@@ -90,7 +106,8 @@ router.put('/:id/stages/:stageId/link-payment', adminOnly, linkPaymentToStage);
 
 // ===== NEW: Asset Requests =====
 router.post('/:id/stages/:stageId/asset-requests', adminSubadminOnly, addAssetRequest);
-router.put('/:id/stages/:stageId/asset-requests/:assetId', adminSubadminOnly, updateAssetRequest);
+router.put('/:id/stages/:stageId/asset-requests/:assetId', upload.single('file'), updateAssetRequest);
+router.delete('/:id/stages/:stageId/asset-requests/:assetId', adminSubadminOnly, deleteAssetRequest);
 
 // ===== NEW: Stage PDF Data =====
 router.get('/:id/stages/:stageId/pdf-data', getStagePdfData);

@@ -137,6 +137,41 @@ exports.createProject = async (req, res) => {
             createdBy: req.user.id
         });
 
+        // Auto-create client payment records based on totalAmount, advancePercent, milestones
+        if (totalAmount && totalAmount > 0) {
+            const advPct = advancePercent || 25;
+            const numMilestones = milestones || 3;
+            const advanceAmount = Math.round(totalAmount * advPct / 100);
+            const remaining = totalAmount - advanceAmount;
+            const milestoneAmount = Math.round(remaining / numMilestones);
+
+            const paymentRecords = [];
+            // Advance payment
+            paymentRecords.push({
+                project: project._id,
+                projectName: project.name,
+                label: 'Advance Payment',
+                amount: advanceAmount,
+                status: 'pending',
+                createdBy: req.user.id
+            });
+            // Milestone payments
+            const milestoneLabels = ['1st Milestone', '2nd Milestone', '3rd Milestone', '4th Milestone', '5th Milestone'];
+            for (let i = 0; i < numMilestones; i++) {
+                const isLast = (i === numMilestones - 1);
+                const amt = isLast ? (remaining - milestoneAmount * (numMilestones - 1)) : milestoneAmount;
+                paymentRecords.push({
+                    project: project._id,
+                    projectName: project.name,
+                    label: milestoneLabels[i] || 'Final Payment',
+                    amount: amt,
+                    status: 'pending',
+                    createdBy: req.user.id
+                });
+            }
+            await ClientPayment.insertMany(paymentRecords);
+        }
+
         // Log activity
         await Activity.create({
             project: project._id,
@@ -233,26 +268,42 @@ exports.deleteProject = async (req, res) => {
 // @access  Private/Admin/SubAdmin
 exports.updateStage = async (req, res) => {
     try {
+        console.log('📍 updateStage called - ProjectID:', req.params.id, 'StageID:', req.params.stageId, 'Body:', req.body);
         const project = await Project.findById(req.params.id);
 
         if (!project) {
+            console.log('❌ Project not found');
             return res.status(404).json({
                 success: false,
                 error: 'Project not found'
             });
         }
 
-        const stage = project.stages.id(req.params.stageId);
+        // Find stage by ID (handle both string and ObjectId formats)
+        const stage = project.stages.find(s => {
+            const match = s._id.toString() === req.params.stageId || s.id === req.params.stageId;
+            if (match) console.log('✅ Stage found:', s.name, 'Current status:', s.status);
+            return match;
+        });
 
         if (!stage) {
+            console.log('❌ Stage not found. Available stages:', project.stages.map(s => ({ name: s.name, id: s._id.toString() })));
             return res.status(404).json({
                 success: false,
                 error: 'Stage not found'
             });
         }
 
-        // Update stage fields
-        Object.assign(stage, req.body);
+        // Update stage fields - use set() for proper Mongoose dirty tracking
+        console.log('📝 Updating stage with:', req.body);
+        const allowedFields = ['status', 'health', 'approved', 'repoUrl', 'liveUrl', 'linkedBackend', 'hostingProvider', 'domainUrl', 'sslStatus', 'summary', 'assigned', 'assignedName', 'deadline', 'deliveries', 'clientVisible', 'linkedPaymentMilestone'];
+        for (const key of Object.keys(req.body)) {
+            if (allowedFields.includes(key)) {
+                stage[key] = req.body[key];
+            }
+        }
+        project.markModified('stages');
+        console.log('✏️ Stage after update:', { name: stage.name, status: stage.status, health: stage.health });
 
         // Update current stage if this is now in progress
         if (req.body.status === 'in-progress') {
@@ -260,6 +311,7 @@ exports.updateStage = async (req, res) => {
         }
 
         await project.save();
+        console.log('💾 Project saved successfully');
 
         // Log activity
         await Activity.create({
@@ -271,11 +323,13 @@ exports.updateStage = async (req, res) => {
             type: 'stage'
         });
 
+        console.log('✅ updateStage success - returning updated project');
         res.status(200).json({
             success: true,
             data: project
         });
     } catch (err) {
+        console.error('❌ updateStage error:', err);
         res.status(500).json({
             success: false,
             error: err.message
@@ -297,7 +351,8 @@ exports.updateStageItem = async (req, res) => {
             });
         }
 
-        const stage = project.stages.id(req.params.stageId);
+        // Find stage by ID (handle both string and ObjectId formats)
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
 
         if (!stage || !stage.items) {
             return res.status(404).json({
@@ -563,7 +618,7 @@ exports.submitStageForApproval = async (req, res) => {
         const project = await Project.findById(req.params.id);
         if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
 
-        const stage = project.stages.id(req.params.stageId);
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
         if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
 
         stage.approvalWorkflow = {
@@ -599,7 +654,7 @@ exports.subadminReviewStage = async (req, res) => {
         const project = await Project.findById(req.params.id);
         if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
 
-        const stage = project.stages.id(req.params.stageId);
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
         if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
 
         if (!stage.approvalWorkflow || !stage.approvalWorkflow.submittedAt) {
@@ -639,7 +694,7 @@ exports.adminApproveStage = async (req, res) => {
         const project = await Project.findById(req.params.id);
         if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
 
-        const stage = project.stages.id(req.params.stageId);
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
         if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
 
         if (!stage.approvalWorkflow || 
@@ -846,7 +901,7 @@ exports.addAssetRequest = async (req, res) => {
         const project = await Project.findById(req.params.id);
         if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
 
-        const stage = project.stages.id(req.params.stageId);
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
         if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
 
         const { label, type, note } = req.body;
@@ -885,13 +940,22 @@ exports.updateAssetRequest = async (req, res) => {
         const project = await Project.findById(req.params.id);
         if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
 
-        const stage = project.stages.id(req.params.stageId);
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
         if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
 
-        const asset = stage.assetRequests.id(req.params.assetId);
+        const asset = stage.assetRequests ? stage.assetRequests.find(a => a._id.toString() === req.params.assetId || a.id === req.params.assetId) : null;
         if (!asset) return res.status(404).json({ success: false, error: 'Asset request not found' });
 
-        Object.assign(asset, req.body);
+        // Handle file upload
+        if (req.file) {
+            asset.fileName = req.file.originalname;
+            asset.fileUrl = '/uploads/' + req.file.filename;
+            asset.status = 'received';
+            asset.receivedAt = new Date();
+        } else {
+            Object.assign(asset, req.body);
+        }
+
         if (req.body.status === 'received') {
             asset.receivedAt = new Date();
 
@@ -921,6 +985,47 @@ exports.updateAssetRequest = async (req, res) => {
     }
 };
 
+// @desc    Delete asset request from a stage
+// @route   DELETE /api/projects/:id/stages/:stageId/asset-requests/:assetId
+// @access  Private/Admin/SubAdmin
+exports.deleteAssetRequest = async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.id);
+        if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
+
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
+        if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
+
+        const assetIdx = stage.assetRequests ? stage.assetRequests.findIndex(a => a._id.toString() === req.params.assetId || a.id === req.params.assetId) : -1;
+        if (assetIdx === -1) return res.status(404).json({ success: false, error: 'Asset request not found' });
+
+        const removed = stage.assetRequests[assetIdx];
+
+        // Delete uploaded file if exists
+        if (removed.fileUrl) {
+            const filePath = require('path').join(__dirname, '..', 'public', removed.fileUrl);
+            const fs = require('fs');
+            if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        }
+
+        stage.assetRequests.splice(assetIdx, 1);
+        await project.save();
+
+        await Activity.create({
+            project: project._id,
+            user: req.user.id,
+            userName: req.user.name,
+            action: `deleted asset request "${removed.label}" from ${stage.name}`,
+            icon: '🗑️',
+            type: 'stage'
+        });
+
+        res.status(200).json({ success: true, data: project });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
 // ==================== STAGE PDF DATA ====================
 // @desc    Get stage data for PDF generation
 // @route   GET /api/projects/:id/stages/:stageId/pdf-data
@@ -930,7 +1035,7 @@ exports.getStagePdfData = async (req, res) => {
         const project = await Project.findById(req.params.id).populate('team.user', 'name email designation');
         if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
 
-        const stage = project.stages.id(req.params.stageId);
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
         if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
 
         const pdfType = req.query.type || 'technical'; // technical, client, handover
@@ -1006,9 +1111,10 @@ exports.getClientView = async (req, res) => {
         const totalPayments = payments.reduce((sum, p) => sum + p.amount, 0);
         const receivedPayments = payments.filter(p => p.status === 'received').reduce((sum, p) => sum + p.amount, 0);
 
-        // Filter stages to only client-visible ones
-        const visibleStages = project.stages
-            .filter(s => s.clientVisible)
+        // Filter stages to only client-visible ones (show all if none explicitly set)
+        let filteredStages = project.stages.filter(s => s.clientVisible);
+        if (filteredStages.length === 0) filteredStages = project.stages; // fallback: show all
+        const visibleStages = filteredStages
             .map(s => ({
                 name: s.name,
                 status: s.status,
@@ -1016,6 +1122,13 @@ exports.getClientView = async (req, res) => {
                 order: s.order,
                 approved: s.approved,
                 deadline: s.deadline,
+                type: s.type || 'checklist',
+                repoUrl: s.repoUrl || '',
+                liveUrl: s.liveUrl || '',
+                health: s.health || 'pending',
+                hostingProvider: s.hostingProvider || '',
+                domainUrl: s.domainUrl || '',
+                sslStatus: s.sslStatus || 'pending',
                 completionRate: s.items && s.items.length > 0 
                     ? Math.round(s.items.filter(i => i.done).length / s.items.length * 100) 
                     : s.status === 'completed' ? 100 : 0
@@ -1026,8 +1139,8 @@ exports.getClientView = async (req, res) => {
         const completedByClient = [];
         project.stages.forEach(stage => {
             (stage.assetRequests || []).forEach(asset => {
-                if (asset.status === 'pending') pendingFromClient.push({ stageName: stage.name, label: asset.label, type: asset.type });
-                else if (asset.status === 'received') completedByClient.push({ stageName: stage.name, label: asset.label, receivedAt: asset.receivedAt });
+                if (asset.status === 'pending') pendingFromClient.push({ stageName: stage.name, stageId: stage._id, assetId: asset._id, label: asset.label, type: asset.type });
+                else if (asset.status === 'received') completedByClient.push({ stageName: stage.name, label: asset.label, receivedAt: asset.receivedAt, fileName: asset.fileName || '', fileUrl: asset.fileUrl || '' });
             });
         });
 
@@ -1079,7 +1192,7 @@ exports.toggleStageVisibility = async (req, res) => {
         const project = await Project.findById(req.params.id);
         if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
 
-        const stage = project.stages.id(req.params.stageId);
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
         if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
 
         stage.clientVisible = req.body.clientVisible !== undefined ? req.body.clientVisible : !stage.clientVisible;
@@ -1099,7 +1212,7 @@ exports.linkPaymentToStage = async (req, res) => {
         const project = await Project.findById(req.params.id);
         if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
 
-        const stage = project.stages.id(req.params.stageId);
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
         if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
 
         stage.linkedPaymentMilestone = req.body.linkedPaymentMilestone || '';

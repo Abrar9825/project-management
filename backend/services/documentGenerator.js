@@ -57,8 +57,7 @@ class DocumentGenerator {
                 status: s.status,
                 order: s.order,
                 deadline: s.deadline,
-                completionRate: s.completionRate,
-                icon: s.icon
+                completionRate: s.completionRate
             })),
             milestonesData: project.milestonesData || [],
             responsibilities: project.responsibilities || { agency: [], client: [] },
@@ -99,7 +98,7 @@ class DocumentGenerator {
             projectName: project.name,
             type: type,
             title: content.title || (type + ' - ' + project.name),
-            status: 'draft',
+            status: 'final',
             content: JSON.stringify(content),
             stage: stage || (project.stages && project.stages[0] ? project.stages[0].name : ''),
             generatedBy: user._id || user.id,
@@ -207,13 +206,13 @@ class DocumentGenerator {
             summary: 'Payment plan for ' + data.projectName + '. ' + (data.description || ''),
             companyName: 'KINNOVANCE',
             sections: {
-                projectValue: { totalAmount: data.totalAmount, currency: 'USD' },
+                projectValue: { totalAmount: data.totalAmount, currency: 'INR (₹)' },
                 advancePayment: { percentage: data.advancePercent, amount: Math.round(data.totalAmount * data.advancePercent / 100), dueOnSigning: true },
                 paymentSchedule: data.payments.map(p => ({ label: p.label, amount: p.amount, dueDate: p.date, status: p.status })),
                 paymentMethods: { preferred: data.paymentMedium, options: ['Bank Transfer', 'UPI', 'PayPal', 'Stripe'] },
                 paymentTerms: data.paymentTerms || 'Net 7 days from invoice date',
                 latePaymentPolicy: data.latePaymentPolicy,
-                summary: { totalAmount: data.totalAmount, received: data.paymentSummary.received, pending: data.paymentSummary.pending, remainingPercent: Math.round((data.paymentSummary.pending / data.totalAmount) * 100) }
+                paymentOverview: { totalAmount: data.totalAmount, received: data.paymentSummary.received, pending: data.paymentSummary.pending, remainingPercent: Math.round((data.paymentSummary.pending / data.totalAmount) * 100) }
             }
         }));
 
@@ -423,6 +422,9 @@ class DocumentGenerator {
         try { results.clientAccessSheet = await this.generateClientAccessSheet(project, user); } catch(e) { results.clientAccessSheetError = e.message; }
         try { results.fulfillmentPlan = await this.generateFulfillmentPlan(project, user); } catch(e) { results.fulfillmentPlanError = e.message; }
         try { results.trackingSheet = await this.generateTrackingSheet(project, user); } catch(e) { results.trackingSheetError = e.message; }
+        try { results.monthlyReport = await this.generateMonthlyReport(project, user); } catch(e) { results.monthlyReportError = e.message; }
+        try { results.handoverKit = await this.generateHandoverKit(project, user); } catch(e) { results.handoverKitError = e.message; }
+        try { results.maintenanceAgreement = await this.generateMaintenanceAgreement(project, user); } catch(e) { results.maintenanceAgreementError = e.message; }
 
         return results;
     }

@@ -140,11 +140,11 @@ exports.deleteUser = async (req, res) => {
             });
         }
 
-        // Prevent deleting the default admin
-        if (user.email === 'admin@company.com') {
+        // Prevent deleting protected users
+        if (!user.canDelete) {
             return res.status(403).json({
                 success: false,
-                error: 'Cannot delete the default admin account'
+                error: 'This user account cannot be deleted. Contact system administrator.'
             });
         }
 

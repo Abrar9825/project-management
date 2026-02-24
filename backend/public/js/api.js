@@ -315,6 +315,18 @@ const api = {
         }
     },
 
+    deleteAssetRequest: async (projectId, stageId, assetId) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/projects/${projectId}/stages/${stageId}/asset-requests/${assetId}`, {
+                method: 'DELETE',
+                headers: api.getHeaders()
+            });
+            return await res.json();
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    },
+
     // ==================== STAGE VISIBILITY & LINKING ====================
     toggleStageVisibility: async (projectId, stageId) => {
         try {

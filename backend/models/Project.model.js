@@ -66,7 +66,7 @@ const StageSchema = new mongoose.Schema({
     // ===== NEW: Client Visibility Toggle =====
     clientVisible: {
         type: Boolean,
-        default: false
+        default: true
     },
 
     // ===== NEW: Linked Payment Milestone =====

@@ -45,7 +45,15 @@ const UserSchema = new mongoose.Schema({
     skills: [{
         type: String
     }],
+    hourRate: {
+        type: Number,
+        default: 0
+    },
     isActive: {
+        type: Boolean,
+        default: true
+    },
+    canDelete: {
         type: Boolean,
         default: true
     },

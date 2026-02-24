@@ -71,8 +71,7 @@ const DeveloperPaymentSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['Frontend Dev', 'Backend Dev', 'Designer', 'QA', 'DevOps', 'Project Manager'],
-        required: true
+        default: ''
     },
     amount: {
         type: Number,
