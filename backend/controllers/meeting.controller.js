@@ -51,6 +51,34 @@ exports.getMeeting = async (req, res) => {
     }
 };
 
+// @desc    Get all meetings across user's projects
+// @route   GET /api/meetings/my
+// @access  Private
+exports.getMyMeetings = async (req, res) => {
+    try {
+        // Find all projects the user is part of
+        const projects = await Project.find({
+            $or: [
+                { 'team.user': req.user.id },
+                { createdBy: req.user.id }
+            ]
+        }).select('_id');
+
+        const projectIds = projects.map(p => p._id);
+
+        const meetings = await Meeting.find({
+            project: { $in: projectIds },
+            status: { $in: ['scheduled', 'rescheduled'] }
+        })
+            .populate('createdBy', 'name')
+            .sort({ scheduledAt: 1 });
+
+        res.status(200).json({ success: true, count: meetings.length, data: meetings });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
 // @desc    Create meeting
 // @route   POST /api/meetings
 // @access  Private/Admin/SubAdmin

@@ -5,6 +5,7 @@ const router = express.Router();
 const {
     getMeetings,
     getUpcomingMeetings,
+    getMyMeetings,
     getMeeting,
     createMeeting,
     updateMeeting,
@@ -22,6 +23,7 @@ const createMeetingValidation = [
 
 router.use(protect);
 
+router.get('/my', getMyMeetings);
 router.get('/project/:projectId', getMeetings);
 router.get('/project/:projectId/upcoming', getUpcomingMeetings);
 

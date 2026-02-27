@@ -32,29 +32,24 @@
     <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-3">
+                <a href="/my-work" class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                     </div>
                     <span class="text-xl font-bold text-gray-800">ProjectControl</span>
-                </div>
-                <div class="hidden md:flex items-center space-x-1">
-                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium' href='/my-work'>My Work</a>
-                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-subadmin-only' href='/projects'>Projects</a>
-                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-only' href='/add-project'>Add Project</a>
-                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-only' href='/users'>Users</a>
-                    <a class='px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-subadmin-only' href='/documents'>Documents</a>
+                </a>
+                <div class="hidden md:flex items-center space-x-1" id="navLinks">
+                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all">My Work</a>
+                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-subadmin-only">Projects</a>
+                    <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">Users</a>
+                    <a href="/documents" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">Documents</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a class='flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-all' href='/profile'>
-                        <div class="w-9 h-9 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            <span id="userInitials">AK</span>
-                        </div>
-                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Ahmed Khan</span>
+                    <a href="/profile" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-all">
+                        <div class="w-9 h-9 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm"><span id="userInitials">AK</span></div>
+                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Admin</span>
                     </a>
-                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 rounded-lg">
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Logout">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                     </button>
                 </div>
@@ -81,8 +76,8 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <a id="docCenterBtn" href="#" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 admin-subadmin-only">📄 Doc Center</a>
-                    <a id="clientPortalBtn" href="#" class="px-3 py-1.5 text-sm font-medium rounded-lg bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 admin-subadmin-only">👤 Client Portal</a>
+                    <a id="docCenterBtn" href="#" class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 admin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Doc Center</a>
+                    <a id="clientPortalBtn" href="#" class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 admin-subadmin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> Client Portal</a>
                     <span class="px-3 py-1 text-sm font-medium rounded-lg bg-orange-100 text-orange-700 border border-orange-200" id="projectPriority">High Priority</span>
                     <span class="px-3 py-1 text-sm font-medium rounded-lg bg-blue-100 text-blue-700 border border-blue-200" id="projectProgress">65% Complete</span>
                 </div>
@@ -111,8 +106,8 @@
                     Developer Payments
                 </button>
                 <button onclick="switchTab('activity')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="activity">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    Activity & Remarks
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
+                    Remarks
                 </button>
                 <button onclick="switchTab('meetings')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="meetings">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
@@ -223,16 +218,28 @@
                     </h2>
                     <p class="text-blue-100 text-sm">Team payment history</p>
                 </div>
+
+                <!-- Per-Developer Summary Cards -->
+                <div class="p-6 pb-0" id="devPaymentSummary"></div>
+
+                <!-- Filter Dropdown -->
+                <div class="px-6 pt-3 pb-0 admin-only">
+                    <select id="devPaymentFilter" onchange="renderDevPayments()" class="w-full md:w-64 px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500 bg-white">
+                        <option value="all">All Developers</option>
+                    </select>
+                </div>
+
                 <div class="p-6" id="devPaymentsList"></div>
                 
                 <!-- Add Dev Payment (Admin) -->
                 <div class="px-6 pb-6 admin-only">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
                         <select id="devPaymentRole" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
                             <option value="">Select Developer...</option>
                         </select>
                         <input type="number" id="devPaymentAmount" placeholder="Amount (₹)" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
                         <input type="date" id="devPaymentDate" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="devPaymentNote" placeholder="Note (optional)" class="px-3 py-2 border border-gray-200 rounded-xl outline-none text-sm focus:ring-2 focus:ring-blue-500">
                         <button onclick="addDevPayment()" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
                             Pay Developer
                         </button>
@@ -241,23 +248,9 @@
             </div>
         </div>
 
-        <!-- ==================== TAB 5: ACTIVITY & REMARKS ==================== -->
+        <!-- ==================== TAB 5: REMARKS ==================== -->
         <div class="tab-content" id="tab-activity">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <!-- Activity Timeline -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-slate-600 to-slate-800 px-6 py-4">
-                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            Project Activity
-                        </h3>
-                    </div>
-                    <div class="p-6 max-h-[500px] overflow-y-auto space-y-4" id="activityList"></div>
-                </div>
-
+            <div class="max-w-3xl mx-auto">
                 <!-- Remarks Section -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                     <div class="bg-gradient-to-r from-amber-500 to-orange-600 px-6 py-4">
@@ -275,7 +268,7 @@
                                 Add
                             </button>
                         </div>
-                        <div class="max-h-[400px] overflow-y-auto space-y-3" id="remarksList"></div>
+                        <div class="max-h-[500px] overflow-y-auto space-y-3" id="remarksList"></div>
                     </div>
                 </div>
             </div>
@@ -507,6 +500,51 @@
             renderActivities();
         }
 
+        // Emoji to SVG icon converter for professional look
+        function emojiToSvg(emoji, cls) {
+            var c = cls || 'w-4 h-4';
+            var map = {
+                '📋': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>',
+                '🎨': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>',
+                '💻': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>',
+                '⚙️': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>',
+                '🔍': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>',
+                '☁️': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>',
+                '🚀': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>',
+                '📌': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>',
+                '✅': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+                '❌': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+                '✏️': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>',
+                '📝': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>',
+                '💰': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+                '💸': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>',
+                '💳': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>',
+                '📄': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+                '📅': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>',
+                '🔧': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0"/></svg>',
+                '🔗': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>',
+                '💬': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>',
+                '📎': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>',
+                '🗑️': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>',
+                '⏳': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+                '▶️': '<svg class="'+c+'" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                '▶': '<svg class="'+c+'" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>',
+                '⛔': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>',
+                '⏪': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.333 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"/></svg>',
+                '🎉': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+                '🔄': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>',
+                '📧': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>',
+                '⭐': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>',
+                '📊': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>',
+                '📈': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>',
+                '📦': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>',
+                '🧾': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>',
+                '🔐': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>',
+                '📑': '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+            };
+            return map[emoji] || '<svg class="'+c+'" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>';
+        }
+
         // ==================== TAB SWITCHING ====================
         function switchTab(tabName) {
             document.querySelectorAll('.tab-btn').forEach(function(btn) {
@@ -544,7 +582,7 @@
             }
             var statusBg = { pending: 'bg-amber-50 text-amber-700', 'in-progress': 'bg-blue-50 text-blue-700', completed: 'bg-emerald-50 text-emerald-700', blocked: 'bg-red-50 text-red-700' };
             var statusLabel = { pending: 'Pending', 'in-progress': 'In Progress', completed: 'Completed', blocked: 'Blocked' };
-            var statusIcon = { pending: '⏳', 'in-progress': '▶️', completed: '✅', blocked: '⛔' };
+            var statusIcon = { pending: emojiToSvg('⏳'), 'in-progress': emojiToSvg('▶️'), completed: emojiToSvg('✅'), blocked: emojiToSvg('⛔') };
 
             container.innerHTML = tasks.map(function(task) {
                 var actionBtn = '';
@@ -554,8 +592,8 @@
                     actionBtn = '<button onclick="completeTaskAPI(\'' + task.id + '\')" class="px-3 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-lg hover:bg-emerald-200 transition-all flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Complete</button>';
                 }
                 var timeInfo = '';
-                if (task.status === 'in-progress' && task.startedAt) timeInfo = '<span class="text-xs text-blue-600 font-medium">▶ ' + formatDuration(task.startedAt, null) + '</span>';
-                else if (task.status === 'completed' && task.startedAt) timeInfo = '<span class="text-xs text-emerald-600 font-medium">✅ ' + formatDuration(task.startedAt, task.completedAt) + '</span>';
+                if (task.status === 'in-progress' && task.startedAt) timeInfo = '<span class="text-xs text-blue-600 font-medium flex items-center gap-1">' + emojiToSvg('▶', 'w-3 h-3') + ' ' + formatDuration(task.startedAt, null) + '</span>';
+                else if (task.status === 'completed' && task.startedAt) timeInfo = '<span class="text-xs text-emerald-600 font-medium flex items-center gap-1">' + emojiToSvg('✅', 'w-3 h-3') + ' ' + formatDuration(task.startedAt, task.completedAt) + '</span>';
 
                 return '<div class="p-5 hover:bg-gray-50 transition-all"><div class="flex items-start justify-between gap-4"><div class="flex-1"><div class="flex items-center gap-2 mb-2"><span class="text-base">' + (statusIcon[task.status] || '') + '</span><span class="px-2.5 py-0.5 text-xs font-medium bg-indigo-100 text-indigo-700 rounded-full">' + task.role + '</span><span class="text-sm text-gray-400">' + (task.assignee || 'Unassigned') + '</span>' + timeInfo + '</div><p class="font-semibold text-gray-900">' + task.title + '</p>' + (task.description ? '<p class="text-sm text-gray-500 mt-1">' + task.description + '</p>' : '') + '<div class="flex items-center gap-3 mt-2 text-xs text-gray-400">' + (task.startedAt ? '<span>Started: ' + formatDT(task.startedAt) + '</span>' : '') + (task.completedAt ? '<span>Completed: ' + formatDT(task.completedAt) + '</span>' : '') + '</div></div><div class="text-right flex-shrink-0"><p class="text-xs text-gray-400 mb-1">Deadline</p><p class="text-sm font-medium text-gray-700">' + new Date(task.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + '</p></div><div class="flex items-center gap-2"><span class="px-3 py-1.5 text-xs font-medium rounded-lg ' + (statusBg[task.status] || '') + '">' + (statusLabel[task.status] || task.status) + '</span>' + actionBtn + '</div></div></div>';
             }).join('');
@@ -606,6 +644,34 @@
                             '<span class="' + textClass + '">' + item.text + '</span>' + checkMark + '</label>';
                     }
                     contentHtml = '<div class="space-y-3 mb-4">' + itemsHtml + '</div>';
+
+                    // Requirement Stage: Doc Link / File
+                    if (stage.name === 'Requirement') {
+                        var reqDocUrl = stage.requirementDocUrl || '';
+                        contentHtml += '<div class="mt-4 mb-4 p-4 bg-blue-50 rounded-xl border border-blue-200">' +
+                            '<h4 class="text-sm font-bold text-blue-800 mb-3 flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Requirement Document</h4>' +
+                            '<div class="grid grid-cols-1 md:grid-cols-2 gap-3">' +
+                                '<div><label class="block text-xs font-medium text-blue-700 mb-1">Document Link</label>' +
+                                '<input type="url" id="reqDocUrl-' + sid + '" value="' + reqDocUrl + '" placeholder="Google Docs, Notion, etc." class="w-full px-3 py-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-sm bg-white"></div>' +
+                                '<div><label class="block text-xs font-medium text-blue-700 mb-1">Upload File</label>' +
+                                '<input type="file" id="reqDocFile-' + sid + '" accept=".pdf,.doc,.docx,.txt" class="w-full px-3 py-1.5 border border-blue-200 rounded-lg text-sm bg-white file:mr-2 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"></div>' +
+                            '</div>' +
+                            (reqDocUrl ? '<a href="' + reqDocUrl + '" target="_blank" class="inline-flex items-center gap-1 mt-2 text-xs text-blue-600 hover:text-blue-800 font-medium"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> Open Document</a>' : '') +
+                            '<button onclick="saveRequirementDoc(\'' + sid + '\')" class="mt-3 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-all">Save Document Link</button>' +
+                        '</div>';
+                    }
+
+                    // Design Stage: Figma Link
+                    if (stage.name === 'Design') {
+                        var figmaUrl = stage.figmaUrl || '';
+                        contentHtml += '<div class="mt-4 mb-4 p-4 bg-purple-50 rounded-xl border border-purple-200">' +
+                            '<h4 class="text-sm font-bold text-purple-800 mb-3 flex items-center gap-2"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/></svg> Figma Design Link</h4>' +
+                            '<div><input type="url" id="figmaUrl-' + sid + '" value="' + figmaUrl + '" placeholder="https://www.figma.com/file/..." class="w-full px-3 py-2 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-400 outline-none text-sm bg-white"></div>' +
+                            (figmaUrl ? '<a href="' + figmaUrl + '" target="_blank" class="inline-flex items-center gap-1 mt-2 text-xs text-purple-600 hover:text-purple-800 font-medium"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> Open in Figma</a>' : '') +
+                            '<button onclick="saveFigmaUrl(\'' + sid + '\')" class="mt-3 px-4 py-2 bg-purple-600 text-white text-sm font-medium rounded-lg hover:bg-purple-700 transition-all">Save Figma Link</button>' +
+                        '</div>';
+                    }
+
                     if (stage.approved) {
                         contentHtml += '<div class="px-4 py-3 bg-emerald-100 rounded-xl text-emerald-700 font-medium flex items-center gap-2 border border-emerald-200"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Stage Approved</div>';
                     } else {
@@ -633,9 +699,13 @@
                     var selProvider = stage.hostingProvider || '';
                     var selDomain = stage.domainUrl || '';
                     var sslChecked = stage.sslStatus === 'active' ? 'checked' : '';
+                    var clientLiveUrl = stage.clientLiveUrl || '';
                     contentHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">' +
                         '<div><label class="block text-sm font-medium text-gray-700 mb-2">Hosting Provider</label><select id="hosting-' + sid + '" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white"><option value="">Select provider</option><option value="aws"' + (selProvider === 'aws' ? ' selected' : '') + '>AWS</option><option value="vercel"' + (selProvider === 'vercel' ? ' selected' : '') + '>Vercel</option><option value="digitalocean"' + (selProvider === 'digitalocean' ? ' selected' : '') + '>DigitalOcean</option><option value="heroku"' + (selProvider === 'heroku' ? ' selected' : '') + '>Heroku</option><option value="custom"' + (selProvider === 'custom' ? ' selected' : '') + '>Custom Server</option></select></div>' +
                         '<div><label class="block text-sm font-medium text-gray-700 mb-2">Domain URL</label><input type="url" id="domain-' + sid + '" value="' + selDomain + '" placeholder="https://example.com" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div></div>' +
+                        '<div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Live Website URL (Client Side)</label><div class="flex gap-2"><input type="url" id="clientLiveUrl-' + sid + '" value="' + clientLiveUrl + '" placeholder="https://client-website.com" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">' +
+                        (clientLiveUrl ? '<a href="' + clientLiveUrl + '" target="_blank" class="px-4 py-3 bg-emerald-100 text-emerald-700 rounded-xl hover:bg-emerald-200 transition-all flex items-center gap-1 text-sm font-medium"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> Visit</a>' : '') +
+                        '</div></div>' +
                         '<div class="flex items-center gap-4 mb-4"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ssl-' + sid + '" ' + sslChecked + ' onclick="event.stopPropagation()" class="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="text-gray-700">SSL Certificate Installed</span></label></div>' +
                         '<div class="flex gap-3"><button onclick="saveHosting(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Save Hosting Details</button>' +
                         '<button onclick="markReady(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Mark as Ready</button></div>';
@@ -718,7 +788,7 @@
                 html += '<div class="stage-card bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="stage-' + sid + '">' +
                     '<div class="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-all" onclick="toggleStage(\'' + sid + '\')">' +
                         '<div class="flex items-center gap-4">' +
-                            '<div class="w-14 h-14 ' + (stage.gradient || 'stage-gradient-1') + ' rounded-xl flex items-center justify-center text-2xl shadow-lg">' + (stage.icon || '📋') + '</div>' +
+                            '<div class="w-14 h-14 ' + (stage.gradient || 'stage-gradient-1') + ' rounded-xl flex items-center justify-center shadow-lg text-white">' + emojiToSvg(stage.icon || '📋', 'w-7 h-7') + '</div>' +
                             '<div><div class="flex items-center gap-3">' +
                                 '<h3 class="text-lg font-bold text-gray-900">' + stage.name + '</h3>' +
                                 '<span class="w-2.5 h-2.5 rounded-full ' + status.dot + (stage.status !== 'pending' ? ' animate-pulse' : '') + '"></span>' +
@@ -846,25 +916,118 @@
         // ==================== RENDER DEV PAYMENTS ====================
         function renderDevPayments() {
             var container = document.getElementById('devPaymentsList');
+            var summaryContainer = document.getElementById('devPaymentSummary');
+            var filterDropdown = document.getElementById('devPaymentFilter');
             if (!container) return;
+
+            // Group payments by developer
+            var byDev = {};
+            devPayments.forEach(function(p) {
+                var devId = (p.developer && p.developer._id) ? p.developer._id : (p.developer || 'unknown');
+                var devName = p.developerName || (p.developer && p.developer.name) || 'Unknown';
+                if (!byDev[devId]) byDev[devId] = { name: devName, total: 0, count: 0, payments: [] };
+                byDev[devId].total += (p.amount || 0);
+                byDev[devId].count++;
+                byDev[devId].payments.push(p);
+            });
+
             var totalPaid = devPayments.reduce(function(s, p) { return s + (p.amount || 0); }, 0);
-            if (devPayments.length === 0) {
-                container.innerHTML = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl mb-4 border border-blue-200"><span class="font-medium text-blue-700">Total Paid to Team</span><span class="text-xl font-bold text-blue-700">₹0</span></div><div class="text-center py-6 text-gray-400 text-sm">No developer payments recorded yet</div>';
+            var devIds = Object.keys(byDev);
+
+            // Colors for developer cards
+            var cardColors = [
+                { bg: 'from-blue-50 to-blue-100', border: 'border-blue-200', text: 'text-blue-700', amount: 'text-blue-600', dot: 'bg-blue-500' },
+                { bg: 'from-purple-50 to-purple-100', border: 'border-purple-200', text: 'text-purple-700', amount: 'text-purple-600', dot: 'bg-purple-500' },
+                { bg: 'from-green-50 to-green-100', border: 'border-green-200', text: 'text-green-700', amount: 'text-green-600', dot: 'bg-green-500' },
+                { bg: 'from-orange-50 to-orange-100', border: 'border-orange-200', text: 'text-orange-700', amount: 'text-orange-600', dot: 'bg-orange-500' },
+                { bg: 'from-pink-50 to-pink-100', border: 'border-pink-200', text: 'text-pink-700', amount: 'text-pink-600', dot: 'bg-pink-500' },
+                { bg: 'from-teal-50 to-teal-100', border: 'border-teal-200', text: 'text-teal-700', amount: 'text-teal-600', dot: 'bg-teal-500' }
+            ];
+
+            // Build per-developer summary cards
+            if (summaryContainer) {
+                if (devIds.length === 0) {
+                    summaryContainer.innerHTML = '';
+                } else {
+                    var summaryHtml = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl mb-4 border border-blue-200">' +
+                        '<span class="font-medium text-blue-700">Total Paid to Team</span>' +
+                        '<span class="text-xl font-bold text-blue-700">₹' + totalPaid.toLocaleString() + '</span></div>';
+                    summaryHtml += '<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-2">';
+                    devIds.forEach(function(devId, idx) {
+                        var dev = byDev[devId];
+                        var c = cardColors[idx % cardColors.length];
+                        var pct = totalPaid > 0 ? Math.round((dev.total / totalPaid) * 100) : 0;
+                        summaryHtml += '<div class="bg-gradient-to-br ' + c.bg + ' rounded-xl p-4 border ' + c.border + ' cursor-pointer hover:shadow-md transition-all" onclick="document.getElementById(\'devPaymentFilter\').value=\'' + devId + '\';renderDevPayments()">' +
+                            '<div class="flex items-center gap-2 mb-2">' +
+                                '<div class="w-3 h-3 rounded-full ' + c.dot + '"></div>' +
+                                '<p class="font-semibold ' + c.text + ' text-sm truncate">' + dev.name + '</p>' +
+                            '</div>' +
+                            '<p class="text-xl font-bold ' + c.amount + '">₹' + dev.total.toLocaleString() + '</p>' +
+                            '<div class="flex justify-between items-center mt-1">' +
+                                '<span class="text-xs ' + c.text + ' opacity-70">' + dev.count + ' payment' + (dev.count > 1 ? 's' : '') + '</span>' +
+                                '<span class="text-xs font-medium ' + c.text + '">' + pct + '%</span>' +
+                            '</div>' +
+                            '<div class="w-full bg-white/50 rounded-full h-1.5 mt-1"><div class="h-1.5 rounded-full ' + c.dot + '" style="width:' + pct + '%"></div></div>' +
+                        '</div>';
+                    });
+                    summaryHtml += '</div>';
+                    summaryContainer.innerHTML = summaryHtml;
+                }
+            }
+
+            // Populate filter dropdown (preserve current selection)
+            if (filterDropdown) {
+                var currentVal = filterDropdown.value || 'all';
+                var filterHtml = '<option value="all">All Developers</option>';
+                devIds.forEach(function(devId) {
+                    var sel = (currentVal === devId) ? ' selected' : '';
+                    filterHtml += '<option value="' + devId + '"' + sel + '>' + byDev[devId].name + ' (₹' + byDev[devId].total.toLocaleString() + ')</option>';
+                });
+                filterDropdown.innerHTML = filterHtml;
+                if (currentVal !== 'all') filterDropdown.value = currentVal;
+            }
+
+            // Filter payments based on dropdown
+            var selectedDev = filterDropdown ? filterDropdown.value : 'all';
+            var filteredPayments = devPayments;
+            if (selectedDev !== 'all') {
+                filteredPayments = devPayments.filter(function(p) {
+                    var devId = (p.developer && p.developer._id) ? p.developer._id : (p.developer || 'unknown');
+                    return String(devId) === String(selectedDev);
+                });
+            }
+            var filteredTotal = filteredPayments.reduce(function(s, p) { return s + (p.amount || 0); }, 0);
+
+            if (filteredPayments.length === 0) {
+                container.innerHTML = '<div class="text-center py-6 text-gray-400 text-sm">No developer payments recorded yet</div>';
                 return;
             }
-            var rows = devPayments.map(function(p) {
+
+            // Sort by date descending
+            filteredPayments.sort(function(a, b) { return new Date(b.date || 0) - new Date(a.date || 0); });
+
+            var rows = filteredPayments.map(function(p, idx) {
                 var id = p._id || p.id;
-                var devName = p.developerName || p.developer || 'Unknown';
+                var devName = p.developerName || (p.developer && p.developer.name) || 'Unknown';
+                var devId = (p.developer && p.developer._id) ? p.developer._id : (p.developer || 'unknown');
+                var devIdx = devIds.indexOf(String(devId));
+                var c = cardColors[(devIdx >= 0 ? devIdx : 0) % cardColors.length];
+                var statusBadge = '';
+                if (p.status === 'pending') statusBadge = '<span class="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full">Pending</span>';
+                else if (p.status === 'cancelled') statusBadge = '<span class="text-xs px-2 py-0.5 bg-red-100 text-red-700 rounded-full">Cancelled</span>';
+                else statusBadge = '<span class="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full">Paid</span>';
+
                 return '<div id="dpRow-' + id + '" class="relative pl-12">' +
-                    '<div class="absolute left-3 w-4 h-4 rounded-full bg-blue-500 border-4 border-white shadow"></div>' +
+                    '<div class="absolute left-3 w-4 h-4 rounded-full ' + c.dot + ' border-4 border-white shadow"></div>' +
                     '<div class="bg-gradient-to-r from-gray-50 to-white rounded-xl p-4 border border-gray-100 hover:shadow-sm transition-all">' +
                         '<div class="flex justify-between items-start">' +
                             '<div>' +
                                 '<p class="font-semibold text-gray-800">' + devName + '</p>' +
                                 '<p class="text-sm text-gray-400">' + (p.role || '') + (p.note ? ' • ' + p.note : '') + '</p>' +
+                                '<div class="mt-1">' + statusBadge + '</div>' +
                             '</div>' +
                             '<div class="text-right">' +
-                                '<p class="text-lg font-bold text-blue-600">₹' + (p.amount || 0).toLocaleString() + '</p>' +
+                                '<p class="text-lg font-bold ' + c.amount + '">₹' + (p.amount || 0).toLocaleString() + '</p>' +
                                 '<p class="text-xs text-gray-400">' + (p.date ? new Date(p.date).toLocaleDateString() : '') + '</p>' +
                                 '<div class="flex gap-2 mt-1 justify-end admin-only">' +
                                     '<button onclick="editDevPaymentRow(\'' + id + '\')" class="text-xs text-blue-500 hover:underline font-medium">Edit</button>' +
@@ -875,7 +1038,14 @@
                     '</div>' +
                 '</div>';
             }).join('');
-            container.innerHTML = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl mb-4 border border-blue-200"><span class="font-medium text-blue-700">Total Paid to Team</span><span class="text-xl font-bold text-blue-700">₹' + totalPaid.toLocaleString() + '</span></div><div class="relative"><div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400 to-indigo-400"></div><div class="space-y-4" id="devPaymentsRows">' + rows + '</div></div>';
+
+            var filterLabel = selectedDev !== 'all' ? byDev[selectedDev].name : 'Showing All';
+            var filterTotal = selectedDev !== 'all' ? filteredTotal : totalPaid;
+            container.innerHTML = '<div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl mb-4 border border-gray-200">' +
+                '<span class="text-sm text-gray-600">' + filterLabel + ' &bull; ' + filteredPayments.length + ' payment' + (filteredPayments.length > 1 ? 's' : '') + '</span>' +
+                '<span class="text-base font-bold text-blue-700">₹' + filterTotal.toLocaleString() + '</span></div>' +
+                '<div class="relative"><div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400 to-indigo-400"></div>' +
+                '<div class="space-y-4" id="devPaymentsRows">' + rows + '</div></div>';
         }
 
         function editDevPaymentRow(id) {
@@ -945,7 +1115,7 @@
             var el = document.getElementById('activityList');
             if (!el) return;
             el.innerHTML = activities.map(function(a) {
-                return '<div class="flex gap-4"><div class="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center text-lg flex-shrink-0">' + (a.icon || '📌') + '</div><div><p class="text-gray-800"><span class="font-semibold">' + a.user + '</span> ' + a.action + '</p><p class="text-xs text-gray-400 mt-1">' + a.time + '</p></div></div>';
+                return '<div class="flex gap-4"><div class="w-10 h-10 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center flex-shrink-0 text-gray-500">' + emojiToSvg(a.icon || '📌', 'w-5 h-5') + '</div><div><p class="text-gray-800"><span class="font-semibold">' + a.user + '</span> ' + a.action + '</p><p class="text-xs text-gray-400 mt-1">' + a.time + '</p></div></div>';
             }).join('');
         }
 
@@ -1202,28 +1372,75 @@
             var hostingProvider = document.getElementById('hosting-' + stageId).value;
             var domainUrl = document.getElementById('domain-' + stageId).value;
             var sslStatus = document.getElementById('ssl-' + stageId).checked ? 'active' : 'pending';
-            console.log('Saving hosting - Provider:', hostingProvider, 'Domain:', domainUrl, 'SSL:', sslStatus);
+            var clientLiveUrlEl = document.getElementById('clientLiveUrl-' + stageId);
+            var clientLiveUrl = clientLiveUrlEl ? clientLiveUrlEl.value : '';
+            console.log('Saving hosting - Provider:', hostingProvider, 'Domain:', domainUrl, 'SSL:', sslStatus, 'ClientLiveUrl:', clientLiveUrl);
             try {
                 var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
                     method: 'PUT', headers: HEADERS,
-                    body: JSON.stringify({ hostingProvider: hostingProvider, domainUrl: domainUrl, sslStatus: sslStatus, status: 'in-progress' })
+                    body: JSON.stringify({ hostingProvider: hostingProvider, domainUrl: domainUrl, sslStatus: sslStatus, clientLiveUrl: clientLiveUrl, status: 'in-progress' })
                 });
                 var data = await res.json();
                 console.log('saveHosting response:', res.status, data);
                 if (res.ok) {
                     stage.hostingProvider = hostingProvider; stage.domainUrl = domainUrl; stage.sslStatus = sslStatus;
+                    stage.clientLiveUrl = clientLiveUrl;
                     stage.status = 'in-progress';
                     renderStages();
                     addLocalActivity('updated hosting configuration', '☁️');
-                    alert('✅ Hosting details saved!');
+                    alert('Hosting details saved!');
                 } else {
-                    alert('❌ Error: ' + (data.error || 'Failed to save hosting details'));
+                    alert('Error: ' + (data.error || 'Failed to save hosting details'));
                     console.error('API Error:', data);
                 }
             } catch (err) { 
-                alert('❌ Failed to save hosting details: ' + err.message);
+                alert('Failed to save hosting details: ' + err.message);
                 console.error('Error:', err);
             }
+        }
+
+        // Save Requirement Document Link
+        async function saveRequirementDoc(stageId) {
+            var stage = stages.find(function(s) { return s.id === stageId; });
+            if (!stage) return;
+            var reqDocUrl = document.getElementById('reqDocUrl-' + stageId).value;
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ requirementDocUrl: reqDocUrl })
+                });
+                var data = await res.json();
+                if (res.ok) {
+                    stage.requirementDocUrl = reqDocUrl;
+                    renderStages();
+                    addLocalActivity('updated requirement document link', '📄');
+                    alert('Requirement document link saved!');
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to save'));
+                }
+            } catch (err) { alert('Failed to save: ' + err.message); }
+        }
+
+        // Save Figma URL
+        async function saveFigmaUrl(stageId) {
+            var stage = stages.find(function(s) { return s.id === stageId; });
+            if (!stage) return;
+            var figmaUrl = document.getElementById('figmaUrl-' + stageId).value;
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId, {
+                    method: 'PUT', headers: HEADERS,
+                    body: JSON.stringify({ figmaUrl: figmaUrl })
+                });
+                var data = await res.json();
+                if (res.ok) {
+                    stage.figmaUrl = figmaUrl;
+                    renderStages();
+                    addLocalActivity('updated Figma design link', '🎨');
+                    alert('Figma link saved!');
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to save'));
+                }
+            } catch (err) { alert('Failed to save: ' + err.message); }
         }
 
         async function toggleDelivery(stageId, deliveryId) {

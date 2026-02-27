@@ -1,4 +1,5 @@
 const User = require('../models/User.model');
+const Project = require('../models/Project.model');
 
 // @desc    Get all users
 // @route   GET /api/users
@@ -7,10 +8,31 @@ exports.getUsers = async (req, res) => {
     try {
         const users = await User.find().sort({ createdAt: -1 });
 
+        // Get project counts for each user
+        const projects = await Project.find({}, 'team');
+        const projectCountMap = {};
+        projects.forEach(project => {
+            if (project.team && project.team.length > 0) {
+                project.team.forEach(member => {
+                    const userId = member.user ? member.user.toString() : null;
+                    if (userId) {
+                        projectCountMap[userId] = (projectCountMap[userId] || 0) + 1;
+                    }
+                });
+            }
+        });
+
+        // Attach project counts to user data
+        const usersWithCounts = users.map(user => {
+            const userObj = user.toObject();
+            userObj.projectCount = projectCountMap[user._id.toString()] || 0;
+            return userObj;
+        });
+
         res.status(200).json({
             success: true,
-            count: users.length,
-            data: users
+            count: usersWithCounts.length,
+            data: usersWithCounts
         });
     } catch (err) {
         res.status(500).json({

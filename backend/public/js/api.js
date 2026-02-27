@@ -515,7 +515,7 @@ const api = {
 
     getMyPayments: async () => {
         try {
-            const res = await fetch(`${API_BASE_URL}/payments/my-payments`, {
+            const res = await fetch(`${API_BASE_URL}/payments/developer/my`, {
                 headers: api.getHeaders()
             });
             return await res.json();
@@ -1151,6 +1151,15 @@ function setupNavigation() {
         }
     }
 
+    // Redirect subadmin away from document pages
+    if (user.role === 'subadmin') {
+        const blockedForSubadmin = ['/documents', '/document-center'];
+        if (blockedForSubadmin.some(p => window.location.pathname.startsWith(p))) {
+            window.location.href = '/my-work';
+            return;
+        }
+    }
+
     // Set user info in nav
     const userName = document.getElementById('userName');
     const userInitials = document.getElementById('userInitials');
@@ -1165,6 +1174,17 @@ function setupNavigation() {
     // Hide admin-subadmin-only elements for developers and clients
     if (user.role === 'developer' || user.role === 'client') {
         document.querySelectorAll('.admin-subadmin-only').forEach(el => el.style.display = 'none');
+    }
+
+    // Hide elements marked hide-for-subadmin
+    if (user.role === 'subadmin') {
+        document.querySelectorAll('.hide-for-subadmin').forEach(el => el.style.display = 'none');
+    }
+
+    // Hide nav links entirely for developers
+    if (user.role === 'developer') {
+        var navLinks = document.getElementById('navLinks');
+        if (navLinks) navLinks.style.display = 'none';
     }
 }
 

@@ -1129,9 +1129,14 @@ exports.getClientView = async (req, res) => {
                 hostingProvider: s.hostingProvider || '',
                 domainUrl: s.domainUrl || '',
                 sslStatus: s.sslStatus || 'pending',
+                figmaUrl: s.figmaUrl || '',
+                requirementDocUrl: s.requirementDocUrl || '',
+                clientLiveUrl: s.clientLiveUrl || '',
                 completionRate: s.items && s.items.length > 0 
                     ? Math.round(s.items.filter(i => i.done).length / s.items.length * 100) 
-                    : s.status === 'completed' ? 100 : 0
+                    : s.status === 'completed' ? 100 : 0,
+                totalItems: s.items ? s.items.length : 0,
+                doneItems: s.items ? s.items.filter(i => i.done).length : 0
             }));
 
         // Client deliverables tracker

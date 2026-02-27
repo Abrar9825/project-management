@@ -62,7 +62,7 @@ router.use(protect);
 
 // Project routes
 router.route('/')
-    .get(adminSubadminOnly, getProjects)
+    .get(getProjects)
     .post(adminOnly, createProjectValidation, handleValidation, createProject);
 
 router.get('/stats', adminOnly, getProjectStats);

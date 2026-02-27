@@ -12,34 +12,25 @@
     <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-3">
+                <a href="/my-work" class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                     </div>
                     <span class="text-xl font-bold text-gray-800">ProjectControl</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-1" id="navLinks">
+                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all">My Work</a>
+                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-subadmin-only">Projects</a>
+                    <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">Users</a>
+                    <a href="/documents" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">Documents</a>
                 </div>
-
-                <div class="hidden md:flex items-center space-x-1">
-                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">My Work</a>
-                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-subadmin">Projects</a>
-                    <a href="/add-project" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-only">Add Project</a>
-                    <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-only">Users</a>
-                    <a href="/documents" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium admin-subadmin">Documents</a>
-                </div>
-
                 <div class="flex items-center space-x-4">
-                    <a href="/profile" class="flex items-center space-x-3 bg-indigo-50 rounded-lg px-2 py-1">
-                        <div class="w-9 h-9 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            <span id="userInitials">AK</span>
-                        </div>
+                    <a href="/profile" class="flex items-center space-x-3 bg-indigo-50 rounded-lg px-2 py-1 transition-all">
+                        <div class="w-9 h-9 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm"><span id="userInitials">AK</span></div>
                         <span class="hidden sm:block text-sm font-medium text-indigo-700" id="userName">Admin</span>
                     </a>
-                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                        </svg>
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Logout">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                     </button>
                 </div>
             </div>
@@ -66,7 +57,7 @@
         </div>
 
         <!-- Stats Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="grid grid-cols-3 gap-4 mb-8">
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -102,25 +93,13 @@
                 <div class="text-2xl font-bold text-gray-900" id="statHours">0h</div>
                 <div class="text-sm text-gray-500">Total Hours</div>
             </div>
-            
-            <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="text-2xl font-bold text-emerald-600" id="statEarnings">$0</div>
-                <div class="text-sm text-gray-500">Total Earnings</div>
-            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
             <!-- Profile Info -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-6">👤 Profile Information</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2"><svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> Profile Information</h3>
                 
                 <div class="space-y-4">
                     <div class="flex justify-between items-center py-3 border-b border-gray-100">
@@ -152,10 +131,14 @@
 
             <!-- Recent Payments -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-6">💰 Recent Payments</h3>
+                <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2"><svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Payment History</h3>
                 
+                <!-- Project-wise Earnings -->
+                <div id="projectEarningsBreakdown" class="space-y-2 mb-4"></div>
+                
+                <!-- Payment Timeline -->
                 <div id="paymentsList" class="space-y-3">
-                    <p class="text-gray-500 text-center py-6">Loading payments...</p>
+                    <p class="text-gray-500 text-center py-4">Loading payments...</p>
                 </div>
             </div>
 
@@ -163,16 +146,16 @@
 
         <!-- Recent Activity -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-6">📊 Recent Activity</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2"><svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg> Recent Activity</h3>
             
             <div id="activityList" class="space-y-4">
                 <p class="text-gray-500 text-center py-6">Loading activity...</p>
             </div>
         </div>
 
-        <!-- My Projects -->
+        <!-- My Projects with Earnings -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-6">📁 My Projects</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2"><svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg> My Projects</h3>
             
             <div id="projectsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <p class="text-gray-500 text-center py-6 col-span-full">Loading projects...</p>
@@ -187,6 +170,8 @@
         let payments = [];
         let projects = [];
         let timelogs = [];
+        let allTasks = [];     // pending + in-progress + blocked
+        let completedTasks = []; // completed only
 
         const profileGradients = [
             'from-blue-500 to-indigo-600',
@@ -211,21 +196,36 @@
         async function loadPayments() {
             try {
                 if (!profile || !profile._id) return;
-                const result = await api.getPayments({ developer: profile._id });
-                if (result.success) {
-                    payments = (result.data || []).filter(p => p.type === 'developer');
-                    renderPayments();
+                let result;
+                if (api.getMyPayments) {
+                    result = await api.getMyPayments();
+                }
+                if (!result || !result.success) {
+                    result = await api.getPayments({ developer: profile._id });
+                }
+                if (result && result.success) {
+                    payments = result.data || [];
+                } else {
+                    payments = [];
                 }
             } catch (error) {
                 console.error('Load payments error:', error);
+                payments = [];
             }
+            renderPayments();
+            updateStats();
         }
 
         async function loadProjects() {
             try {
                 const result = await api.getProjects();
                 if (result.success) {
-                    projects = result.data || [];
+                    const allProjects = result.data || [];
+                    // All roles: only show projects where user is a team member
+                    const myId = String(profile._id);
+                    projects = allProjects.filter(p => {
+                        return (p.team || []).some(t => String(t.user?._id || t.user) === myId);
+                    });
                     renderProjects();
                 }
             } catch (error) {
@@ -238,22 +238,32 @@
                 const result = await api.getMyTimeLogs();
                 if (result.success) {
                     timelogs = result.data || [];
-                    updateStats();
                 }
             } catch (error) {
                 console.error('Load timelogs error:', error);
             }
+            updateStats();
         }
 
-        async function loadTasks() {
+        async function loadAllTasks() {
             try {
-                const result = await api.getMyTasks();
-                if (result.success) {
-                    const tasks = result.data || [];
-                    const completed = tasks.filter(t => t.status === 'completed').length;
-                    document.getElementById('statTasksCompleted').textContent = completed;
-                    renderActivity(tasks);
+                // Load active tasks
+                const activeResult = await api.getMyTasks();
+                if (activeResult.success) {
+                    allTasks = activeResult.data || [];
                 }
+                
+                // Load completed tasks
+                const completedResult = await fetch('/api/tasks/my/completed', {
+                    headers: api.getHeaders()
+                });
+                const completedData = await completedResult.json();
+                if (completedData.success) {
+                    completedTasks = completedData.data || [];
+                }
+                
+                updateStats();
+                renderActivity();
             } catch (error) {
                 console.error('Load tasks error:', error);
             }
@@ -291,44 +301,103 @@
         }
 
         function updateStats() {
-            // Calculate total hours
-            const totalMinutes = timelogs.reduce((sum, log) => sum + (log.duration || 0), 0);
+            // Projects count
+            document.getElementById('statProjects').textContent = projects.length;
+            
+            // Tasks completed count
+            document.getElementById('statTasksCompleted').textContent = completedTasks.length;
+            
+            // Calculate total hours from timelogs + task durations
+            let totalMinutes = timelogs.reduce((sum, log) => sum + (log.duration || 0), 0);
+            
+            // Also calculate time from tasks with startedAt/completedAt (if no timelogs)
+            if (totalMinutes === 0) {
+                completedTasks.forEach(t => {
+                    if (t.startedAt && t.completedAt) {
+                        const diffMs = new Date(t.completedAt) - new Date(t.startedAt);
+                        totalMinutes += Math.floor(diffMs / 60000);
+                    }
+                });
+                allTasks.forEach(t => {
+                    if (t.startedAt && t.status === 'in-progress') {
+                        const diffMs = new Date() - new Date(t.startedAt);
+                        totalMinutes += Math.floor(diffMs / 60000);
+                    }
+                });
+            }
+            
             const hours = Math.floor(totalMinutes / 60);
             const mins = totalMinutes % 60;
             document.getElementById('statHours').textContent = `${hours}h ${mins}m`;
-            
-            // Calculate earnings (from payments)
-            const totalEarnings = payments.reduce((sum, p) => sum + (p.status === 'paid' ? p.amount : 0), 0);
-            document.getElementById('statEarnings').textContent = formatCurrency(totalEarnings);
         }
 
         function renderPayments() {
             const container = document.getElementById('paymentsList');
+            const breakdownContainer = document.getElementById('projectEarningsBreakdown');
+            
+            // Calculate total earned
+            const totalEarned = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+            
+            // Project-wise earnings breakdown
+            const byProject = {};
+            payments.forEach(p => {
+                const pName = p.projectName || p.project?.name || 'Unknown Project';
+                if (!byProject[pName]) byProject[pName] = 0;
+                byProject[pName] += (p.amount || 0);
+            });
+            
+            const projectEntries = Object.entries(byProject).sort((a, b) => b[1] - a[1]);
+            if (projectEntries.length > 0) {
+                breakdownContainer.innerHTML = projectEntries.map(([name, amount]) => {
+                    const pct = totalEarned > 0 ? Math.round((amount / totalEarned) * 100) : 0;
+                    return `
+                        <div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center gap-2 flex-1 min-w-0">
+                                <div class="w-2 h-2 rounded-full bg-emerald-500 flex-shrink-0"></div>
+                                <span class="text-sm text-gray-700 truncate">${name}</span>
+                            </div>
+                            <div class="flex items-center gap-3 flex-shrink-0">
+                                <div class="w-20 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-emerald-500 rounded-full" style="width: ${pct}%"></div>
+                                </div>
+                                <span class="text-sm font-semibold text-gray-900 w-20 text-right">₹${amount.toLocaleString()}</span>
+                            </div>
+                        </div>`;
+                }).join('');
+            } else {
+                breakdownContainer.innerHTML = '';
+            }
             
             if (payments.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center py-6">No payments yet</p>';
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">No payments yet</p>';
                 return;
             }
             
-            // Update earnings stat
-            const totalEarnings = payments.reduce((sum, p) => sum + (p.status === 'paid' ? p.amount : 0), 0);
-            document.getElementById('statEarnings').textContent = formatCurrency(totalEarnings);
-            
-            container.innerHTML = payments.slice(0, 5).map(p => `
-                <div class="flex items-center justify-between p-3 border border-gray-100 rounded-xl">
-                    <div>
-                        <p class="font-medium text-gray-900">${formatCurrency(p.amount)}</p>
-                        <p class="text-sm text-gray-500">${p.project?.name || 'Project'} • ${formatDate(p.date || p.createdAt)}</p>
-                    </div>
-                    <span class="px-2 py-1 text-xs font-medium rounded-lg ${p.status === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${p.status}</span>
-                </div>
-            `).join('');
+            // Timeline of payments
+            container.innerHTML = '<div class="relative"><div class="absolute left-4 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-300 to-teal-300"></div>' +
+                payments.slice(0, 10).map(p => {
+                    const pName = p.projectName || p.project?.name || 'Project';
+                    return `
+                        <div class="relative pl-10 pb-4">
+                            <div class="absolute left-2.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white shadow"></div>
+                            <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="font-medium text-gray-900">${pName}</p>
+                                        <p class="text-xs text-gray-500">${p.role || ''} ${p.note ? '· ' + p.note : ''}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-bold text-emerald-600">₹${(p.amount || 0).toLocaleString()}</p>
+                                        <p class="text-xs text-gray-400">${formatDate(p.date || p.createdAt)}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                }).join('') + '</div>';
         }
 
         function renderProjects() {
             const container = document.getElementById('projectsList');
-            
-            // Update stat
             document.getElementById('statProjects').textContent = projects.length;
             
             if (projects.length === 0) {
@@ -336,65 +405,161 @@
                 return;
             }
             
-            container.innerHTML = projects.slice(0, 6).map((p, i) => {
+            // Build earnings lookup from payments
+            const earningsByProject = {};
+            payments.forEach(p => {
+                const pid = p.project?._id || p.project || '';
+                const pName = p.projectName || p.project?.name || '';
+                const key = String(pid);
+                if (!earningsByProject[key]) earningsByProject[key] = { amount: 0, name: pName };
+                earningsByProject[key].amount += (p.amount || 0);
+            });
+            
+            // Also try matching by project name for fallback
+            const earningsByName = {};
+            payments.forEach(p => {
+                const pName = p.projectName || p.project?.name || '';
+                if (pName) {
+                    if (!earningsByName[pName]) earningsByName[pName] = 0;
+                    earningsByName[pName] += (p.amount || 0);
+                }
+            });
+            
+            // Count tasks per project
+            const tasksByProject = {};
+            [...allTasks, ...completedTasks].forEach(t => {
+                const pid = String(t.project?._id || t.project || t.projectId || '');
+                const pName = t.projectName || '';
+                if (pid) { tasksByProject[pid] = (tasksByProject[pid] || 0) + 1; }
+                if (pName) { tasksByProject[pName] = (tasksByProject[pName] || 0) + 1; }
+            });
+            
+            container.innerHTML = projects.map((p, i) => {
                 const gradient = profileGradients[i % profileGradients.length];
+                const clientName = typeof p.client === 'string' ? p.client : (p.client?.name || p.clientDetails?.name || 'Client');
+                const stages = p.stages || [];
+                const completedStages = stages.filter(s => s.status === 'completed').length;
+                const progress = stages.length > 0 ? Math.round((completedStages / stages.length) * 100) : (p.progress || 0);
+                
+                // Find earnings for this project
+                const pid = String(p._id);
+                const projectEarning = earningsByProject[pid]?.amount || earningsByName[p.name] || 0;
+                
+                // Find task count for this project
+                const taskCount = tasksByProject[pid] || tasksByProject[p.name] || 0;
+                
+                // Find the user's role in this project
+                const myTeamEntry = (p.team || []).find(t => String(t.user?._id || t.user) === String(profile._id));
+                const myRole = myTeamEntry?.role || myTeamEntry?.name || '';
+                
+                const isDev = profile.role === 'developer';
+                const tag = isDev ? 'div' : 'a';
+                const linkAttr = isDev ? '' : ` href="/project-detail?id=${p._id}"`;
+                const cursorClass = isDev ? 'cursor-default' : 'hover:shadow-md';
+                
                 return `
-                    <a href="/project-detail?id=${p._id}" class="block p-4 rounded-xl border border-gray-100 hover:shadow-md transition-all">
+                    <${tag}${linkAttr} class="block p-4 rounded-xl border border-gray-100 ${cursorClass} transition-all">
                         <div class="flex items-center gap-3 mb-3">
-                            <div class="w-10 h-10 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center text-white font-bold">
+                            <div class="w-10 h-10 bg-gradient-to-br ${gradient} rounded-xl flex items-center justify-center text-white font-bold text-sm">
                                 ${p.name?.charAt(0) || 'P'}
                             </div>
                             <div class="flex-1 min-w-0">
                                 <h4 class="font-medium text-gray-900 truncate">${p.name}</h4>
-                                <p class="text-sm text-gray-500">${p.client?.name || 'Client'}</p>
+                                <p class="text-sm text-gray-500">${clientName}</p>
                             </div>
                         </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-500">${p.progress || 0}% complete</span>
-                            <span class="px-2 py-0.5 rounded-full text-xs font-medium ${getStatusClass(p.status)}">${p.status || 'active'}</span>
+                        ${myRole ? `<p class="text-xs text-indigo-600 font-medium mb-2">${myRole}</p>` : ''}
+                        <div class="mb-2">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span class="text-gray-500">${progress}% complete</span>
+                                <span class="text-gray-400">${completedStages}/${stages.length} stages</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="h-full rounded-full bg-gradient-to-r ${gradient}" style="width: ${progress}%"></div>
+                            </div>
                         </div>
-                    </a>
+                        <div class="flex items-center justify-between text-sm mt-2">
+                            <span class="text-gray-500 text-xs">${taskCount} task${taskCount !== 1 ? 's' : ''}</span>
+                            <span class="font-semibold ${projectEarning > 0 ? 'text-emerald-600' : 'text-gray-400'} text-xs">₹${projectEarning.toLocaleString()}</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm mt-1">
+                            <span class="text-gray-400 text-xs">${p.type || 'web'}</span>
+                            <span class="px-2 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusClass(p.status)}">${p.status || 'active'}</span>
+                        </div>
+                    </${tag}>
                 `;
             }).join('');
         }
 
-        function renderActivity(tasks) {
+        function renderActivity() {
             const container = document.getElementById('activityList');
             
-            // Get recent completed tasks as activity
-            const recentTasks = tasks
-                .filter(t => t.updatedAt)
-                .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-                .slice(0, 5);
+            // Merge all tasks and sort by most recent activity
+            const merged = [...allTasks, ...completedTasks]
+                .map(t => {
+                    // Determine the most relevant action & timestamp
+                    let action, timestamp, icon, iconBg;
+                    if (t.status === 'completed' && t.completedAt) {
+                        action = 'completed';
+                        timestamp = t.completedAt;
+                        icon = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+                        iconBg = 'bg-emerald-100 text-emerald-600';
+                    } else if (t.status === 'in-progress' && t.startedAt) {
+                        action = 'started working on';
+                        timestamp = t.startedAt;
+                        icon = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>';
+                        iconBg = 'bg-blue-100 text-blue-600';
+                    } else if (t.status === 'blocked') {
+                        action = 'blocked on';
+                        timestamp = t.updatedAt || t.createdAt;
+                        icon = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>';
+                        iconBg = 'bg-red-100 text-red-600';
+                    } else {
+                        action = 'was assigned';
+                        timestamp = t.createdAt || t.updatedAt;
+                        icon = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>';
+                        iconBg = 'bg-indigo-100 text-indigo-600';
+                    }
+                    return { ...t, action, timestamp, icon, iconBg };
+                })
+                .filter(t => t.timestamp)
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 8);
             
-            if (recentTasks.length === 0) {
+            if (merged.length === 0) {
                 container.innerHTML = '<p class="text-gray-500 text-center py-6">No recent activity</p>';
                 return;
             }
             
-            const statusLabels = {
-                'pending': 'was assigned',
-                'in-progress': 'started working on',
-                'completed': 'completed',
-                'blocked': 'marked as blocked'
-            };
-            
-            container.innerHTML = recentTasks.map(task => `
+            container.innerHTML = merged.map(task => `
                 <div class="flex items-start gap-4 pb-4 border-b border-gray-100 last:border-0">
-                    <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 flex-shrink-0">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
+                    <div class="w-10 h-10 rounded-full ${task.iconBg} flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">${task.icon}</svg>
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 min-w-0">
                         <p class="text-gray-900">
-                            <span class="font-medium">${statusLabels[task.status] || 'updated'}</span> 
-                            "${task.title}"
+                            <span class="font-medium">${task.action}</span> 
+                            "<span class="text-indigo-600">${task.title}</span>"
                         </p>
-                        <p class="text-sm text-gray-500">${formatDateTime(task.updatedAt)}</p>
+                        <p class="text-sm text-gray-500 flex items-center gap-2 mt-0.5">
+                            <span>${task.projectName || 'Project'}</span>
+                            <span class="text-gray-300">·</span>
+                            <span>${formatDateTime(task.timestamp)}</span>
+                        </p>
                     </div>
+                    <span class="px-2 py-1 text-xs font-medium rounded-lg capitalize ${getStatusBadge(task.status)} flex-shrink-0">${task.status}</span>
                 </div>
             `).join('');
+        }
+
+        function getStatusBadge(status) {
+            const map = {
+                'completed': 'bg-emerald-100 text-emerald-700',
+                'in-progress': 'bg-blue-100 text-blue-700',
+                'pending': 'bg-amber-100 text-amber-700',
+                'blocked': 'bg-red-100 text-red-700'
+            };
+            return map[status] || 'bg-gray-100 text-gray-700';
         }
 
         function getStatusClass(status) {
@@ -425,13 +590,15 @@
             }
             renderProfile();
             
-            // Load all data
+            // Load profile first to get the _id, then load dependent data
+            await loadProfile();
+            
+            // Now load all data in parallel
             await Promise.all([
-                loadProfile(),
                 loadProjects(),
                 loadPayments(),
                 loadTimelogs(),
-                loadTasks()
+                loadAllTasks()
             ]);
         }
 

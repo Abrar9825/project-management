@@ -28,27 +28,28 @@
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Navigation -->
+    <!-- Navigation Bar -->
     <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-teal-500 to-teal-700 rounded-xl flex items-center justify-center shadow-lg">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <a href="/my-work" class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                     </div>
-                    <span class="text-xl font-bold text-oxford-900">AgencyControl</span>
-                </div>
-                <div class="hidden md:flex items-center space-x-1">
-                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">My Work</a>
-                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">Projects</a>
-                    <a href="/documents" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">Documents</a>
+                    <span class="text-xl font-bold text-gray-800">ProjectControl</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-1" id="navLinks">
+                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all">My Work</a>
+                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-subadmin-only">Projects</a>
+                    <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">Users</a>
+                    <a href="/documents" class="px-4 py-2 rounded-lg bg-indigo-50 text-indigo-700 font-medium transition-all admin-only">Documents</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/profile" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1">
-                        <div class="w-9 h-9 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold text-sm"><span id="userInitials">AK</span></div>
+                    <a href="/profile" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-all">
+                        <div class="w-9 h-9 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center text-white font-semibold text-sm"><span id="userInitials">AK</span></div>
                         <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Admin</span>
                     </a>
-                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg" title="Logout">
+                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Logout">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                     </button>
                 </div>
@@ -174,21 +175,21 @@
         let projectData = null;
 
         const docTypeLabels = {
-            'contract': { icon: '📝', label: 'Contract Agreement', color: 'bg-blue-50 text-blue-700' },
-            'welcome-doc': { icon: '🎉', label: 'Welcome Document', color: 'bg-green-50 text-green-700' },
-            'payment-plan': { icon: '💰', label: 'Payment Plan', color: 'bg-yellow-50 text-yellow-700' },
-            'client-access-sheet': { icon: '🔐', label: 'Client Access Sheet', color: 'bg-purple-50 text-purple-700' },
-            'fulfillment-plan': { icon: '📋', label: 'Fulfillment Plan', color: 'bg-indigo-50 text-indigo-700' },
-            'tracking-sheet': { icon: '📊', label: 'Tracking Sheet', color: 'bg-cyan-50 text-cyan-700' },
-            'monthly-report': { icon: '📈', label: 'Monthly Report', color: 'bg-orange-50 text-orange-700' },
-            'stage-summary': { icon: '📑', label: 'Stage Summary', color: 'bg-pink-50 text-pink-700' },
-            'handover': { icon: '📦', label: 'Handover Kit', color: 'bg-emerald-50 text-emerald-700' },
-            'maintenance-agreement': { icon: '🔧', label: 'Maintenance Agreement', color: 'bg-slate-50 text-slate-700' },
-            'feedback-request': { icon: '⭐', label: 'Feedback Request', color: 'bg-amber-50 text-amber-700' },
-            'requirement': { icon: '📝', label: 'Requirement Document', color: 'bg-blue-50 text-blue-700' },
-            'quotation': { icon: '🧾', label: 'Quotation', color: 'bg-green-50 text-green-700' },
-            'agreement': { icon: '📄', label: 'Agreement', color: 'bg-blue-50 text-blue-700' },
-            'design-brief': { icon: '🎨', label: 'Design Brief', color: 'bg-pink-50 text-pink-700' }
+            'contract': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>', label: 'Contract Agreement', color: 'bg-blue-50 text-blue-700' },
+            'welcome-doc': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', label: 'Welcome Document', color: 'bg-green-50 text-green-700' },
+            'payment-plan': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>', label: 'Payment Plan', color: 'bg-yellow-50 text-yellow-700' },
+            'client-access-sheet': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>', label: 'Client Access Sheet', color: 'bg-purple-50 text-purple-700' },
+            'fulfillment-plan': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>', label: 'Fulfillment Plan', color: 'bg-indigo-50 text-indigo-700' },
+            'tracking-sheet': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>', label: 'Tracking Sheet', color: 'bg-cyan-50 text-cyan-700' },
+            'monthly-report': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>', label: 'Monthly Report', color: 'bg-orange-50 text-orange-700' },
+            'stage-summary': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>', label: 'Stage Summary', color: 'bg-pink-50 text-pink-700' },
+            'handover': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>', label: 'Handover Kit', color: 'bg-emerald-50 text-emerald-700' },
+            'maintenance-agreement': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>', label: 'Maintenance Agreement', color: 'bg-slate-50 text-slate-700' },
+            'feedback-request': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>', label: 'Feedback Request', color: 'bg-amber-50 text-amber-700' },
+            'requirement': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>', label: 'Requirement Document', color: 'bg-blue-50 text-blue-700' },
+            'quotation': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>', label: 'Quotation', color: 'bg-green-50 text-green-700' },
+            'agreement': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>', label: 'Agreement', color: 'bg-blue-50 text-blue-700' },
+            'design-brief': { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>', label: 'Design Brief', color: 'bg-pink-50 text-pink-700' }
         };
 
         async function init() {
@@ -253,7 +254,7 @@
 
             empty.classList.add('hidden');
             grid.innerHTML = filtered.map(doc => {
-                const info = docTypeLabels[doc.type] || { icon: '📄', label: doc.type, color: 'bg-gray-50 text-gray-700' };
+                const info = docTypeLabels[doc.type] || { icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>', label: doc.type, color: 'bg-gray-50 text-gray-700' };
                 const statusClass = `status-${doc.status}`;
                 const date = new Date(doc.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 

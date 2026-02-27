@@ -39,6 +39,10 @@ const StageSchema = new mongoose.Schema({
     repoUrl: String,
     liveUrl: String,
     linkedBackend: String,
+    figmaUrl: String,
+    requirementDocUrl: String,
+    requirementDocFile: String,
+    clientLiveUrl: String,
     health: {
         type: String,
         enum: ['success', 'warning', 'danger', 'pending'],
