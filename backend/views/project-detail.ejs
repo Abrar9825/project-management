@@ -399,7 +399,7 @@
                         </div>
                         <div>
                             <label class="text-xs font-semibold text-gray-600 mb-1 block">Type</label>
-                            <select id="globalAssetType" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-violet-500 text-sm bg-white">
+                            <select id="globalAssetType" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-teal-500 text-sm bg-white">
                                 <option value="logo">Logo</option>
                                 <option value="content">Content</option>
                                 <option value="brand-guide">Brand Guide</option>
@@ -763,13 +763,13 @@
                     var sslChecked = stage.sslStatus === 'active' ? 'checked' : '';
                     var clientLiveUrl = stage.clientLiveUrl || '';
                     contentHtml = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">' +
-                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Hosting Provider</label><select id="hosting-' + sid + '" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none bg-white"><option value="">Select provider</option><option value="aws"' + (selProvider === 'aws' ? ' selected' : '') + '>AWS</option><option value="vercel"' + (selProvider === 'vercel' ? ' selected' : '') + '>Vercel</option><option value="digitalocean"' + (selProvider === 'digitalocean' ? ' selected' : '') + '>DigitalOcean</option><option value="heroku"' + (selProvider === 'heroku' ? ' selected' : '') + '>Heroku</option><option value="custom"' + (selProvider === 'custom' ? ' selected' : '') + '>Custom Server</option></select></div>' +
-                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Domain URL</label><input type="url" id="domain-' + sid + '" value="' + selDomain + '" placeholder="https://example.com" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"></div></div>' +
-                        '<div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Live Website URL (Client Side)</label><div class="flex gap-2"><input type="url" id="clientLiveUrl-' + sid + '" value="' + clientLiveUrl + '" placeholder="https://client-website.com" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">' +
+                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Hosting Provider</label><select id="hosting-' + sid + '" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none bg-white"><option value="">Select provider</option><option value="aws"' + (selProvider === 'aws' ? ' selected' : '') + '>AWS</option><option value="vercel"' + (selProvider === 'vercel' ? ' selected' : '') + '>Vercel</option><option value="digitalocean"' + (selProvider === 'digitalocean' ? ' selected' : '') + '>DigitalOcean</option><option value="heroku"' + (selProvider === 'heroku' ? ' selected' : '') + '>Heroku</option><option value="custom"' + (selProvider === 'custom' ? ' selected' : '') + '>Custom Server</option></select></div>' +
+                        '<div><label class="block text-sm font-medium text-gray-700 mb-2">Domain URL</label><input type="url" id="domain-' + sid + '" value="' + selDomain + '" placeholder="https://example.com" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none"></div></div>' +
+                        '<div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">Live Website URL (Client Side)</label><div class="flex gap-2"><input type="url" id="clientLiveUrl-' + sid + '" value="' + clientLiveUrl + '" placeholder="https://client-website.com" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none">' +
                         (clientLiveUrl ? '<a href="' + clientLiveUrl + '" target="_blank" class="px-4 py-3 bg-emerald-100 text-emerald-700 rounded-xl hover:bg-emerald-200 transition-all flex items-center gap-1 text-sm font-medium"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg> Visit</a>' : '') +
                         '</div></div>' +
                         '<div class="flex items-center gap-4 mb-4"><label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" id="ssl-' + sid + '" ' + sslChecked + ' onclick="event.stopPropagation()" class="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"><span class="text-gray-700">SSL Certificate Installed</span></label></div>' +
-                        '<div class="flex gap-3"><button onclick="saveHosting(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-purple-500 to-pink-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Save Hosting Details</button>' +
+                        '<div class="flex gap-3"><button onclick="saveHosting(\'' + sid + '\')" class="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl transition-all">Save Hosting Details</button>' +
                         '<button onclick="markReady(\'' + sid + '\')" class="px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">Mark as Ready</button></div>';
 
                 } else if (stage.type === 'delivery') {
@@ -904,7 +904,7 @@
                 var circleText = isReceived ? '&#10003;' : String(i + 1);
                 var amountColor = isReceived ? 'text-emerald-600' : 'text-gray-400';
                 var adminBtns = '<div class="flex gap-2 mt-1 admin-only">' +
-                    (!isReceived ? '<button onclick="markPaymentReceived(\'' + id + '\')" class="text-xs text-indigo-600 hover:underline font-medium">Mark Received</button>' : '') +
+                    (!isReceived ? '<button onclick="markPaymentReceived(\'' + id + '\')" class="text-xs text-teal-600 hover:underline font-medium">Mark Received</button>' : '') +
                     '<button onclick="editClientPaymentRow(\'' + id + '\')" class="text-xs text-blue-500 hover:underline font-medium">Edit</button>' +
                     '<button onclick="deleteClientPayment(\'' + id + '\')" class="text-xs text-red-400 hover:underline font-medium">Delete</button>' +
                     '</div>';
@@ -999,7 +999,7 @@
             // Colors for developer cards
             var cardColors = [
                 { bg: 'from-blue-50 to-blue-100', border: 'border-blue-200', text: 'text-blue-700', amount: 'text-blue-600', dot: 'bg-blue-500' },
-                { bg: 'from-purple-50 to-purple-100', border: 'border-purple-200', text: 'text-purple-700', amount: 'text-purple-600', dot: 'bg-purple-500' },
+                { bg: 'from-teal-50 to-teal-100', border: 'border-teal-200', text: 'text-teal-700', amount: 'text-teal-600', dot: 'bg-teal-500' },
                 { bg: 'from-green-50 to-green-100', border: 'border-green-200', text: 'text-green-700', amount: 'text-green-600', dot: 'bg-green-500' },
                 { bg: 'from-orange-50 to-orange-100', border: 'border-orange-200', text: 'text-orange-700', amount: 'text-orange-600', dot: 'bg-orange-500' },
                 { bg: 'from-pink-50 to-pink-100', border: 'border-pink-200', text: 'text-pink-700', amount: 'text-pink-600', dot: 'bg-pink-500' },
@@ -1011,7 +1011,7 @@
                 if (devIds.length === 0) {
                     summaryContainer.innerHTML = '';
                 } else {
-                    var summaryHtml = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl mb-4 border border-blue-200">' +
+                    var summaryHtml = '<div class="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-teal-50 rounded-xl mb-4 border border-teal-200">' +
                         '<span class="font-medium text-blue-700">Total Paid to Team</span>' +
                         '<span class="text-xl font-bold text-blue-700">₹' + totalPaid.toLocaleString() + '</span></div>';
                     summaryHtml += '<div class="grid grid-cols-2 md:grid-cols-3 gap-3 mb-2">';
@@ -1106,7 +1106,7 @@
             container.innerHTML = '<div class="flex justify-between items-center p-3 bg-gray-50 rounded-xl mb-4 border border-gray-200">' +
                 '<span class="text-sm text-gray-600">' + filterLabel + ' &bull; ' + filteredPayments.length + ' payment' + (filteredPayments.length > 1 ? 's' : '') + '</span>' +
                 '<span class="text-base font-bold text-blue-700">₹' + filterTotal.toLocaleString() + '</span></div>' +
-                '<div class="relative"><div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400 to-indigo-400"></div>' +
+                '<div class="relative"><div class="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400 to-teal-400"></div>' +
                 '<div class="space-y-4" id="devPaymentsRows">' + rows + '</div></div>';
         }
 
@@ -1813,7 +1813,7 @@
             var typeBg = {
                 logo: 'bg-pink-100 text-pink-600',
                 content: 'bg-sky-100 text-sky-600',
-                'brand-guide': 'bg-violet-100 text-violet-600',
+                'brand-guide': 'bg-teal-100 text-teal-600',
                 'api-keys': 'bg-orange-100 text-orange-600',
                 approval: 'bg-emerald-100 text-emerald-600',
                 other: 'bg-gray-100 text-gray-600'
@@ -1943,7 +1943,7 @@
                     grid.innerHTML = '<div class="text-center py-16"><svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><p class="text-gray-400 font-medium">No meetings scheduled</p><p class="text-gray-300 text-sm mt-1">Schedule a meeting above to get started</p></div>';
                     return;
                 }
-                var colors = ['from-blue-600 to-blue-800', 'from-indigo-600 to-indigo-800', 'from-violet-600 to-violet-800', 'from-emerald-600 to-emerald-800'];
+                var colors = ['from-blue-600 to-blue-800', 'from-teal-600 to-teal-800', 'from-cyan-600 to-cyan-800', 'from-emerald-600 to-emerald-800'];
                 grid.innerHTML = meetings.map(function(m, i) {
                     var dt = new Date(m.scheduledAt);
                     var isPast = dt < new Date();
@@ -1967,12 +1967,12 @@
                                 '<span class="text-gray-300">|</span>' +
                                 '<span>' + (m.duration || 30) + ' min</span>' +
                             '</div>' +
-                            (m.stage ? '<span class="inline-block px-2 py-0.5 text-xs font-medium bg-indigo-50 text-indigo-700 rounded mb-2">' + m.stage + '</span>' : '') +
+                            (m.stage ? '<span class="inline-block px-2 py-0.5 text-xs font-medium bg-teal-50 text-teal-700 rounded mb-2">' + m.stage + '</span>' : '') +
                             (m.agenda ? '<p class="text-xs text-gray-500 bg-gray-50 rounded-lg p-3 mt-2 mb-3">' + m.agenda + '</p>' : '') +
                             '<div class="flex items-center gap-2 mt-3">' +
                                 (m.meetingLink ? '<a href="' + m.meetingLink + '" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg> Join</a>' : '') +
                                 (m.meetingLink ? '<button onclick="copyMeetingLink(\'' + m.meetingLink + '\')" class="inline-flex items-center gap-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg> Copy Link</button>' : '') +
-                                '<button onclick="editMeeting(\'' + m._id + '\',\'' + (m.title || '').replace(/'/g, "\\'") + '\',\'' + (m.type || 'google-meet') + '\',\'' + (m.meetingLink || '').replace(/'/g, "\\'") + '\',\'' + (m.scheduledAt || '') + '\',' + (m.duration || 30) + ',\'' + (m.stage || '').replace(/'/g, "\\'") + '\',\'' + (m.agenda || '').replace(/'/g, "\\'") + '\')" class="inline-flex items-center gap-1 px-3 py-2 text-indigo-600 hover:bg-indigo-50 rounded-lg text-sm font-medium transition-colors admin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Edit</button>' +
+                                '<button onclick="editMeeting(\'' + m._id + '\',\'' + (m.title || '').replace(/'/g, "\\'") + '\',\'' + (m.type || 'google-meet') + '\',\'' + (m.meetingLink || '').replace(/'/g, "\\'") + '\',\'' + (m.scheduledAt || '') + '\',' + (m.duration || 30) + ',\'' + (m.stage || '').replace(/'/g, "\\'") + '\',\'' + (m.agenda || '').replace(/'/g, "\\'") + '\')" class="inline-flex items-center gap-1 px-3 py-2 text-teal-600 hover:bg-teal-50 rounded-lg text-sm font-medium transition-colors admin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Edit</button>' +
                                 '<button onclick="deleteMeeting(\'' + m._id + '\')" class="inline-flex items-center gap-1 px-3 py-2 text-red-500 hover:bg-red-50 rounded-lg text-sm font-medium transition-colors admin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Delete</button>' +
                             '</div>' +
                         '</div>' +
@@ -2104,7 +2104,7 @@
 
             var roleIcons = {
                 'Project Manager': { color: 'bg-pink-500', icon: 'PM' },
-                'Designer': { color: 'bg-purple-500', icon: 'DS' },
+                'Designer': { color: 'bg-teal-500', icon: 'DS' },
                 'Frontend Dev': { color: 'bg-blue-500', icon: 'FE' },
                 'Backend Dev': { color: 'bg-green-500', icon: 'BE' },
                 'QA Engineer': { color: 'bg-orange-500', icon: 'QA' },
@@ -2117,12 +2117,12 @@
                 var isEditing = editingTeamIdx === idx;
 
                 if (isEditing) {
-                    return '<div class="p-4 bg-indigo-50 border-l-4 border-l-indigo-500">' +
-                        '<p class="text-xs font-semibold text-indigo-600 uppercase tracking-wide mb-3">Editing Member</p>' +
+                    return '<div class="p-4 bg-teal-50 border-l-4 border-l-teal-500">' +
+                        '<p class="text-xs font-semibold text-teal-600 uppercase tracking-wide mb-3">Editing Member</p>' +
                         '<div class="flex flex-wrap gap-3 items-end">' +
                             '<div class="flex-1 min-w-[140px]">' +
                                 '<label class="text-xs font-medium text-gray-600 mb-1 block">Role</label>' +
-                                '<select id="teamEditRole" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-500">' +
+                                '<select id="teamEditRole" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-teal-500">' +
                                     '<option value="Project Manager"' + (member.role === 'Project Manager' ? ' selected' : '') + '>Project Manager</option>' +
                                     '<option value="Designer"' + (member.role === 'Designer' ? ' selected' : '') + '>Designer</option>' +
                                     '<option value="Frontend Dev"' + (member.role === 'Frontend Dev' ? ' selected' : '') + '>Frontend Dev</option>' +
@@ -2133,14 +2133,14 @@
                             '</div>' +
                             '<div class="flex-1 min-w-[180px]">' +
                                 '<label class="text-xs font-medium text-gray-600 mb-1 block">Developer</label>' +
-                                '<select id="teamEditUser" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-indigo-500">' +
+                                '<select id="teamEditUser" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-teal-500">' +
                                     teamMembers.map(function(m) {
                                         return '<option value="' + m._id + '"' + (String(m._id) === String(userId) ? ' selected' : '') + '>' + m.name + (m.designation ? ' — ' + m.designation : '') + '</option>';
                                     }).join('') +
                                 '</select>' +
                             '</div>' +
                             '<div class="flex gap-2">' +
-                                '<button onclick="saveTeamEdit(' + idx + ')" class="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors">Save</button>' +
+                                '<button onclick="saveTeamEdit(' + idx + ')" class="px-4 py-2 bg-teal-600 text-white text-sm font-semibold rounded-lg hover:bg-teal-700 transition-colors">Save</button>' +
                                 '<button onclick="cancelTeamEdit()" class="px-4 py-2 bg-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-300 transition-colors">Cancel</button>' +
                             '</div>' +
                         '</div>' +
@@ -2156,7 +2156,7 @@
                         '</div>' +
                     '</div>' +
                     '<div class="flex items-center gap-1 admin-only">' +
-                        '<button onclick="startTeamEdit(' + idx + ')" class="p-1.5 text-gray-400 hover:text-indigo-600 transition-colors rounded-lg hover:bg-indigo-50" title="Edit">' +
+                        '<button onclick="startTeamEdit(' + idx + ')" class="p-1.5 text-gray-400 hover:text-teal-600 transition-colors rounded-lg hover:bg-teal-50" title="Edit">' +
                             '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>' +
                         '</button>' +
                         '<button onclick="removeTeamMember(' + idx + ', \'' + (member.name || '').replace(/'/g, "\\'") + '\')" class="p-1.5 text-gray-400 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50" title="Remove">' +
