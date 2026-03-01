@@ -56,7 +56,7 @@
 
         <!-- Payment Status -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg> Payment Status</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">💳 Payment Status</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
                     <p class="text-sm text-gray-600">Paid</p>
@@ -76,25 +76,25 @@
 
         <!-- Project Phases/Stages -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg> Project Phases</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">📊 Project Phases</h2>
             <div class="space-y-3" id="phasesList"></div>
         </div>
 
         <!-- Pending Items from Client -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Items Pending From You</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">⏳ Items Pending From You</h2>
             <div id="pendingFromClientList"></div>
         </div>
 
         <!-- Work Blockers -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6" id="blockersSection" style="display:none;">
-            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg> Work Blockers</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">🚧 Work Blockers</h2>
             <div id="blockersList" class="space-y-2"></div>
         </div>
 
         <!-- Completed Deliverables -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2"><svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Completed Deliverables</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">✅ Completed Deliverables</h2>
             <div id="completedList"></div>
         </div>
 
@@ -163,7 +163,7 @@
                     // Pending from client
                     const pendingHtml = (proj.pendingFromClient || []).map(p => {
                         return `<div class="flex items-center gap-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
-                            <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span class="text-amber-500 text-lg">⏳</span>
                             <div>
                                 <p class="font-semibold text-gray-900">${p.label}</p>
                                 <p class="text-xs text-gray-500">Stage: ${p.stageName}</p>
@@ -179,7 +179,7 @@
                             const colors = {blocked:'red',waiting:'amber',info:'blue'};
                             const c = colors[b.severity] || 'gray';
                             return `<div class="flex items-center gap-3 p-3 bg-${c}-50 rounded-lg border border-${c}-200">
-                                <span class="w-3 h-3 rounded-full bg-${c}-500 flex-shrink-0"></span>
+                                <span class="text-${c}-500 text-lg">${b.severity==='blocked'?'🔴':b.severity==='waiting'?'🟡':'🔵'}</span>
                                 <div>
                                     <p class="font-semibold text-gray-900">${b.label}</p>
                                     <p class="text-xs text-gray-500">Stage: ${b.stageName}</p>
@@ -192,7 +192,7 @@
                     // Completed
                     const completedHtml = (proj.completedByClient || []).map(c => {
                         return `<div class="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-                            <svg class="w-5 h-5 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span class="text-emerald-500 text-lg">✅</span>
                             <div>
                                 <p class="font-semibold text-gray-900">${c.label}</p>
                                 <p class="text-xs text-gray-500">${formatDate(c.receivedAt)}</p>
