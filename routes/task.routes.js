@@ -43,8 +43,8 @@ router.route('/')
 
 router.route('/:id')
     .get(getTask)
-    .put(updateTask)
-    .delete(adminOnly, deleteTask);
+    .put(adminSubadminOnly, updateTask)
+    .delete(adminSubadminOnly, deleteTask);
 
 // Start / Complete task
 router.put('/:id/start', startTask);

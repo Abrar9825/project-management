@@ -1,55 +1,28 @@
 # ==========================================
-# PROJECT STRUCTURE
-# 04-management/
-# ├── backend/        (Node.js/Express API)
-# ├── js/            (Frontend JS utilities)
-# └── .gitignore     (Root config)
+# BACKEND-SPECIFIC IGNORES
 # ==========================================
 
 # ==========================================
-# ALL NODE_MODULES (ANYWHERE in project)
+# DEPENDENCIES & LOCK FILES
 # ==========================================
-**/node_modules/
-**/*.npm
-**/package-lock.json
-**/yarn.lock
-**/npm-shrinkwrap.json
+node_modules/
+package-lock.json
+yarn.lock
+.npm/
+npm-shrinkwrap.json
 
 # ==========================================
-# BACKEND ENVIRONMENT VARIABLES (SENSITIVE)
-# ==========================================
-backend/.env
-backend/.env.local
-backend/.env.*.local
-backend/.env.development.local
-backend/.env.test.local
-backend/.env.production.local
-
-# ==========================================
-# ROOT ENVIRONMENT VARIABLES (IF ANY)
+# ENVIRONMENT VARIABLES (SENSITIVE)
 # ==========================================
 .env
 .env.local
 .env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # ==========================================
-# IDE & EDITOR (Root + all subdirs)
-# ==========================================
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-*.sublime-project
-*.sublime-workspace
-.code-workspace
-.DS_Store
-.AppleDouble
-.LSOverride
-Thumbs.db
-
-# ==========================================
-# LOGS (Root + all subdirs)
+# LOGS & DEBUG FILES
 # ==========================================
 logs/
 *.log
@@ -59,16 +32,28 @@ yarn-error.log*
 lerna-debug.log*
 
 # ==========================================
+# IDE & EDITOR
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.AppleDouble
+.LSOverride
+*.sublime-project
+*.sublime-workspace
+
+# ==========================================
 # BUILD & DISTRIBUTION
 # ==========================================
 dist/
 build/
 out/
-.next/
-.nuxt
 
 # ==========================================
-# DATABASE FILES (if using locally)
+# DATABASE & DATA FILES
 # ==========================================
 *.db
 *.sqlite
@@ -84,7 +69,7 @@ coverage/
 test-results/
 
 # ==========================================
-# TEMPORARY & BACKUP FILES
+# TEMPORARY & CACHE FILES
 # ==========================================
 tmp/
 temp/
@@ -94,15 +79,12 @@ temp/
 .cache/
 .parcel-cache
 .turbo/
+
+# ==========================================
+# NODE-SPECIFIC
+# ==========================================
 .venv
 ENV/
 env.bak/
 venv.bak/
-
-# ==========================================
-# OS & SYSTEM FILES
-# ==========================================
-.Trash-*
-.nfs*
-*.DS_Store
-Thumbs.db
+.tern-port
