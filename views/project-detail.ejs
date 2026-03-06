@@ -27,6 +27,9 @@
         /* Mobile scrollbar hide for tabs */
         .tabs-scroll::-webkit-scrollbar { height: 0; width: 0; }
         .tabs-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Hide scrollbar but keep scroll functionality - Production grade for all browsers */
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
         @media (max-width: 768px) {
             .sticky-header { position: relative !important; top: 0 !important; }
         }
@@ -236,6 +239,28 @@
             </div>
         </div>
         
+        <!-- Task Detail Modal -->
+        <div id="taskDetailModal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center p-4" onclick="if(event.target===this)closeTaskDetailModal()">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[85vh] overflow-y-auto">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white rounded-t-2xl z-10">
+                    <div class="flex-1 min-w-0">
+                        <h3 id="tdModalTitle" class="font-bold text-gray-900 truncate"></h3>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span id="tdModalRole" class="px-2 py-0.5 text-[10px] font-medium rounded-full bg-teal-100 text-teal-700"></span>
+                            <span id="tdModalAssignee" class="text-xs text-gray-500"></span>
+                        </div>
+                    </div>
+                    <button onclick="closeTaskDetailModal()" class="p-2 hover:bg-gray-100 rounded-xl transition-colors ml-2">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="tdModalBody" class="text-sm text-gray-700 leading-relaxed bg-gray-50 rounded-xl p-4 whitespace-pre-wrap max-h-80 overflow-y-auto hide-scrollbar"></div>
+                    <div id="tdModalTimestamps" class="mt-4 space-y-1"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- ==================== TAB 1: TASKS ==================== -->
         <div class="tab-content" id="tab-tasks">
 
@@ -362,30 +387,59 @@
 
         <!-- ==================== TAB: WORK STATUS MANAGER ==================== -->
         <div class="tab-content" id="tab-work-status">
-            <div class="max-w-4xl mx-auto">
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4">
-                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                            Work Status Manager
-                        </h3>
-                        <p class="text-blue-100 text-sm mt-1">Set who currently holds the ball for each stage — this shows in the Client Portal overview</p>
-                    </div>
-                    <div class="p-6">
-                        <div id="workStatusStages" class="space-y-4">
-                            <div class="text-center text-gray-400 py-8">Loading stages...</div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Left: Create Task Form -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden sticky top-40">
+                        <div class="bg-gradient-to-r from-teal-600 to-emerald-600 px-6 py-4">
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                                Assign to Client
+                            </h3>
+                            <p class="text-teal-100 text-sm mt-1">Create a request for the client</p>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div>
+                                <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">Phase</label>
+                                <select id="ctPhase" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                                    <option value="">Select Phase</option>
+                                    <option value="Requirement">Requirement</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Frontend">Frontend</option>
+                                    <option value="Backend">Backend</option>
+                                    <option value="QA">QA</option>
+                                    <option value="Hosting">Hosting</option>
+                                    <option value="Delivery">Delivery</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">What do you need?</label>
+                                <textarea id="ctDescription" rows="4" placeholder="Describe what you need from the client..." class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 resize-none"></textarea>
+                            </div>
+                            <button onclick="addClientTask()" class="w-full px-4 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-xl text-sm transition-all flex items-center justify-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                Assign Task
+                            </button>
                         </div>
                     </div>
                 </div>
-                <!-- Work Status Timeline -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-6">
-                    <div class="px-6 py-4 border-b border-gray-100">
-                        <h3 class="font-bold text-gray-900">Status Change Timeline</h3>
-                        <p class="text-xs text-gray-500 mt-0.5">History of holder changes — visible to clients</p>
-                    </div>
-                    <div class="p-6">
-                        <div id="workStatusTimeline" class="space-y-3">
-                            <div class="text-center text-gray-400 py-4">No history yet</div>
+
+                <!-- Right: Task List -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                            <div>
+                                <h3 class="font-bold text-gray-900">All Client Tasks</h3>
+                                <p class="text-xs text-gray-500 mt-0.5">Tasks between admin & client</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 font-medium" id="ctPendingCount">0 Pending</span>
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-medium" id="ctProgressCount">0 In Progress</span>
+                                <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-medium" id="ctCompletedCount">0 Done</span>
+                            </div>
+                        </div>
+                        <div id="clientTasksList" class="divide-y divide-gray-100">
+                            <div class="text-center text-gray-400 py-12">Loading tasks...</div>
                         </div>
                     </div>
                 </div>
@@ -743,6 +797,9 @@
             if (tabName === 'team') {
                 renderTeam();
             }
+            if (tabName === 'work-status') {
+                loadClientTasks();
+            }
         }
 
         // ==================== TOGGLE STAGE ====================
@@ -761,22 +818,51 @@
             var statusBg = { pending: 'bg-amber-50 text-amber-700', 'in-progress': 'bg-blue-50 text-blue-700', completed: 'bg-emerald-50 text-emerald-700', blocked: 'bg-red-50 text-red-700' };
             var statusIcon = { pending: emojiToSvg('⏳'), 'in-progress': emojiToSvg('▶️'), completed: emojiToSvg('✅'), blocked: emojiToSvg('⛔') };
 
-            container.innerHTML = tasks.map(function(task) {
+            container.innerHTML = tasks.map(function(task, idx) {
                 var actionBtn = '';
                 if (task.status === 'pending') {
-                    actionBtn = '<button onclick="startTaskAPI(\'' + task.id + '\')" class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-lg hover:bg-blue-200 transition-all flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Start</button>';
+                    actionBtn = '<button onclick="event.stopPropagation(); startTaskAPI(\'' + task.id + '\')" class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-lg hover:bg-blue-200 transition-all flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg> Start</button>';
                 } else if (task.status === 'in-progress') {
-                    actionBtn = '<button onclick="completeTaskAPI(\'' + task.id + '\')" class="px-3 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-lg hover:bg-emerald-200 transition-all flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Complete</button>';
+                    actionBtn = '<button onclick="event.stopPropagation(); completeTaskAPI(\'' + task.id + '\')" class="px-3 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-medium rounded-lg hover:bg-emerald-200 transition-all flex items-center gap-1"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Complete</button>';
                 }
+                var editDeleteBtns = '<button onclick="event.stopPropagation(); editTaskUI(\'' + task.id + '\')" title="Edit" class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition">✏️</button>' +
+                    '<button onclick="event.stopPropagation(); deleteTaskAPI(\'' + task.id + '\')" title="Delete" class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition">🗑️</button>';
+
                 var timeInfo = '';
                 if (task.status === 'in-progress' && task.startedAt) timeInfo = '<span class="text-xs text-blue-600 font-medium flex items-center gap-1">' + emojiToSvg('▶', 'w-3 h-3') + ' ' + formatDuration(task.startedAt, null) + '</span>';
                 else if (task.status === 'completed' && task.startedAt) timeInfo = '<span class="text-xs text-emerald-600 font-medium flex items-center gap-1">' + emojiToSvg('✅', 'w-3 h-3') + ' ' + formatDuration(task.startedAt, task.completedAt) + '</span>';
 
-                var editDeleteBtns = '<button onclick="editTaskUI(\'' + task.id + '\')" title="Edit" class="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition">✏️</button>' +
-                    '<button onclick="deleteTaskAPI(\'' + task.id + '\')" title="Delete" class="p-1.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded transition">🗑️</button>';
-
-                return '<div class="p-5 hover:bg-gray-50 transition-all" id="taskRow-' + task.id + '"><div class="flex items-start justify-between gap-4"><div class="flex-1"><div class="flex items-center gap-2 mb-2"><span class="text-base">' + (statusIcon[task.status] || '') + '</span><span class="px-2.5 py-0.5 text-xs font-medium bg-teal-100 text-teal-700 rounded-full">' + task.role + '</span><span class="text-sm text-gray-400">' + (task.assignee || 'Unassigned') + '</span>' + timeInfo + '</div><p class="font-semibold text-gray-900">' + task.title + '</p>' + (task.description ? '<p class="text-sm text-gray-500 mt-1">' + task.description + '</p>' : '') + '<div class="flex items-center gap-3 mt-2 text-xs text-gray-400">' + (task.startedAt ? '<span>Started: ' + formatDT(task.startedAt) + '</span>' : '') + (task.completedAt ? '<span>Completed: ' + formatDT(task.completedAt) + '</span>' : '') + '</div></div><div class="text-right flex-shrink-0"><p class="text-xs text-gray-400 mb-1">Deadline</p><p class="text-sm font-medium text-gray-700">' + new Date(task.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + '</p></div><div class="flex items-center gap-2"><span class="px-3 py-1.5 text-xs font-medium rounded-lg ' + (statusBg[task.status] || '') + '">' + (statusLabel[task.status] || task.status) + '</span>' + actionBtn + '<div class="flex items-center gap-1">' + editDeleteBtns + '</div></div></div></div>';
+                return '<div class="p-5 hover:bg-gray-50 transition-all cursor-pointer" id="taskRow-' + task.id + '" onclick="openTaskDetailModal(' + idx + ')"><div class="flex items-start justify-between gap-4"><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-2 flex-wrap"><span class="text-base">' + (statusIcon[task.status] || '') + '</span><span class="px-2.5 py-0.5 text-xs font-medium bg-teal-100 text-teal-700 rounded-full">' + task.role + '</span><span class="text-sm text-gray-400">' + (task.assignee || 'Unassigned') + '</span>' + timeInfo + '</div><p class="font-semibold text-gray-900 truncate">' + task.title + '</p></div><div class="text-right flex-shrink-0"><p class="text-xs text-gray-400 mb-1">Deadline</p><p class="text-sm font-medium text-gray-700">' + new Date(task.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + '</p></div><div class="flex items-center gap-2 flex-shrink-0" onclick="event.stopPropagation()"><span class="px-3 py-1.5 text-xs font-medium rounded-lg ' + (statusBg[task.status] || '') + '">' + (statusLabel[task.status] || task.status) + '</span>' + actionBtn + '<div class="flex items-center gap-1">' + editDeleteBtns + '</div></div></div></div>';
             }).join('');
+        }
+
+        function openTaskDetailModal(idx) {
+            var task = tasks[idx];
+            if (!task) return;
+            document.getElementById('tdModalTitle').textContent = task.title;
+            document.getElementById('tdModalRole').textContent = task.role || 'General';
+            document.getElementById('tdModalAssignee').textContent = task.assignee || 'Unassigned';
+            document.getElementById('tdModalBody').textContent = task.description || '(No description)';
+            var timestamps = '<p class="text-xs text-gray-400">Assigned: ' + new Date(task.createdAt || task.createdDate).toLocaleString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) + '</p>';
+            if (task.startedAt) {
+                timestamps += '<p class="text-xs text-blue-600 mt-1">Started: ' + new Date(task.startedAt).toLocaleString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) + '</p>';
+            }
+            if (task.completedAt) {
+                var dur = Math.ceil((new Date(task.completedAt) - new Date(task.startedAt)) / (1000 * 60 * 60 * 24));
+                timestamps += '<p class="text-xs text-emerald-600 mt-1">Completed: ' + new Date(task.completedAt).toLocaleString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) + ' (' + dur + ' days)</p>';
+            }
+            document.getElementById('tdModalTimestamps').innerHTML = timestamps;
+            var modal = document.getElementById('taskDetailModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTaskDetailModal() {
+            var modal = document.getElementById('taskDetailModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
         }
 
         // ==================== RENDER STAGES ====================
@@ -1818,13 +1904,13 @@
             var statusOptions = ['pending', 'in-progress', 'completed', 'blocked'].map(function(s) {
                 return '<option value="' + s + '"' + (task.status === s ? ' selected' : '') + '>' + statusLabels[s] + '</option>';
             }).join('');
-            row.innerHTML = '<div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded" id="editForm-' + taskId + '"><div class="space-y-3">' +
-                '<div class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="text-xs font-semibold text-gray-700 block mb-1">Title *</label><input type="text" id="editTaskTitle-' + taskId + '" value="' + (task.title || '').replace(/"/g, '&quot;') + '" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div>' +
-                '<div><label class="text-xs font-semibold text-gray-700 block mb-1">Role</label><input type="text" id="editTaskRole-' + taskId + '" value="' + (task.role || '').replace(/"/g, '&quot;') + '" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div></div>' +
-                '<div><label class="text-xs font-semibold text-gray-700 block mb-1">Description</label><textarea id="editTaskDesc-' + taskId + '" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" rows="2">' + (task.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</textarea></div>' +
-                '<div class="grid grid-cols-1 md:grid-cols-3 gap-3"><div><label class="text-xs font-semibold text-gray-700 block mb-1">Status</label><select id="editTaskStatus-' + taskId + '" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">' + statusOptions + '</select></div>' +
-                '<div><label class="text-xs font-semibold text-gray-700 block mb-1">Assignee</label><select id="editTaskAssignee-' + taskId + '" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"><option value="">Unassigned</option>' + memberOptions + '</select></div>' +
-                '<div><label class="text-xs font-semibold text-gray-700 block mb-1">Deadline *</label><input type="date" id="editTaskDeadline-' + taskId + '" value="' + deadlineVal + '" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div></div>' +
+            row.innerHTML = '<div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded" id="editForm-' + taskId + '" onclick="event.stopPropagation()"><div class="space-y-3">' +
+                '<div class="grid grid-cols-1 md:grid-cols-2 gap-3"><div><label class="text-xs font-semibold text-gray-700 block mb-1">Title *</label><input type="text" id="editTaskTitle-' + taskId + '" value="' + (task.title || '').replace(/"/g, '&quot;') + '" onclick="event.stopPropagation()" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div>' +
+                '<div><label class="text-xs font-semibold text-gray-700 block mb-1">Role</label><input type="text" id="editTaskRole-' + taskId + '" value="' + (task.role || '').replace(/"/g, '&quot;') + '" onclick="event.stopPropagation()" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div></div>' +
+                '<div><label class="text-xs font-semibold text-gray-700 block mb-1">Description</label><textarea id="editTaskDesc-' + taskId + '" onclick="event.stopPropagation()" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" rows="2">' + (task.description || '').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</textarea></div>' +
+                '<div class="grid grid-cols-1 md:grid-cols-3 gap-3"><div><label class="text-xs font-semibold text-gray-700 block mb-1">Status</label><select id="editTaskStatus-' + taskId + '" onclick="event.stopPropagation()" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">' + statusOptions + '</select></div>' +
+                '<div><label class="text-xs font-semibold text-gray-700 block mb-1">Assignee</label><select id="editTaskAssignee-' + taskId + '" onclick="event.stopPropagation()" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"><option value="">Unassigned</option>' + memberOptions + '</select></div>' +
+                '<div><label class="text-xs font-semibold text-gray-700 block mb-1">Deadline *</label><input type="date" id="editTaskDeadline-' + taskId + '" value="' + deadlineVal + '" onclick="event.stopPropagation()" class="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"></div></div>' +
                 '<div class="flex gap-2 pt-2"><button onclick="saveTaskEdit(\'' + taskId + '\')" class="px-4 py-2 bg-blue-600 text-white rounded text-sm font-medium hover:bg-blue-700 transition">Save</button>' +
                 '<button onclick="cancelTaskEdit(\'' + taskId + '\')" class="px-4 py-2 bg-gray-300 text-gray-700 rounded text-sm font-medium hover:bg-gray-400 transition">Cancel</button>' +
                 '</div></div></div>';
@@ -1992,6 +2078,7 @@
 
         // ==================== WORK STATUS MANAGER ====================
         var workStatusData = null;
+        var clientTasks = [];
         var stageIcons = { 'Requirement': '📋', 'Design': '🎨', 'Frontend': '💻', 'Backend': '⚙️', 'QA Testing': '🔍', 'Hosting & Deployment': '☁️', 'Delivery': '🚀', 'Maintenance': '🔧' };
         var holderOptions = [
             { val: 'agency', label: 'Agency (Our Team)', color: 'blue', desc: 'Work in progress at our side', icon: '🏢' },
@@ -2130,6 +2217,144 @@
                 '</div>';
             });
             container.innerHTML = html;
+        }
+
+        // ==================== CLIENT TASKS ====================
+        async function loadClientTasks() {
+            try {
+                var res = await fetch('/api/client-tasks/' + projectId, { headers: HEADERS });
+                var data = await res.json();
+                if (data.success) {
+                    clientTasks = data.data || [];
+                    renderClientTasks();
+                }
+            } catch(e) {
+                document.getElementById('clientTasksList').innerHTML = '<div class="text-center text-red-500 py-8">Error loading tasks</div>';
+            }
+        }
+
+        function renderClientTasks() {
+            var container = document.getElementById('clientTasksList');
+            var pending = clientTasks.filter(function(t) { return t.status === 'pending'; }).length;
+            var inProgress = clientTasks.filter(function(t) { return t.status === 'in-progress'; }).length;
+            var completed = clientTasks.filter(function(t) { return t.status === 'completed'; }).length;
+
+            document.getElementById('ctPendingCount').textContent = pending + ' Pending';
+            document.getElementById('ctProgressCount').textContent = inProgress + ' In Progress';
+            document.getElementById('ctCompletedCount').textContent = completed + ' Done';
+
+            if (clientTasks.length === 0) {
+                container.innerHTML = '<div class="text-center py-12"><div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg></div><p class="text-gray-400 font-medium">No tasks yet</p><p class="text-gray-300 text-sm mt-1">Assign a task to the client from the left panel</p></div>';
+                return;
+            }
+
+            var phaseColors = { Requirement: 'purple', Design: 'pink', Frontend: 'blue', Backend: 'indigo', QA: 'orange', Hosting: 'cyan', Delivery: 'emerald' };
+            var statusCfg = {
+                pending: { bg: 'bg-amber-50', text: 'text-amber-700', label: 'Pending', icon: '⏳' },
+                'in-progress': { bg: 'bg-blue-50', text: 'text-blue-700', label: 'In Progress', icon: '▶️' },
+                completed: { bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Completed', icon: '✅' }
+            };
+
+            container.innerHTML = clientTasks.map(function(task) {
+                var st = statusCfg[task.status] || statusCfg.pending;
+                var pc = phaseColors[task.phase] || 'gray';
+                var createdDate = new Date(task.createdAt);
+                var timeStr = createdDate.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                var isAdmin = task.assignedBy === 'admin';
+
+                var actionBtn = '';
+                if (task.status === 'pending') {
+                    actionBtn = '<button onclick="startClientTaskAction(\'' + task._id + '\')" class="px-3 py-1.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-lg hover:bg-blue-200 transition-all">Start</button>';
+                } else if (task.status === 'in-progress') {
+                    actionBtn = '<button onclick="completeClientTaskAction(\'' + task._id + '\')" class="px-3 py-1.5 bg-emerald-100 text-emerald-700 text-xs font-semibold rounded-lg hover:bg-emerald-200 transition-all">Complete</button>';
+                }
+
+                var duration = '';
+                if (task.startedAt) {
+                    duration = '<span class="text-[10px] text-gray-400">Started: ' + formatDT(task.startedAt) + '</span>';
+                }
+                if (task.completedAt) {
+                    duration += '<span class="text-[10px] text-gray-400 ml-2">Completed: ' + formatDT(task.completedAt) + '</span>';
+                }
+
+                return '<div class="p-5 hover:bg-gray-50/50 transition-all">' +
+                    '<div class="flex items-start justify-between gap-4">' +
+                        '<div class="flex-1">' +
+                            '<div class="flex items-center gap-2 mb-2 flex-wrap">' +
+                                '<span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full bg-' + pc + '-100 text-' + pc + '-700 uppercase tracking-wide">' + task.phase + '</span>' +
+                                '<span class="px-2 py-0.5 text-[10px] font-medium rounded-full ' + (isAdmin ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700') + '">' + (isAdmin ? '→ To Client' : '← From Client') + '</span>' +
+                                '<span class="text-[10px] text-gray-400">' + timeStr + '</span>' +
+                            '</div>' +
+                            '<p class="text-sm font-medium text-gray-900">' + task.description + '</p>' +
+                            '<div class="flex items-center gap-2 mt-2">' +
+                                '<span class="text-[10px] text-gray-400">By: ' + (task.assignedByName || task.assignedBy) + '</span>' +
+                                duration +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="flex items-center gap-2 flex-shrink-0">' +
+                            '<span class="px-2.5 py-1 text-xs font-medium rounded-lg ' + st.bg + ' ' + st.text + '">' + st.label + '</span>' +
+                            actionBtn +
+                            '<button onclick="deleteClientTaskAction(\'' + task._id + '\')" class="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">' +
+                                '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
+                            '</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        async function addClientTask() {
+            var phase = document.getElementById('ctPhase').value;
+            var description = document.getElementById('ctDescription').value.trim();
+            if (!phase) { showToast('Please select a phase', 'error'); return; }
+            if (!description) { showToast('Please enter a description', 'error'); return; }
+
+            try {
+                var res = await fetch('/api/client-tasks/' + projectId, {
+                    method: 'POST',
+                    headers: HEADERS,
+                    body: JSON.stringify({ phase: phase, description: description, assignedBy: 'admin' })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    document.getElementById('ctPhase').value = '';
+                    document.getElementById('ctDescription').value = '';
+                    showToast('Task assigned to client!', 'success');
+                    await loadClientTasks();
+                } else {
+                    showToast(data.error || 'Failed to create task', 'error');
+                }
+            } catch(e) {
+                showToast('Error creating task', 'error');
+            }
+        }
+
+        async function startClientTaskAction(id) {
+            try {
+                var res = await fetch('/api/client-tasks/' + id + '/start', { method: 'PUT', headers: HEADERS });
+                var data = await res.json();
+                if (data.success) { showToast('Task started!', 'success'); await loadClientTasks(); }
+                else { showToast(data.error || 'Failed', 'error'); }
+            } catch(e) { showToast('Error', 'error'); }
+        }
+
+        async function completeClientTaskAction(id) {
+            try {
+                var res = await fetch('/api/client-tasks/' + id + '/complete', { method: 'PUT', headers: HEADERS });
+                var data = await res.json();
+                if (data.success) { showToast('Task completed!', 'success'); await loadClientTasks(); }
+                else { showToast(data.error || 'Failed', 'error'); }
+            } catch(e) { showToast('Error', 'error'); }
+        }
+
+        async function deleteClientTaskAction(id) {
+            if (!confirm('Delete this client task?')) return;
+            try {
+                var res = await fetch('/api/client-tasks/' + id, { method: 'DELETE', headers: HEADERS });
+                var data = await res.json();
+                if (data.success) { showToast('Task deleted', 'success'); await loadClientTasks(); }
+                else { showToast(data.error || 'Failed', 'error'); }
+            } catch(e) { showToast('Error', 'error'); }
         }
 
         function logout() {
@@ -2731,7 +2956,6 @@
             await loadRemarks();
             await loadTeamMembers();
             await loadMeetings();
-            await loadWorkStatus();
 
             // populate meeting stage dropdown
             if (project && project.stages) {

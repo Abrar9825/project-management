@@ -32,6 +32,7 @@ const ticketRoutes = require('./routes/ticket.routes');
 const meetingRoutes = require('./routes/meeting.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
 const generatorRoutes = require('./routes/generator.routes');
+const clientTaskRoutes = require('./routes/clientTask.routes');
 
 const app = express();
 
@@ -74,6 +75,7 @@ app.use('/api/tickets', ticketRoutes);
 app.use('/api/meetings', meetingRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/generator', generatorRoutes);
+app.use('/api/client-tasks', clientTaskRoutes);
 
 // View Routes
 app.get('/', (req, res) => res.redirect('/login'));
