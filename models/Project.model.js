@@ -80,6 +80,27 @@ const StageSchema = new mongoose.Schema({
         default: ''
     },
 
+    // ===== NEW: Workflow Holder Tracking =====
+    currentHolder: {
+        type: String,
+        enum: ['agency', 'client', 'testing', 'review', 'completed', 'none'],
+        default: 'agency'
+    },
+    holderSince: {
+        type: Date,
+        default: Date.now
+    },
+    holderHistory: [{
+        holder: { type: String, enum: ['agency', 'client', 'testing', 'review', 'completed', 'none'] },
+        reason: String,
+        startedAt: Date,
+        endedAt: Date,
+        durationHours: Number
+    }],
+    completedByDevAt: Date,
+    sentForReviewAt: Date,
+    clientActionNeededSince: Date,
+
     // ===== NEW: Blocker Reasons (auto-computed) =====
     blockerReasons: [{
         type: { type: String, enum: ['payment-pending', 'client-approval', 'assets-missing', 'repo-empty'] },
@@ -197,6 +218,7 @@ const ProjectSchema = new mongoose.Schema({
         default: 'card-gradient-1'
     },
     description: String,
+    descriptionSummary: { type: String, default: '' },
     isActive: {
         type: Boolean,
         default: true

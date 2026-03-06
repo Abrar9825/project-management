@@ -11,7 +11,9 @@ const {
     deleteDocument,
     generateQuotation,
     generateHandover,
-    generateDocumentWithAI
+    generateDocumentWithAI,
+    shareDocument,
+    sendEmailNotification
 } = require('../controllers/document.controller');
 
 const { protect, adminOnly, adminSubadminOnly } = require('../middleware/auth.middleware');
@@ -29,6 +31,8 @@ router.get('/project/:projectId', getDocuments);
 router.post('/generate-ai', generateDocumentWithAI);
 router.post('/generate-quotation/:projectId', adminOnly, generateQuotation);
 router.post('/generate-handover/:projectId', adminOnly, generateHandover);
+router.post('/send-notification', adminSubadminOnly, sendEmailNotification);
+router.post('/:id/share', adminSubadminOnly, shareDocument);
 
 router.route('/')
     .post(adminSubadminOnly, createDocValidation, handleValidation, createDocument);

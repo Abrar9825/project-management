@@ -1,6 +1,8 @@
 const Document = require('../models/Document.model');
 const Project = require('../models/Project.model');
 const { Activity } = require('../models/Activity.model');
+const { sendDocumentSharedEmail, sendNotificationEmail } = require('../services/emailService');
+const User = require('../models/User.model');
 
 // @desc    Get all documents for a project
 // @route   GET /api/documents/project/:projectId
@@ -304,5 +306,93 @@ exports.generateDocumentWithAI = async (req, res) => {
             success: false, 
             error: err.message || 'Failed to generate document with AI' 
         });
+    }
+};
+
+// @desc    Share document via email
+// @route   POST /api/documents/:id/share
+// @access  Private/Admin/SubAdmin
+exports.shareDocument = async (req, res) => {
+    try {
+        const doc = await Document.findById(req.params.id);
+        if (!doc) return res.status(404).json({ success: false, error: 'Document not found' });
+
+        const { recipientEmail, recipientName, message } = req.body;
+
+        if (!recipientEmail) {
+            return res.status(400).json({ success: false, error: 'Recipient email is required' });
+        }
+
+        // If recipientEmail is a userId, look up the user
+        let email = recipientEmail;
+        let name = recipientName || 'Team Member';
+
+        if (recipientEmail.match(/^[0-9a-fA-F]{24}$/)) {
+            const user = await User.findById(recipientEmail);
+            if (user) {
+                email = user.email;
+                name = user.name;
+            }
+        }
+
+        await sendDocumentSharedEmail(email, name, {
+            title: doc.title,
+            type: doc.type,
+            projectName: doc.projectName,
+            status: doc.status,
+            createdAt: doc.createdAt,
+            sharedBy: req.user.name
+        });
+
+        // Log activity
+        await Activity.create({
+            project: doc.project,
+            user: req.user.id,
+            userName: req.user.name,
+            action: `shared document "${doc.title}" with ${name}`,
+            icon: '📤',
+            type: 'general'
+        });
+
+        res.status(200).json({ success: true, message: `Document shared with ${name} (${email})` });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+// @desc    Send notification email to a user
+// @route   POST /api/documents/send-notification
+// @access  Private/Admin/SubAdmin
+exports.sendEmailNotification = async (req, res) => {
+    try {
+        const { userId, email, subject, title, message, details, link, linkText } = req.body;
+
+        let recipientEmail = email;
+        let recipientName = 'User';
+
+        if (userId) {
+            const user = await User.findById(userId);
+            if (!user) return res.status(404).json({ success: false, error: 'User not found' });
+            recipientEmail = user.email;
+            recipientName = user.name;
+        }
+
+        if (!recipientEmail) {
+            return res.status(400).json({ success: false, error: 'Email or userId is required' });
+        }
+
+        await sendNotificationEmail(recipientEmail, recipientName, {
+            subject: subject || 'Notification — Project Management',
+            title: title || 'Notification',
+            subtitle: '',
+            message: message || 'You have a new notification.',
+            details: details || null,
+            link: link || null,
+            linkText: linkText || 'View Details'
+        });
+
+        res.status(200).json({ success: true, message: `Notification sent to ${recipientName} (${recipientEmail})` });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
     }
 };

@@ -249,6 +249,58 @@ const api = {
         }
     },
 
+    // ==================== CLIENT OVERVIEW API ====================
+    getClientOverview: async (projectId) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/projects/${projectId}/client-overview`, {
+                headers: api.getHeaders()
+            });
+            return await res.json();
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    },
+
+    updateStageHolder: async (projectId, stageId, holder, reason) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/projects/${projectId}/stages/${stageId}/holder`, {
+                method: 'PUT',
+                headers: api.getHeaders(),
+                body: JSON.stringify({ holder, reason })
+            });
+            return await res.json();
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    },
+
+    // ==================== DOCUMENT SHARING API ====================
+    shareDocument: async (docId, recipientEmail, recipientName) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/documents/${docId}/share`, {
+                method: 'POST',
+                headers: api.getHeaders(),
+                body: JSON.stringify({ recipientEmail, recipientName })
+            });
+            return await res.json();
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    },
+
+    sendNotification: async (data) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/documents/send-notification`, {
+                method: 'POST',
+                headers: api.getHeaders(),
+                body: JSON.stringify(data)
+            });
+            return await res.json();
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    },
+
     // ==================== APPROVAL WORKFLOW API ====================
     submitStageForApproval: async (projectId, stageId) => {
         try {
@@ -984,6 +1036,19 @@ const api = {
         try {
             const res = await fetch(`${API_BASE_URL}/generator/${projectId}/monthly-reports`, {
                 headers: api.getHeaders()
+            });
+            return await res.json();
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    },
+
+    summarizeDescription: async (description, maxLength = 200) => {
+        try {
+            const res = await fetch(`${API_BASE_URL}/generator/summarize`, {
+                method: 'POST',
+                headers: api.getHeaders(),
+                body: JSON.stringify({ description, maxLength })
             });
             return await res.json();
         } catch (error) {

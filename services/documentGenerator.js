@@ -134,18 +134,24 @@ class DocumentGenerator {
     // ==================== 1. CONTRACT AGREEMENT ====================
     static async generateContract(project, user) {
         const ctx = await this._getProjectContext(project);
+        const descriptionSummary = await this._getSummaryDescription(ctx.description, 80, project);
 
         const content = await this._aiGenerate('contract', 'Contract Agreement', ctx, (data) => ({
             title: 'Contract Agreement - ' + data.projectName,
             generatedDate: new Date().toISOString(),
-            summary: data.description || data.scopeOfWork || 'Project contract agreement',
+            summary: descriptionSummary || data.description || 'Project contract agreement',
             companyName: 'KINNOVANCE',
             sections: {
                 parties: {
                     agency: { name: 'KINNOVANCE', role: 'Service Provider' },
                     client: { name: data.clientDetails.name, company: data.clientDetails.company, email: data.clientDetails.email, phone: data.clientDetails.phone }
                 },
-                scopeOfWork: { description: data.scopeOfWork, projectType: data.type, deliverables: data.deliverables },
+                scopeOfWork: { 
+                    description: descriptionSummary, 
+                    fullDescription: data.scopeOfWork || data.description,
+                    projectType: data.type, 
+                    deliverables: data.deliverables 
+                },
                 timeline: { startDate: data.startDate, endDate: data.dueDate, stages: data.stages, milestones: data.milestonesData },
                 paymentStructure: {
                     totalAmount: data.totalAmount, advancePercent: data.advancePercent,
@@ -167,20 +173,48 @@ class DocumentGenerator {
     }
 
     // ==================== 2. WELCOME DOCUMENT ====================
+    // ==================== HELPER: Get description summary ====================
+    static async _getSummaryDescription(description, maxWords = 100, project = null) {
+        if (!description) return '';
+        
+        // Use saved summary from DB if available
+        if (project && project.descriptionSummary) {
+            return project.descriptionSummary;
+        }
+
+        // Check if already short
+        const wordCount = description.split(/\s+/).length;
+        if (wordCount <= maxWords) return description;
+
+        // Try AI summarization
+        const summary = await AIService.summarizeDescription(description, maxWords);
+        
+        // Save to DB for future use
+        if (summary && project && project._id) {
+            try {
+                const Project = require('../models/Project.model');
+                await Project.findByIdAndUpdate(project._id, { descriptionSummary: summary });
+            } catch(e) { /* ignore save error */ }
+        }
+
+        return summary || description.substring(0, 200) + '...';
+    }
+
     static async generateWelcomeDoc(project, user) {
         const ctx = await this._getProjectContext(project);
+        const descriptionSummary = await this._getSummaryDescription(ctx.description, 80, project);
 
         const content = await this._aiGenerate('welcome-doc', 'Welcome Document', ctx, (data) => ({
             title: 'Welcome Document - ' + data.projectName,
             generatedDate: new Date().toISOString(),
-            summary: data.description || 'Welcome to your project journey with KINNOVANCE',
+            summary: descriptionSummary || 'Welcome to your project journey with KINNOVANCE',
             companyName: 'KINNOVANCE',
             sections: {
                 introduction: {
                     greeting: 'Welcome aboard, ' + data.clientDetails.name + '!',
-                    message: 'We at KINNOVANCE are thrilled to begin working on ' + data.projectName + '. ' + (data.description || '') + ' This document provides everything you need to know about our collaboration.'
+                    message: 'We at KINNOVANCE are thrilled to begin working on ' + data.projectName + '. ' + descriptionSummary + ' This document provides everything you need to know about our collaboration.'
                 },
-                projectOverview: { name: data.projectName, description: data.description, type: data.type, startDate: data.startDate, dueDate: data.dueDate, totalStages: data.stages.length },
+                projectOverview: { name: data.projectName, description: descriptionSummary, type: data.type, startDate: data.startDate, dueDate: data.dueDate, totalStages: data.stages.length },
                 timeline: data.stages.map(s => ({ stage: s.name, deadline: s.deadline, order: s.order })),
                 communicationChannels: {
                     primary: data.communicationChannels.primary || 'Email / WhatsApp',

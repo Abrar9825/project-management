@@ -24,6 +24,12 @@
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        /* Mobile scrollbar hide for tabs */
+        .tabs-scroll::-webkit-scrollbar { height: 0; width: 0; }
+        .tabs-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        @media (max-width: 768px) {
+            .sticky-header { position: relative !important; top: 0 !important; }
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
@@ -58,66 +64,70 @@
     </nav>
 
     <!-- Sticky Project Header -->
-    <div class="bg-white border-b border-gray-100 sticky top-16 z-40 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="flex items-center gap-4">
-                    <a class='p-2 hover:bg-gray-100 rounded-lg transition-all' href='/projects'>
+    <div class="bg-white border-b border-gray-100 sticky top-16 z-40 shadow-sm sticky-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                    <a class='p-2 hover:bg-gray-100 rounded-lg transition-all flex-shrink-0' href='/projects'>
                         <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                         </svg>
                     </a>
-                    <div>
-                        <div class="flex items-center gap-3">
-                            <h1 class="text-2xl font-bold text-gray-900" id="projectTitle">E-Commerce Platform</h1>
-                            <span class="w-3 h-3 rounded-full bg-amber-500 animate-pulse"></span>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <h1 class="text-lg sm:text-2xl font-bold text-gray-900 truncate" id="projectTitle">E-Commerce Platform</h1>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse flex-shrink-0"></span>
                         </div>
-                        <p class="text-gray-500" id="projectClient">TechMart Inc.</p>
+                        <p class="text-gray-500 text-sm truncate" id="projectClient">TechMart Inc.</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <a id="docCenterBtn" href="#" class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 admin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Doc Center</a>
-                    <a id="clientPortalBtn" href="#" class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-lg bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100 admin-subadmin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> Client Portal</a>
-                    <span class="px-3 py-1 text-sm font-medium rounded-lg bg-orange-100 text-orange-700 border border-orange-200" id="projectPriority">High Priority</span>
-                    <span class="px-3 py-1 text-sm font-medium rounded-lg bg-blue-100 text-blue-700 border border-blue-200" id="projectProgress">65% Complete</span>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <a id="docCenterBtn" href="#" class="flex items-center gap-1.5 px-2.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-teal-50 text-teal-700 border border-teal-200 hover:bg-teal-100 admin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> <span class="hidden sm:inline">Doc Center</span><span class="sm:hidden">Docs</span></a>
+                    <a id="clientPortalBtn" href="#" class="flex items-center gap-1.5 px-2.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100 admin-subadmin-only"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> <span class="hidden sm:inline">Client Portal</span><span class="sm:hidden">Portal</span></a>
+                    <span class="px-2.5 py-1 text-xs sm:text-sm font-medium rounded-lg bg-orange-100 text-orange-700 border border-orange-200" id="projectPriority">High</span>
+                    <span class="px-2.5 py-1 text-xs sm:text-sm font-medium rounded-lg bg-blue-100 text-blue-700 border border-blue-200" id="projectProgress">65%</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Tab Navigation -->
-    <div class="bg-white border-b border-gray-200 sticky top-[132px] z-30">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex overflow-x-auto -mb-px">
-                <button onclick="switchTab('tasks')" class="tab-btn active px-6 py-4 text-sm font-semibold whitespace-nowrap flex items-center gap-2" data-tab="tasks">
+    <div class="bg-white border-b border-gray-200 sticky top-16 sm:top-[132px] z-30">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex overflow-x-auto -mb-px tabs-scroll">
+                <button onclick="switchTab('overview')" class="tab-btn active px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold whitespace-nowrap flex items-center gap-1.5 sm:gap-2" data-tab="overview">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Overview
+                </button>
+                <button onclick="switchTab('tasks')" class="tab-btn px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-1.5 sm:gap-2" data-tab="tasks">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                     Tasks
                 </button>
-                <button onclick="switchTab('stages')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="stages">
+                <button onclick="switchTab('stages')" class="tab-btn px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-1.5 sm:gap-2" data-tab="stages">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                     Stages
                 </button>
-                <button onclick="switchTab('client-payments')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2 admin-only" data-tab="client-payments">
+                <button onclick="switchTab('client-payments')" class="tab-btn px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-1.5 sm:gap-2 admin-only" data-tab="client-payments">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     Client Payments
                 </button>
-                <button onclick="switchTab('dev-payments')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2 admin-only" data-tab="dev-payments">
+                <button onclick="switchTab('dev-payments')" class="tab-btn px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-1.5 sm:gap-2 admin-only" data-tab="dev-payments">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                     Developer Payments
                 </button>
-                <button onclick="switchTab('activity')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="activity">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/></svg>
-                    Remarks
+                <button onclick="switchTab('work-status')" class="tab-btn px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-1.5 sm:gap-2 admin-only" data-tab="work-status">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    Work Status
                 </button>
-                <button onclick="switchTab('meetings')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="meetings">
+                <button onclick="switchTab('meetings')" class="tab-btn px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-1.5 sm:gap-2" data-tab="meetings">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                     Meetings
                 </button>
-                <button onclick="switchTab('assets')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="assets">
+                <button onclick="switchTab('assets')" class="tab-btn px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-1.5 sm:gap-2" data-tab="assets">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
                     Assets
                 </button>
-                <button onclick="switchTab('team')" class="tab-btn px-6 py-4 text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-2" data-tab="team">
+                <button onclick="switchTab('team')" class="tab-btn px-3 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm font-semibold text-gray-500 hover:text-gray-700 whitespace-nowrap flex items-center gap-1.5 sm:gap-2" data-tab="team">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
                     Team
                 </button>
@@ -128,8 +138,106 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
+        <!-- ==================== TAB 0: OVERVIEW ==================== -->
+        <div class="tab-content active" id="tab-overview">
+            <div class="space-y-6">
+                <!-- Project Summary Card -->
+                <div class="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-2xl border border-teal-100 p-8 shadow-sm">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2" id="overviewProjectName">Loading...</h2>
+                    <p class="text-gray-600 text-sm mb-4" id="overviewProjectClient">-</p>
+                    <div class="prose prose-sm max-w-none prose-p:text-gray-700 prose-p:text-base">
+                        <p id="overviewDescription" class="text-gray-700 leading-relaxed">Loading project description...</p>
+                    </div>
+                </div>
+
+                <!-- Key Details Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                    <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Status</p>
+                        <p class="text-lg font-bold text-gray-900" id="overviewStatus">-</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Start Date</p>
+                        <p class="text-lg font-bold text-gray-900" id="overviewStartDate">-</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Due Date</p>
+                        <p class="text-lg font-bold text-gray-900" id="overviewDueDate">-</p>
+                    </div>
+                    <div class="bg-white rounded-xl border border-gray-100 p-5 shadow-sm">
+                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Progress</p>
+                        <p class="text-lg font-bold text-gray-900" id="overviewProgress">0%</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                            <div id="overviewProgressBar" class="bg-teal-600 h-2 rounded-full transition-all" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scope of Work Section -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-800 px-6 py-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            Scope of Work
+                        </h3>
+                        <p class="text-blue-100 text-sm mt-1">Project deliverables and key objectives</p>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-3">Project Type</h4>
+                                <p class="text-gray-600 capitalize" id="overviewType">-</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-3">Priority</h4>
+                                <span id="overviewPriority" class="inline-block px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">-</span>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-6 border-t">
+                            <h4 class="font-semibold text-gray-900 mb-3">Key Deliverables</h4>
+                            <div id="overviewDeliverables" class="space-y-2 text-gray-700">
+                                <p class="text-sm text-gray-500">Loading deliverables...</p>
+                            </div>
+                        </div>
+                        <div class="mt-6 pt-6 border-t">
+                            <h4 class="font-semibold text-gray-900 mb-3">Project Stages</h4>
+                            <div id="overviewStages" class="space-y-2">
+                                <p class="text-sm text-gray-500">Loading stages...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Summary -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="bg-gradient-to-r from-emerald-600 to-teal-600 px-6 py-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Financial Summary
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-3 gap-3 sm:gap-4">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Total Amount</p>
+                                <p class="text-lg sm:text-2xl font-bold text-gray-900" id="overviewTotalAmount">₹ -</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Advance Paid</p>
+                                <p class="text-lg sm:text-2xl font-bold text-emerald-600" id="overviewAdvancePaid">₹ -</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Pending</p>
+                                <p class="text-lg sm:text-2xl font-bold text-orange-600" id="overviewPending">₹ -</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- ==================== TAB 1: TASKS ==================== -->
-        <div class="tab-content active" id="tab-tasks">
+        <div class="tab-content" id="tab-tasks">
 
             <!-- Task Assignment (Admin Only) -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden admin-only">
@@ -140,8 +248,8 @@
                     </h2>
                 </div>
                 <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-                        <select id="taskRole" onchange="updateDeveloperDropdown()" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none bg-white">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 mb-4">
+                        <select id="taskRole" onchange="updateDeveloperDropdown()" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none bg-white text-sm">
                             <option value="">Select Role</option>
                             <option value="Frontend Dev">Frontend Dev</option>
                             <option value="Backend Dev">Backend Dev</option>
@@ -150,12 +258,12 @@
                             <option value="DevOps">DevOps</option>
                             <option value="Project Manager">Project Manager</option>
                         </select>
-                        <select id="taskDeveloper" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none bg-white">
+                        <select id="taskDeveloper" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none bg-white text-sm">
                             <option value="">Select Developer</option>
                         </select>
-                        <input type="text" id="taskTitle" placeholder="Task title" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none">
-                        <input type="date" id="taskDeadline" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none">
-                        <button onclick="addTask()" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl transition-all">
+                        <input type="text" id="taskTitle" placeholder="Task title" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-sm">
+                        <input type="date" id="taskDeadline" class="px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 outline-none text-sm">
+                        <button onclick="addTask()" class="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl transition-all text-sm sm:col-span-2 md:col-span-1">
                             Add Task
                         </button>
                     </div>
@@ -252,27 +360,33 @@
             </div>
         </div>
 
-        <!-- ==================== TAB 5: REMARKS ==================== -->
-        <div class="tab-content" id="tab-activity">
-            <div class="max-w-3xl mx-auto">
-                <!-- Remarks Section -->
+        <!-- ==================== TAB: WORK STATUS MANAGER ==================== -->
+        <div class="tab-content" id="tab-work-status">
+            <div class="max-w-4xl mx-auto">
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="bg-gradient-to-r from-amber-500 to-orange-600 px-6 py-4">
+                    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-4">
                         <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"/>
-                            </svg>
-                            Remarks & Notes
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                            Work Status Manager
                         </h3>
+                        <p class="text-blue-100 text-sm mt-1">Set who currently holds the ball for each stage — this shows in the Client Portal overview</p>
                     </div>
                     <div class="p-6">
-                        <div class="flex gap-3 mb-4">
-                            <input type="text" id="remarkInput" placeholder="Add a remark..." class="flex-1 px-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-amber-500">
-                            <button onclick="addRemark()" class="px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-medium rounded-xl hover:shadow-lg transition-all">
-                                Add
-                            </button>
+                        <div id="workStatusStages" class="space-y-4">
+                            <div class="text-center text-gray-400 py-8">Loading stages...</div>
                         </div>
-                        <div class="max-h-[500px] overflow-y-auto space-y-3" id="remarksList"></div>
+                    </div>
+                </div>
+                <!-- Work Status Timeline -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-6">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-bold text-gray-900">Status Change Timeline</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">History of holder changes — visible to clients</p>
+                    </div>
+                    <div class="p-6">
+                        <div id="workStatusTimeline" class="space-y-3">
+                            <div class="text-center text-gray-400 py-4">No history yet</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1252,12 +1366,96 @@
                     console.log('Asset requests per stage:', stages.map(function(s) {
                         return { stage: s.name, assetsCount: s.assetRequests?.length || 0, assets: s.assetRequests };
                     }));
+                    renderOverview();
                     renderStages();
                 }
             } catch (err) {
                 console.error('Failed to load project:', err);
                 document.getElementById('stagesContainer').innerHTML = '<p class="p-6 text-red-500">Error loading project: ' + err.message + '</p>';
             }
+        }
+
+        function renderOverview() {
+            if (!project) return;
+
+            // Project name and description
+            document.getElementById('overviewProjectName').textContent = project.name || 'Untitled Project';
+            document.getElementById('overviewProjectClient').textContent = 'Client: ' + (project.clientDetails?.name || project.client || 'No Client');
+            
+            // Description - use saved summary if available, else generate once and save
+            var descEl = document.getElementById('overviewDescription');
+            if (project.descriptionSummary) {
+                // Already saved — use it directly
+                descEl.textContent = project.descriptionSummary;
+            } else if (project.description && project.description.length > 300) {
+                descEl.textContent = 'Generating summary...';
+                api.summarizeDescription(project.description, 150).then(function(res) {
+                    if (res.success && res.data?.summary) {
+                        descEl.textContent = res.data.summary;
+                        // Save to DB so it never calls AI again
+                        fetch('/api/projects/' + projectId + '/save-summary', {
+                            method: 'PUT',
+                            headers: HEADERS,
+                            body: JSON.stringify({ summary: res.data.summary })
+                        }).catch(function() {});
+                    } else {
+                        descEl.textContent = project.description;
+                    }
+                }).catch(function() {
+                    descEl.textContent = project.description;
+                });
+            } else {
+                descEl.textContent = project.description || 'No description provided';
+            }
+
+            // Key details
+            var statusMap = { success: 'Active', warning: 'At Risk', danger: 'In Trouble', info: 'Planning' };
+            document.getElementById('overviewStatus').textContent = statusMap[project.status] || 'Active';
+            document.getElementById('overviewStartDate').textContent = project.startDate ? new Date(project.startDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '-';
+            document.getElementById('overviewDueDate').textContent = project.dueDate ? new Date(project.dueDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '-';
+            document.getElementById('overviewProgress').textContent = (project.progress || 0) + '%';
+            document.getElementById('overviewProgressBar').style.width = (project.progress || 0) + '%';
+
+            // Scope of work
+            document.getElementById('overviewType').textContent = (project.type || 'web').charAt(0).toUpperCase() + project.type.slice(1);
+            var priorityMap = { low: 'Low', medium: 'Medium', high: 'High', critical: 'Critical' };
+            document.getElementById('overviewPriority').textContent = priorityMap[project.priority] || 'Medium';
+
+            // Deliverables
+            var delHTML = '';
+            if (project.deliverables && project.deliverables.length > 0) {
+                delHTML = project.deliverables.slice(0, 5).map(function(d) {
+                    return '<li class="flex items-start gap-2"><span class="text-teal-500 mt-1">✓</span><span>' + (typeof d === 'string' ? d : (d.title || 'Deliverable')) + '</span></li>';
+                }).join('');
+                if (project.deliverables.length > 5) {
+                    delHTML += '<li class="text-gray-500 italic">... and ' + (project.deliverables.length - 5) + ' more</li>';
+                }
+            } else {
+                delHTML = '<li class="text-gray-500">No specific deliverables defined</li>';
+            }
+            document.getElementById('overviewDeliverables').innerHTML = '<ul class="list-none space-y-1">' + delHTML + '</ul>';
+
+            // Stages
+            var stagesHTML = '';
+            if (project.stages && project.stages.length > 0) {
+                stagesHTML = project.stages.map(function(s) {
+                    var statusBg = s.status === 'completed' ? 'bg-emerald-100 text-emerald-700' : (s.status === 'in-progress' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700');
+                    return '<div class="flex items-center justify-between py-2 px-3 bg-gray-50 rounded-lg"><span class="font-medium text-gray-900">' + s.name + '</span><span class="text-xs font-semibold px-2 py-1 rounded ' + statusBg + '">' + (s.status || 'pending').replace('-', ' ') + '</span></div>';
+                }).join('');
+            } else {
+                stagesHTML = '<p class="text-gray-500">No stages defined</p>';
+            }
+            document.getElementById('overviewStages').innerHTML = stagesHTML;
+
+            // Financial summary
+            var totalAmount = project.totalAmount || 0;
+            var advPercent = project.advancePercent || 25;
+            var advancePaid = Math.round(totalAmount * advPercent / 100);
+            var pending = totalAmount - advancePaid;
+
+            document.getElementById('overviewTotalAmount').textContent = '₹ ' + totalAmount.toLocaleString('en-IN');
+            document.getElementById('overviewAdvancePaid').textContent = '₹ ' + advancePaid.toLocaleString('en-IN');
+            document.getElementById('overviewPending').textContent = '₹ ' + Math.max(0, pending).toLocaleString('en-IN');
         }
 
         async function loadTasks() {
@@ -1790,6 +1988,148 @@
             document.getElementById('remarkInput').value = '';
             renderRemarks();
             addLocalActivity('added a remark', '💬');
+        }
+
+        // ==================== WORK STATUS MANAGER ====================
+        var workStatusData = null;
+        var stageIcons = { 'Requirement': '📋', 'Design': '🎨', 'Frontend': '💻', 'Backend': '⚙️', 'QA Testing': '🔍', 'Hosting & Deployment': '☁️', 'Delivery': '🚀', 'Maintenance': '🔧' };
+        var holderOptions = [
+            { val: 'agency', label: 'Agency (Our Team)', color: 'blue', desc: 'Work in progress at our side', icon: '🏢' },
+            { val: 'client', label: 'Client Side', color: 'amber', desc: 'Waiting on the client', icon: '👤' },
+            { val: 'testing', label: 'QA Testing', color: 'violet', desc: 'Under quality testing', icon: '🔍' },
+            { val: 'review', label: 'Under Review', color: 'indigo', desc: 'Being reviewed / approved', icon: '📋' },
+            { val: 'completed', label: 'Completed ✅', color: 'emerald', desc: 'Stage is fully done', icon: '✅' },
+            { val: 'none', label: 'Not Started', color: 'gray', desc: 'Stage not yet active', icon: '⏸️' }
+        ];
+
+        async function loadWorkStatus() {
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/client-overview', { headers: HEADERS });
+                var data = await res.json();
+                if (data.success && data.data) {
+                    workStatusData = data.data;
+                    renderWorkStatusStages();
+                    renderWorkStatusTimeline();
+                }
+            } catch(e) {
+                document.getElementById('workStatusStages').innerHTML = '<p class="text-red-500 text-center py-4">Error loading status</p>';
+            }
+        }
+
+        function renderWorkStatusStages() {
+            if (!workStatusData || !workStatusData.stageOverview) return;
+            var container = document.getElementById('workStatusStages');
+            var html = '';
+            
+            // Summary counts
+            var counts = { agency: 0, client: 0, testing: 0, review: 0, completed: 0, none: 0 };
+            workStatusData.stageOverview.forEach(function(s) { counts[s.currentHolder || 'none']++; });
+            
+            html += '<div class="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-6">';
+            holderOptions.forEach(function(h) {
+                var isActive = counts[h.val] > 0;
+                html += '<div class="text-center p-2 rounded-xl border ' + (isActive ? 'border-' + h.color + '-200 bg-' + h.color + '-50' : 'border-gray-100 bg-gray-50') + '">' +
+                    '<p class="text-lg font-bold ' + (isActive ? 'text-' + h.color + '-600' : 'text-gray-300') + '">' + counts[h.val] + '</p>' +
+                    '<p class="text-[10px] font-medium ' + (isActive ? 'text-' + h.color + '-600' : 'text-gray-400') + '">' + h.val.charAt(0).toUpperCase() + h.val.slice(1) + '</p>' +
+                '</div>';
+            });
+            html += '</div>';
+
+            workStatusData.stageOverview.forEach(function(stage) {
+                var icon = stageIcons[stage.name] || '📌';
+                var currentHolder = stage.currentHolder || 'none';
+                var currentReason = stage.holderReason || '';
+                var colorMap = { agency: 'blue', client: 'amber', testing: 'violet', review: 'indigo', completed: 'emerald', none: 'gray' };
+                var c = colorMap[currentHolder] || 'gray';
+                var holderLabel = holderOptions.find(function(h) { return h.val === currentHolder; });
+                holderLabel = holderLabel ? holderLabel.label : 'Not Set';
+                var isCompleted = currentHolder === 'completed';
+
+                html += '<div class="border-2 rounded-xl p-4 sm:p-5 transition-all ' + (isCompleted ? 'border-emerald-200 bg-emerald-50/50' : 'border-gray-200 hover:border-' + c + '-300') + '">' +
+                    '<div class="flex items-center justify-between mb-3">' +
+                        '<div class="flex items-center gap-2 sm:gap-3">' +
+                            '<span class="text-lg sm:text-xl">' + icon + '</span>' +
+                            '<div>' +
+                                '<h4 class="font-bold text-gray-900 text-sm sm:text-base ' + (isCompleted ? 'line-through text-gray-500' : '') + '">' + stage.name + '</h4>' +
+                                '<span class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-' + c + '-100 text-' + c + '-700 font-medium">' + holderLabel + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="flex items-center gap-2">' +
+                            '<span class="text-[10px] sm:text-xs text-gray-400 capitalize">' + stage.status + '</span>' +
+                            (isCompleted ? '<svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>' : '') +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="grid grid-cols-1 md:grid-cols-3 gap-3">' +
+                        '<div>' +
+                            '<label class="text-[10px] sm:text-xs font-semibold text-gray-500 mb-1 block">Who holds the ball?</label>' +
+                            '<select id="holder-' + stage.stageId + '" class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500">' +
+                                holderOptions.map(function(h) {
+                                    return '<option value="' + h.val + '"' + (currentHolder === h.val ? ' selected' : '') + '>' + h.label + '</option>';
+                                }).join('') +
+                            '</select>' +
+                        '</div>' +
+                        '<div class="md:col-span-2">' +
+                            '<label class="text-[10px] sm:text-xs font-semibold text-gray-500 mb-1 block">Reason / What\'s pending?</label>' +
+                            '<div class="flex gap-2">' +
+                                '<input type="text" id="reason-' + stage.stageId + '" value="' + (currentReason || '').replace(/"/g, '&quot;') + '" placeholder="e.g. Waiting for client to share photos, docs..." class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500">' +
+                                '<button onclick="saveWorkStatus(\'' + stage.stageId + '\', \'' + stage.name + '\')" class="px-3 sm:px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-all whitespace-nowrap">Save</button>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    // Quick reason buttons
+                    '<div class="mt-2 flex flex-wrap gap-1.5">' +
+                        ['Waiting for client photos', 'Waiting for client documents', 'Client feedback pending', 'Content not provided', 'Client approval needed', 'Payment pending from client', 'Under development', 'Bug fixing in progress', 'Testing in progress'].map(function(reason) {
+                            return '<button onclick="document.getElementById(\'reason-' + stage.stageId + '\').value=\'' + reason + '\'" class="text-[10px] sm:text-[11px] px-2 sm:px-2.5 py-1 rounded-full border border-gray-200 text-gray-500 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 transition-all">' + reason + '</button>';
+                        }).join('') +
+                    '</div>' +
+                '</div>';
+            });
+            container.innerHTML = html;
+        }
+
+        async function saveWorkStatus(stageId, stageName) {
+            var holder = document.getElementById('holder-' + stageId).value;
+            var reason = document.getElementById('reason-' + stageId).value.trim();
+            try {
+                var res = await fetch('/api/projects/' + projectId + '/stages/' + stageId + '/holder', {
+                    method: 'PUT',
+                    headers: HEADERS,
+                    body: JSON.stringify({ holder: holder, reason: reason })
+                });
+                var data = await res.json();
+                if (data.success) {
+                    showToast('Work status updated for ' + stageName, 'success');
+                    await loadWorkStatus();
+                } else {
+                    showToast(data.error || 'Failed to update', 'error');
+                }
+            } catch(e) {
+                showToast('Error saving work status', 'error');
+            }
+        }
+
+        function renderWorkStatusTimeline() {
+            if (!workStatusData || !workStatusData.timeline || workStatusData.timeline.length === 0) return;
+            var container = document.getElementById('workStatusTimeline');
+            var colorMap = { agency: 'blue', client: 'amber', testing: 'violet', review: 'indigo', completed: 'emerald', none: 'gray' };
+            var labelMap = { agency: 'Agency', client: 'Client', testing: 'QA Testing', review: 'Review', completed: 'Completed', none: 'None' };
+            var html = '';
+            workStatusData.timeline.forEach(function(t) {
+                var c = colorMap[t.holder] || 'gray';
+                var durText = t.durationHours < 24 ? t.durationHours + 'h' : Math.round(t.durationHours / 24) + 'd';
+                html += '<div class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-gray-200 transition-colors">' +
+                    '<div class="w-8 h-8 rounded-lg bg-' + c + '-100 flex items-center justify-center text-' + c + '-600 flex-shrink-0 text-sm">' + (t.stageIcon || '📌') + '</div>' +
+                    '<div class="flex-1 min-w-0">' +
+                        '<p class="text-sm font-medium text-gray-900 truncate">' + t.stageName + ' → <span class="text-' + c + '-600 font-bold">' + (labelMap[t.holder] || t.holder) + '</span></p>' +
+                        '<p class="text-xs text-gray-400">' + (t.reason || 'Status change') + '</p>' +
+                    '</div>' +
+                    '<div class="text-right flex-shrink-0">' +
+                        '<p class="text-sm font-bold text-' + c + '-600">' + durText + '</p>' +
+                        '<p class="text-[10px] text-gray-400">' + new Date(t.startedAt).toLocaleDateString('en-US', {month:'short', day:'numeric'}) + '</p>' +
+                    '</div>' +
+                '</div>';
+            });
+            container.innerHTML = html;
         }
 
         function logout() {
@@ -2391,6 +2731,7 @@
             await loadRemarks();
             await loadTeamMembers();
             await loadMeetings();
+            await loadWorkStatus();
 
             // populate meeting stage dropdown
             if (project && project.stages) {

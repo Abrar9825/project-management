@@ -12,6 +12,7 @@ const {
     getMyCompletedTasks,
     startTask,
     completeTask,
+    reopenTask,
     getTaskStats
 } = require('../controllers/task.controller');
 
@@ -49,5 +50,6 @@ router.route('/:id')
 // Start / Complete task
 router.put('/:id/start', startTask);
 router.put('/:id/complete', completeTask);
+router.put('/:id/reopen', reopenTask);
 
 module.exports = router;

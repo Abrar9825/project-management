@@ -9,12 +9,16 @@ const {
     sendToClient,
     getClientDocuments,
     generateMonthlyReportRecord,
-    getMonthlyReports
+    getMonthlyReports,
+    summarizeDescription
 } = require('../controllers/generator.controller');
 
 const { protect, adminOnly, adminSubadminOnly } = require('../middleware/auth.middleware');
 
 router.use(protect);
+
+// Summarize description
+router.post('/summarize', summarizeDescription);
 
 // Document Center - All documents for a project
 router.get('/:projectId/documents', getDocumentCenter);

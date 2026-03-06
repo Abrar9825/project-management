@@ -2,6 +2,7 @@ const Project = require('../models/Project.model');
 const { Activity, Remark } = require('../models/Activity.model');
 const { ClientPayment } = require('../models/Payment.model');
 const AutomationEngine = require('../services/automationEngine');
+const { sendProjectCreatedEmail } = require('../services/emailService');
 
 // Default stages template
 const defaultStages = [
@@ -111,6 +112,7 @@ exports.createProject = async (req, res) => {
         const {
             name,
             client,
+            clientEmail,
             type,
             priority,
             dueDate,
@@ -134,7 +136,12 @@ exports.createProject = async (req, res) => {
             milestones,
             description,
             stages: defaultStages,
-            createdBy: req.user.id
+            createdBy: req.user.id,
+            clientAccess: {
+                enabled: !!clientEmail,
+                clientName: client,
+                clientEmail: clientEmail || ''
+            }
         });
 
         // Auto-create client payment records based on totalAmount, advancePercent, milestones
@@ -181,6 +188,19 @@ exports.createProject = async (req, res) => {
             icon: '🚀',
             type: 'general'
         });
+
+        // Send email to client if email was provided
+        if (clientEmail) {
+            sendProjectCreatedEmail(clientEmail, client, {
+                name,
+                type,
+                priority,
+                dueDate,
+                startDate: req.body.startDate,
+                totalAmount,
+                description
+            }).catch(err => console.error('Email send error:', err.message));
+        }
 
         res.status(201).json({
             success: true,
@@ -1098,6 +1118,28 @@ exports.getStagePdfData = async (req, res) => {
     }
 };
 
+// ==================== SAVE DESCRIPTION SUMMARY ====================
+// @desc    Save AI-generated description summary to project (one-time)
+// @route   PUT /api/projects/:id/save-summary
+// @access  Private
+exports.saveDescriptionSummary = async (req, res) => {
+    try {
+        const { summary } = req.body;
+        if (!summary) return res.status(400).json({ success: false, error: 'Summary is required' });
+
+        const project = await Project.findByIdAndUpdate(
+            req.params.id,
+            { descriptionSummary: summary },
+            { new: true }
+        );
+        if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
+
+        res.status(200).json({ success: true, data: { descriptionSummary: project.descriptionSummary } });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
 // ==================== CLIENT SIDE VIEW ====================
 // @desc    Get project data for client panel (limited)
 // @route   GET /api/projects/:id/client-view
@@ -1229,6 +1271,258 @@ exports.linkPaymentToStage = async (req, res) => {
             userName: req.user.name,
             action: `linked ${stage.name} stage to "${req.body.linkedPaymentMilestone}" payment`,
             icon: '🔗',
+            type: 'stage'
+        });
+
+        res.status(200).json({ success: true, data: project });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+// ==================== CLIENT OVERVIEW / WORK TRACKER ====================
+// @desc    Get comprehensive client overview with work holder tracking
+// @route   GET /api/projects/:id/client-overview
+// @access  Private
+exports.getClientOverview = async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.id)
+            .populate('team.user', 'name email');
+        if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
+
+        const payments = await ClientPayment.find({ project: project._id });
+        const totalPayments = payments.reduce((sum, p) => sum + p.amount, 0);
+        const receivedPayments = payments.filter(p => p.status === 'received').reduce((sum, p) => sum + p.amount, 0);
+        const pendingPayments = payments.filter(p => p.status === 'pending');
+
+        const now = new Date();
+
+        // Build stage-by-stage overview with holder info
+        const stageOverview = project.stages.map(stage => {
+            // Determine current holder based on stage state
+            let holder = stage.currentHolder || 'agency';
+            let holderReason = '';
+            let holderSince = stage.holderSince || stage.updatedAt || project.createdAt;
+            let waitingHours = Math.round((now - new Date(holderSince)) / (1000 * 60 * 60));
+            let waitingDays = Math.round(waitingHours / 24);
+
+            // Auto-detect holder from status and blockers
+            if (stage.currentHolder === 'completed' || (stage.status === 'completed' && stage.currentHolder === 'completed')) {
+                holder = 'completed';
+                holderReason = 'Stage completed';
+                waitingHours = 0;
+                waitingDays = 0;
+            } else if (stage.status === 'completed') {
+                holder = 'completed';
+                holderReason = 'Stage completed';
+                waitingHours = 0;
+                waitingDays = 0;
+            } else if (stage.status === 'pending') {
+                holder = 'agency';
+                holderReason = 'Not started yet';
+            } else if (stage.status === 'waiting-client') {
+                holder = 'client';
+                const pendingAssets = (stage.assetRequests || []).filter(a => a.status === 'pending');
+                const needsApproval = stage.type === 'checklist' && !stage.approved &&
+                    (stage.items || []).some(i => i.text && i.text.toLowerCase().includes('approval') && !i.done);
+                const linkedPayment = stage.linkedPaymentMilestone ?
+                    payments.find(p => p.label === stage.linkedPaymentMilestone && p.status === 'pending') : null;
+
+                if (linkedPayment) holderReason = `Payment pending: ${stage.linkedPaymentMilestone}`;
+                else if (pendingAssets.length > 0) holderReason = `${pendingAssets.length} asset(s) needed from client`;
+                else if (needsApproval) holderReason = 'Waiting for client approval';
+                else holderReason = 'Client action required';
+            } else if (stage.status === 'blocked') {
+                const linkedPayment = stage.linkedPaymentMilestone ?
+                    payments.find(p => p.label === stage.linkedPaymentMilestone && p.status === 'pending') : null;
+                if (linkedPayment) {
+                    holder = 'client';
+                    holderReason = `Blocked: Payment "${stage.linkedPaymentMilestone}" pending`;
+                } else {
+                    holder = 'agency';
+                    holderReason = 'Blocked — internal issue';
+                }
+            } else if (stage.status === 'in-progress') {
+                if (stage.approvalWorkflow && stage.approvalWorkflow.submittedAt) {
+                    const subReview = stage.approvalWorkflow.subadminReview;
+                    const adminReview = stage.approvalWorkflow.adminApproval;
+                    if (subReview && subReview.status === 'approved' && (!adminReview || adminReview.status === 'pending')) {
+                        holder = 'review';
+                        holderReason = 'Awaiting admin final approval';
+                    } else if (!subReview || subReview.status === 'pending') {
+                        holder = 'review';
+                        holderReason = 'Under sub-admin review';
+                    } else {
+                        holder = 'agency';
+                        holderReason = 'Development in progress';
+                    }
+                } else {
+                    holder = 'agency';
+                    holderReason = 'Work in progress by team';
+                }
+            }
+
+            if (stage.name === 'QA Testing' && stage.status === 'in-progress') {
+                holder = 'testing';
+                holderReason = 'QA testing in progress';
+            }
+
+            return {
+                stageId: stage._id,
+                name: stage.name,
+                icon: stage.icon,
+                order: stage.order,
+                status: stage.status,
+                type: stage.type,
+                approved: stage.approved,
+                currentHolder: holder,
+                holderReason: holderReason,
+                holderSince: holderSince,
+                waitingHours: waitingHours,
+                waitingDays: waitingDays,
+                completedByDevAt: stage.completedByDevAt || null,
+                sentForReviewAt: stage.sentForReviewAt || null,
+                holderHistory: stage.holderHistory || [],
+                completionRate: stage.items && stage.items.length > 0
+                    ? Math.round(stage.items.filter(i => i.done).length / stage.items.length * 100)
+                    : stage.status === 'completed' ? 100 : 0,
+                deadline: stage.deadline
+            };
+        });
+
+        // Aggregate time per holder
+        const holderSummary = { agency: 0, client: 0, testing: 0, review: 0 };
+        stageOverview.forEach(s => {
+            if (s.status !== 'completed' && s.status !== 'pending' && s.currentHolder !== 'none') {
+                holderSummary[s.currentHolder] = (holderSummary[s.currentHolder] || 0) + s.waitingDays;
+            }
+        });
+
+        // Current bottleneck
+        const activeStages = stageOverview.filter(s => s.status !== 'completed' && s.status !== 'pending');
+        const bottleneck = activeStages.length > 0
+            ? activeStages.sort((a, b) => b.waitingDays - a.waitingDays)[0]
+            : null;
+
+        // Client delay tracking
+        const clientDelayStages = stageOverview.filter(s => s.currentHolder === 'client');
+        const totalClientDelayDays = clientDelayStages.reduce((sum, s) => sum + s.waitingDays, 0);
+
+        // Timeline
+        let timeline = [];
+        project.stages.forEach(stage => {
+            if (stage.holderHistory && stage.holderHistory.length > 0) {
+                stage.holderHistory.forEach(h => {
+                    timeline.push({
+                        stageName: stage.name,
+                        stageIcon: stage.icon,
+                        holder: h.holder,
+                        reason: h.reason,
+                        startedAt: h.startedAt,
+                        endedAt: h.endedAt,
+                        durationHours: h.durationHours
+                    });
+                });
+            }
+        });
+        timeline.sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
+
+        const overview = {
+            projectName: project.name,
+            client: project.client,
+            progress: project.progress,
+            mode: project.mode,
+            currentStage: project.currentStage,
+            dueDate: project.dueDate,
+            stageOverview,
+            holderSummary,
+            bottleneck: bottleneck ? {
+                stageName: bottleneck.name,
+                holder: bottleneck.currentHolder,
+                reason: bottleneck.holderReason,
+                waitingDays: bottleneck.waitingDays
+            } : null,
+            clientDelay: {
+                stagesWaiting: clientDelayStages.length,
+                totalDelayDays: totalClientDelayDays,
+                stages: clientDelayStages.map(s => ({ name: s.name, reason: s.holderReason, waitingDays: s.waitingDays }))
+            },
+            payments: {
+                total: totalPayments,
+                received: receivedPayments,
+                pending: totalPayments - receivedPayments,
+                pendingCount: pendingPayments.length
+            },
+            timeline: timeline.slice(0, 20)
+        };
+
+        res.status(200).json({ success: true, data: overview });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+
+// @desc    Update stage workflow holder
+// @route   PUT /api/projects/:id/stages/:stageId/holder
+// @access  Private/Admin/SubAdmin
+exports.updateStageHolder = async (req, res) => {
+    try {
+        const project = await Project.findById(req.params.id);
+        if (!project) return res.status(404).json({ success: false, error: 'Project not found' });
+
+        const stage = project.stages.find(s => s._id.toString() === req.params.stageId || s.id === req.params.stageId);
+        if (!stage) return res.status(404).json({ success: false, error: 'Stage not found' });
+
+        const { holder, reason } = req.body;
+        const validHolders = ['agency', 'client', 'testing', 'review', 'completed', 'none'];
+        if (!validHolders.includes(holder)) {
+            return res.status(400).json({ success: false, error: 'Invalid holder. Must be: agency, client, testing, review, completed, or none' });
+        }
+
+        const now = new Date();
+
+        // Close previous holder period
+        if (stage.currentHolder && stage.currentHolder !== holder && stage.holderSince) {
+            if (!stage.holderHistory) stage.holderHistory = [];
+            const prevDuration = Math.round((now - new Date(stage.holderSince)) / (1000 * 60 * 60));
+            stage.holderHistory.push({
+                holder: stage.currentHolder,
+                reason: reason || '',
+                startedAt: stage.holderSince,
+                endedAt: now,
+                durationHours: prevDuration
+            });
+        }
+
+        stage.currentHolder = holder;
+        stage.holderSince = now;
+
+        if (holder === 'client') {
+            stage.clientActionNeededSince = now;
+            if (stage.status !== 'waiting-client' && stage.status !== 'completed') {
+                stage.status = 'waiting-client';
+            }
+        }
+        if (holder === 'testing') {
+            stage.sentForReviewAt = now;
+        }
+        if (holder === 'completed') {
+            stage.status = 'completed';
+            stage.completedByDevAt = now;
+        }
+        if (holder === 'none' && stage.status !== 'completed') {
+            stage.completedByDevAt = now;
+        }
+
+        project.markModified('stages');
+        await project.save();
+
+        await Activity.create({
+            project: project._id,
+            user: req.user.id,
+            userName: req.user.name,
+            action: `set ${stage.name} work holder to "${holder}"${reason ? ': ' + reason : ''}`,
+            icon: holder === 'client' ? '👤' : holder === 'testing' ? '🔍' : holder === 'review' ? '📋' : holder === 'completed' ? '✅' : '🏢',
             type: 'stage'
         });
 

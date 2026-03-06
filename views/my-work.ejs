@@ -56,7 +56,7 @@
                 <p class="text-gray-500 mt-1">Tasks, calendar & time tracking</p>
             </div>
             <!-- View Tabs -->
-            <div class="flex bg-white rounded-xl p-1 shadow-sm border border-gray-100">
+            <div class="flex bg-white rounded-xl p-1 shadow-sm border border-gray-100 flex-wrap max-w-2xl">
                 <button onclick="switchTab('tasks')" id="tab-tasks" class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-teal-100 text-teal-700">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg> Tasks
                 </button>
@@ -65,6 +65,9 @@
                 </button>
                 <button onclick="switchTab('stats')" id="tab-stats" class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-gray-100">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg> Dashboard
+                </button>
+                <button onclick="switchTab('history')" id="tab-history" class="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all text-gray-600 hover:bg-gray-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> History
                 </button>
             </div>
         </div>
@@ -250,7 +253,61 @@
             </div>
         </div>
 
+        <!-- ==================== HISTORY VIEW ==================== -->
+        <div id="view-history" class="hidden">
+            <!-- Filter and Sort Options -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-gray-900">Task Completion Timeline</h3>
+                        <p class="text-sm text-gray-500 mt-0.5">View and manage your task history</p>
+                    </div>
+                    <select id="historySort" onchange="renderHistory()" class="px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-teal-500 outline-none bg-white">
+                        <option value="recent">Most Recent First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="project">By Project</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- History Timeline -->
+            <div id="historyContainer" class="space-y-4">
+                <div class="text-center py-8">
+                    <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p class="text-gray-500">Loading task history...</p>
+                </div>
+            </div>
+        </div>
+
     </main>
+
+    <!-- Task Detail Modal -->
+    <div id="taskDetailModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-gray-500 uppercase tracking-wide mb-1">Project</p>
+                    <h2 class="text-xl font-bold text-gray-900" id="modalTaskTitle">Task</h2>
+                </div>
+                <button onclick="closeTaskDetail()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Content - Description Only -->
+            <div class="p-6">
+                <p class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-3">Description</p>
+                <div class="bg-gray-50 rounded-lg p-5 border border-gray-100">
+                    <p id="modalDescription" class="text-gray-700 leading-relaxed whitespace-pre-wrap break-words">—</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="/js/api.js"></script>
     <script>
@@ -262,6 +319,38 @@
         let currentCalendarDate = new Date();
 
         const gradients = ['card-gradient-1', 'card-gradient-2', 'card-gradient-3', 'card-gradient-4', 'card-gradient-5', 'card-gradient-6'];
+
+        // ==================== TASK DETAIL MODAL ====================
+        function openTaskDetail(taskId) {
+            // Find task in all items
+            const task = [...workItems, ...completedItems].find(t => t.id === taskId);
+            if (!task) return;
+
+            // Populate modal with task data - Description only
+            document.getElementById('modalTaskTitle').textContent = task.title;
+            document.getElementById('modalDescription').textContent = task.description || 'No description provided';
+
+            // Show modal
+            document.getElementById('taskDetailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTaskDetail() {
+            document.getElementById('taskDetailModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('taskDetailModal');
+            if (modal) {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === this) {
+                        closeTaskDetail();
+                    }
+                });
+            }
+        });
 
         const statusConfig = {
             completed: { dot: 'bg-emerald-500', bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Completed' },
@@ -310,6 +399,8 @@
                         projectName: task.projectName || 'Untitled Project',
                         projectId: task.projectId || task.project?._id || '',
                         stageName: task.stageName || task.stage?.name || 'Pending',
+                        title: task.title || task.name || 'Task',
+                        description: task.description || '',
                         pendingAction: task.title || task.description || task.name || 'Task',
                         deadline,
                         status: (task.status || 'pending').toLowerCase(),
@@ -364,6 +455,8 @@
                         projectName: task.projectName || task.project?.name || 'Untitled Project',
                         projectId: task.projectId || task.project?._id || '',
                         stageName: task.stageName || task.stage?.name || '',
+                        title: task.title || task.name || 'Task',
+                        description: task.description || '',
                         pendingAction: task.title || task.description || task.name || 'Task',
                         deadline,
                         status: 'completed',
@@ -406,7 +499,7 @@
 
         // ==================== TAB SWITCHING ====================
         function switchTab(tab) {
-            ['tasks', 'calendar', 'stats'].forEach(t => {
+            ['tasks', 'calendar', 'stats', 'history'].forEach(t => {
                 document.getElementById(`view-${t}`).classList.add('hidden');
                 document.getElementById(`tab-${t}`).classList.remove('bg-teal-100', 'text-teal-700');
                 document.getElementById(`tab-${t}`).classList.add('text-gray-600');
@@ -417,6 +510,7 @@
             
             if (tab === 'calendar') renderCalendar();
             if (tab === 'stats') renderDashboard();
+            if (tab === 'history') renderHistory();
         }
 
         // ==================== DURATION HELPERS ====================
@@ -466,11 +560,33 @@
                 const data = await res.json();
                 if (data.success) {
                     await loadWorkItems();
+                    await loadCompletedTasks();
+                    renderHistory();
                 } else {
                     alert(data.error || 'Failed to complete task');
                 }
             } catch (err) {
                 alert('Failed to complete task');
+            }
+        }
+
+        async function reopenTask(taskId) {
+            try {
+                const res = await fetch(`/api/tasks/${taskId}/reopen`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    await loadCompletedTasks();
+                    await loadWorkItems();
+                    renderHistory();
+                    alert('Task reopened successfully!');
+                } else {
+                    alert(data.error || 'Failed to reopen task');
+                }
+            } catch (err) {
+                alert('Failed to reopen task');
             }
         }
 
@@ -539,13 +655,13 @@
                 let actionBtn = '';
                 if (item.status === 'pending') {
                     actionBtn = `
-                        <button onclick="startTask('${item.id}')" class="px-3 py-2 bg-blue-100 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-200 transition-all flex items-center gap-1.5" title="Start Task">
+                        <button onclick="event.stopPropagation(); startTask('${item.id}')" class="px-3 py-2 bg-blue-100 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-200 transition-all flex items-center gap-1.5" title="Start Task">
                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             <span class="hidden sm:inline">Start</span>
                         </button>`;
                 } else if (item.status === 'in-progress') {
                     actionBtn = `
-                        <button onclick="completeTask('${item.id}')" class="px-3 py-2 bg-emerald-100 text-emerald-700 text-sm font-medium rounded-lg hover:bg-emerald-200 transition-all flex items-center gap-1.5" title="Complete Task">
+                        <button onclick="event.stopPropagation(); completeTask('${item.id}')" class="px-3 py-2 bg-emerald-100 text-emerald-700 text-sm font-medium rounded-lg hover:bg-emerald-200 transition-all flex items-center gap-1.5" title="Complete Task">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             <span class="hidden sm:inline">Complete</span>
                         </button>`;
@@ -568,7 +684,7 @@
                 }
                 
                 return `
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+                    <div onclick="openTaskDetail('${item.id}')" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
                         <div class="flex flex-col lg:flex-row">
                             <div class="${item.gradient} w-full lg:w-2 h-2 lg:h-auto"></div>
                             <div class="flex-1 p-5">
@@ -604,9 +720,6 @@
                                         <!-- Actions -->
                                         <div class="flex gap-2">
                                             ${actionBtn}
-                                            ${!isDeveloper ? `
-                                                <a href="/project-detail?id=${item.projectId}" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition-all">Open</a>
-                                            ` : ''}
                                         </div>
                                     </div>
                                 </div>
@@ -829,6 +942,116 @@
             
             const score = Math.round((completedCount / total) * 100);
             document.getElementById('productivityScore').textContent = score + '%';
+        }
+
+        // ==================== HISTORY ====================
+        function renderHistory() {
+            const container = document.getElementById('historyContainer');
+            if (!container) return; // Exit if container doesn't exist
+            
+            const sortElement = document.getElementById('historySort');
+            const sortBy = sortElement?.value || 'recent';
+            
+            if (!completedItems || completedItems.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">No Task History Yet</h3>
+                        <p class="text-gray-500">Complete tasks to see them appear in your history</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let itemsToShow = [...completedItems];
+            
+            // Sort items based on selection
+            if (sortBy === 'oldest') {
+                itemsToShow.sort((a, b) => new Date(a.completedAt) - new Date(b.completedAt));
+            } else if (sortBy === 'project') {
+                itemsToShow.sort((a, b) => a.projectName.localeCompare(b.projectName));
+            } else {
+                itemsToShow.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+            }
+            
+            container.innerHTML = itemsToShow.map((item, index) => {
+                const completedDate = item.completedAt ? new Date(item.completedAt) : null;
+                const formattedDate = completedDate ? 
+                    completedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown';
+                const formattedTime = completedDate ? 
+                    completedDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
+                const duration = formatDuration(item.startedAt, item.completedAt);
+                
+                return `
+                    <div onclick="openTaskDetail('${item.id}')" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+                        <div class="flex flex-col lg:flex-row">
+                            <div class="${item.gradient} w-full lg:w-2 h-2 lg:h-auto"></div>
+                            <div class="flex-1 p-6">
+                                <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+                                    <!-- Task Info -->
+                                    <div class="flex-1">
+                                        <div class="flex items-start gap-3 mb-3">
+                                            <div class="w-3 h-3 rounded-full bg-emerald-500 mt-1.5"></div>
+                                            <div>
+                                                <h3 class="text-lg font-semibold text-gray-900">${item.projectName}</h3>
+                                                <p class="text-gray-600 mt-1">${item.pendingAction}</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Task Details -->
+                                        <div class="flex flex-wrap gap-3 mt-3">
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                <span class="text-sm text-gray-600">Completed: ${formattedDate}</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                <span class="text-sm text-gray-600">Duration: ${duration}</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                                </svg>
+                                                <span class="text-sm text-gray-600">${item.stageName}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Actions -->
+                                    <div class="flex flex-col gap-2 lg:items-end">
+                                        <div class="px-3 py-1.5 rounded-lg bg-emerald-50 inline-block lg:inline">
+                                            <span class="text-xs font-medium text-emerald-700">✓ Completed</span>
+                                        </div>
+                                        <div class="flex gap-2">
+                                            <button onclick="event.stopPropagation(); openTaskDetail('${item.id}')" class="px-3 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-all text-sm flex items-center gap-2" title="View Details">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                            </button>
+                                            <button onclick="event.stopPropagation(); reopenTask('${item.id}')" 
+                                                    class="px-4 py-2 bg-amber-100 hover:bg-amber-200 text-amber-700 font-medium rounded-lg transition-all text-sm flex items-center gap-2" 
+                                                    title="Reopen task to make it active again">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                                </svg>
+                                                <span class="hidden sm:inline">Reopen</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         // ==================== UTILITY ====================

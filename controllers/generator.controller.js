@@ -8,6 +8,8 @@ const Meeting = require('../models/Meeting.model');
 const MonthlyReport = require('../models/MonthlyReport.model');
 const { Activity } = require('../models/Activity.model');
 const DocumentGenerator = require('../services/documentGenerator');
+const AIService = require('../services/aiService');
+
 
 // @desc    Generate a specific document type
 // @route   POST /api/generator/:projectId/generate/:docType
@@ -296,3 +298,23 @@ exports.getMonthlyReports = async (req, res) => {
         res.status(500).json({ success: false, error: err.message });
     }
 };
+
+// @desc    Summarize a project description using AI
+// @route   POST /api/generator/summarize
+// @access  Private
+exports.summarizeDescription = async (req, res) => {
+    try {
+        const { description, maxLength } = req.body;
+        
+        if (!description) {
+            return res.status(400).json({ success: false, error: 'Description is required' });
+        }
+
+        const summary = await AIService.summarizeDescription(description, maxLength || 200);
+        
+        res.status(200).json({ success: true, data: { summary } });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+};
+

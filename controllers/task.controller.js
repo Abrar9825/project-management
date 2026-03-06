@@ -1,6 +1,7 @@
 const Task = require('../models/Task.model');
 const Project = require('../models/Project.model');
 const { Activity } = require('../models/Activity.model');
+const { sendTaskAssignedEmail } = require('../services/emailService');
 
 // @desc    Get all tasks
 // @route   GET /api/tasks
@@ -103,10 +104,12 @@ exports.createTask = async (req, res) => {
 
         // Get assignee name if provided
         let assigneeName = '';
+        let assigneeEmail = '';
         if (assignee) {
             const User = require('../models/User.model');
             const user = await User.findById(assignee);
             assigneeName = user ? user.name : '';
+            assigneeEmail = user ? user.email : '';
         }
 
         const task = await Task.create({
@@ -133,6 +136,19 @@ exports.createTask = async (req, res) => {
             icon: '📋',
             type: 'task'
         });
+
+        // Send email notification to assignee
+        if (assigneeEmail) {
+            sendTaskAssignedEmail(assigneeEmail, assigneeName, {
+                title,
+                projectName: projectDoc.name,
+                role,
+                priority: priority || 'medium',
+                deadline,
+                stageName: stageName || projectDoc.currentStage,
+                description
+            }).catch(err => console.error('Email send error:', err.message));
+        }
 
         res.status(201).json({
             success: true,
@@ -184,6 +200,10 @@ exports.updateTask = async (req, res) => {
             req.body.completedAt = null;
         }
 
+        // Check if assignee changed — send email to new assignee
+        const oldAssignee = task.assignee ? task.assignee.toString() : '';
+        const newAssignee = req.body.assignee || '';
+
         task = await Task.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
@@ -199,6 +219,23 @@ exports.updateTask = async (req, res) => {
                 icon: req.body.status === 'completed' ? '✅' : '🔄',
                 type: 'task'
             });
+        }
+
+        // Send email if assignee changed
+        if (newAssignee && newAssignee !== oldAssignee) {
+            const User = require('../models/User.model');
+            const newUser = await User.findById(newAssignee);
+            if (newUser && newUser.email) {
+                sendTaskAssignedEmail(newUser.email, newUser.name, {
+                    title: task.title,
+                    projectName: task.projectName,
+                    role: task.role,
+                    priority: task.priority,
+                    deadline: task.deadline,
+                    stageName: task.stageName,
+                    description: task.description
+                }).catch(err => console.error('Email send error:', err.message));
+            }
         }
 
         res.status(200).json({
@@ -367,6 +404,53 @@ exports.completeTask = async (req, res) => {
             userName: req.user.name,
             action: `completed "${task.title}"`,
             icon: '✅',
+            type: 'task'
+        });
+
+        res.status(200).json({
+            success: true,
+            data: task
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: err.message
+        });
+    }
+};
+
+// @desc    Reopen a task (completed -> in-progress)
+// @route   PUT /api/tasks/:id/reopen
+// @access  Private
+exports.reopenTask = async (req, res) => {
+    try {
+        const task = await Task.findById(req.params.id);
+
+        if (!task) {
+            return res.status(404).json({
+                success: false,
+                error: 'Task not found'
+            });
+        }
+
+        if (task.status !== 'completed') {
+            return res.status(400).json({
+                success: false,
+                error: 'Only completed tasks can be reopened'
+            });
+        }
+
+        task.status = 'in-progress';
+        task.completedAt = null;
+        await task.save();
+
+        // Log activity
+        await Activity.create({
+            project: task.project,
+            user: req.user.id,
+            userName: req.user.name,
+            action: `reopened "${task.title}"`,
+            icon: '🔄',
             type: 'task'
         });
 

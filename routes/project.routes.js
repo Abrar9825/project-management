@@ -43,7 +43,11 @@ const {
     getStagePdfData,
     getClientView,
     toggleStageVisibility,
-    linkPaymentToStage
+    linkPaymentToStage,
+    saveDescriptionSummary,
+    // Client Overview & Holder
+    getClientOverview,
+    updateStageHolder
 } = require('../controllers/project.controller');
 
 const { protect, adminOnly, adminSubadminOnly } = require('../middleware/auth.middleware');
@@ -95,6 +99,12 @@ router.get('/:id/health', getProjectHealth);
 // ===== NEW: Client View =====
 router.get('/:id/client-view', getClientView);
 
+// ===== NEW: Client Overview (Work Tracker) =====
+router.get('/:id/client-overview', getClientOverview);
+
+// ===== NEW: Save Description Summary =====
+router.put('/:id/save-summary', saveDescriptionSummary);
+
 // ===== NEW: Approval Workflow =====
 router.put('/:id/stages/:stageId/submit-approval', adminSubadminOnly, submitStageForApproval);
 router.put('/:id/stages/:stageId/subadmin-review', adminSubadminOnly, subadminReviewStage);
@@ -103,6 +113,7 @@ router.put('/:id/stages/:stageId/admin-approve', adminOnly, adminApproveStage);
 // ===== NEW: Stage Visibility & Payment Linking =====
 router.put('/:id/stages/:stageId/visibility', adminOnly, toggleStageVisibility);
 router.put('/:id/stages/:stageId/link-payment', adminOnly, linkPaymentToStage);
+router.put('/:id/stages/:stageId/holder', adminSubadminOnly, updateStageHolder);
 
 // ===== NEW: Asset Requests =====
 router.post('/:id/stages/:stageId/asset-requests', adminSubadminOnly, addAssetRequest);

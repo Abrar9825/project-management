@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client Portal | Agency Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -110,18 +111,26 @@
 
         <!-- Tabs -->
         <div class="flex gap-2 mb-8 overflow-x-auto pb-2">
-            <button onclick="switchTab('stages')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl tab-active" data-tab="stages">Stages</button>
-            <button onclick="switchTab('payments')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl hide-for-subadmin" data-tab="payments">Payments</button>
-            <button onclick="switchTab('documents')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl hide-for-subadmin" data-tab="documents">Documents</button>
-            <button onclick="switchTab('meetings')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl" data-tab="meetings">Meetings</button>
-            <button onclick="switchTab('reports')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl" data-tab="reports">Reports</button>
-            <button onclick="switchTab('feedback')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl" data-tab="feedback">Feedback</button>
-            <button onclick="switchTab('assets')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl" data-tab="assets">Assets</button>
+            <button onclick="switchTab('overview')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl tab-active relative" data-tab="overview">Overview<span id="badge-overview" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm"></span></button>
+            <button onclick="switchTab('stages')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl relative" data-tab="stages">Stages<span id="badge-stages" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm"></span></button>
+            <button onclick="switchTab('payments')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl hide-for-subadmin relative" data-tab="payments">Payments<span id="badge-payments" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm"></span></button>
+            <button onclick="switchTab('documents')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl hide-for-subadmin relative" data-tab="documents">Documents<span id="badge-documents" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm"></span></button>
+            <button onclick="switchTab('meetings')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl relative" data-tab="meetings">Meetings<span id="badge-meetings" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm"></span></button>
+            <button onclick="switchTab('reports')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl relative" data-tab="reports">Reports<span id="badge-reports" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm"></span></button>
+            <button onclick="switchTab('feedback')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl relative" data-tab="feedback">Feedback<span id="badge-feedback" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm"></span></button>
+            <button onclick="switchTab('assets')" class="tab-btn portal-tab px-5 py-2.5 text-sm font-medium text-gray-500 whitespace-nowrap rounded-xl relative" data-tab="assets">Assets<span id="badge-assets" class="hidden absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-sm"></span></button>
         </div>
 
         <!-- Tab Content -->
+        <!-- Overview Tab (NEW) -->
+        <div id="tab-overview" class="tab-content">
+            <div id="overviewContent">
+                <div class="text-center text-gray-400 py-12">Loading overview...</div>
+            </div>
+        </div>
+
         <!-- Stages Tab -->
-        <div id="tab-stages" class="tab-content">
+        <div id="tab-stages" class="tab-content hidden">
             <div id="stagesGrid"></div>
         </div>
 
@@ -258,11 +267,83 @@
         async function init() {
             if (!projectId) { alert('No project ID provided'); return; }
             await loadClientView();
-            await loadClientDocuments();
-            await loadMeetings();
-            await loadReports();
-            await loadFeedback();
+            await Promise.all([
+                loadClientDocuments(),
+                loadMeetings(),
+                loadReports(),
+                loadFeedback(),
+                loadOverview()
+            ]);
+            // Badges are updated AFTER all data is loaded
+            setTimeout(updateBadges, 300);
         }
+
+        // ===== NOTIFICATION BADGES =====
+        function getBadgeKey(tab) { return 'cp_seen_' + projectId + '_' + tab; }
+
+        function setBadge(tabName, count) {
+            var el = document.getElementById('badge-' + tabName);
+            if (!el) return;
+            if (count > 0) {
+                el.textContent = count > 9 ? '9+' : count;
+                el.classList.remove('hidden');
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        function markTabSeen(tab, count) {
+            try { localStorage.setItem(getBadgeKey(tab), String(count)); } catch(e) {}
+        }
+
+        function getLastSeen(tab) {
+            try { return parseInt(localStorage.getItem(getBadgeKey(tab)) || '0', 10); } catch(e) { return 0; }
+        }
+
+        function updateBadges() {
+            if (clientData) {
+                // Stages: badge for blocked or waiting-client stages
+                var blockedOrWaiting = (clientData.phases || []).filter(function(s) { 
+                    return s.status === 'blocked' || s.status === 'waiting-client'; 
+                }).length;
+                setBadge('stages', blockedOrWaiting);
+
+                // Payments: ONLY pending payments count
+                var pendingPayments = (clientData.payments?.details || []).filter(function(p) { return p.status === 'pending'; }).length;
+                setBadge('payments', pendingPayments);
+
+                // Assets: pending asset requests
+                var pendingAssets = (clientData.pendingFromClient || []).length;
+                setBadge('assets', pendingAssets);
+            }
+
+            // Documents badge: new docs since last seen
+            var docsGrid = document.getElementById('clientDocsGrid');
+            if (docsGrid) {
+                var docCards = docsGrid.querySelectorAll('.card-hover');
+                var docCount = docCards.length;
+                var lastSeenDocs = getLastSeen('documents');
+                var newDocs = Math.max(0, docCount - lastSeenDocs);
+                setBadge('documents', newDocs);
+            }
+
+            // Meetings badge: new meetings since last seen
+            var mtgGrid = document.getElementById('meetingsGrid');
+            if (mtgGrid) {
+                var upcomingMtgs = mtgGrid.querySelectorAll('.card-hover');
+                var mtgCount = upcomingMtgs.length;
+                var lastSeenMtgs = getLastSeen('meetings');
+                var newMtgs = Math.max(0, mtgCount - lastSeenMtgs);
+                setBadge('meetings', newMtgs);
+            }
+
+            // Reports badge: 0 by default (no unseen tracking needed)
+            setBadge('reports', 0);
+            // Feedback badge: 0
+            setBadge('feedback', 0);
+        }
+
+        // Clear badge when tab is clicked
 
         async function loadClientView() {
             try {
@@ -779,7 +860,6 @@
             try {
                 var res = await api.fetch('/documents/' + docId);
                 var doc = res.data;
-                var printWindow = window.open('', '_blank');
                 var content;
                 try { content = JSON.parse(doc.content); } catch(e) { content = null; }
                 
@@ -796,41 +876,46 @@
                     bodyHtml = clientRenderSections(content.sections, 0);
                 }
 
-                printWindow.document.write('<html><head><title>' + doc.title + '</title>' +
-                '<style>' +
-                '@page { margin: 20mm 15mm; size: A4; }' +
-                'body{font-family:"Segoe UI",Tahoma,sans-serif;max-width:780px;margin:0 auto;padding:30px 20px;color:#1a1a2e;font-size:14px;line-height:1.6;}' +
+                var pdfStyles = '@page { margin: 20mm 15mm; size: A4; }' +
+                'body{font-family:"Segoe UI",Tahoma,sans-serif;max-width:780px;margin:0 auto;padding:30px 20px;color:#1a1a2e;font-size:14px;line-height:1.7;}' +
                 '.logo-header{text-align:center;margin-bottom:20px;padding-bottom:14px;border-bottom:3px solid #008080;}' +
-                '.logo-header img{height:44px;margin-bottom:6px;}' +
                 '.logo-header .company-name{font-size:20px;font-weight:700;letter-spacing:2px;color:#1a1a2e;margin:0;}' +
                 '.logo-header .doc-title{font-size:16px;color:#008080;margin-top:6px;font-weight:600;}' +
                 '.logo-header .client-info{font-size:11px;color:#627d98;margin-top:3px;}' +
-                'h2{color:#008080;font-size:16px;margin:22px 0 10px;padding-bottom:6px;border-bottom:2px solid #e2e8f0;}' +
-                'h3{color:#334e68;font-size:14px;margin:14px 0 6px;}' +
-                'h4{color:#486581;font-size:13px;margin:10px 0 4px;}' +
-                'p,li{font-size:13px;color:#334e68;}' +
-                'table{width:100%;border-collapse:collapse;margin:8px 0 16px;font-size:12px;}' +
-                'th,td{border:1px solid #d1d5db;padding:7px 10px;text-align:left;}' +
+                'h2{color:#008080;font-size:16px;margin:22px 0 10px;padding-bottom:6px;border-bottom:2px solid #e2e8f0;page-break-after:avoid;}' +
+                'h3{color:#334e68;font-size:14px;margin:14px 0 6px;page-break-after:avoid;}' +
+                'h4{color:#486581;font-size:13px;margin:10px 0 4px;page-break-after:avoid;}' +
+                'p,li{font-size:13px;color:#334e68;word-wrap:break-word;overflow-wrap:break-word;}' +
+                'table{width:100%;border-collapse:collapse;margin:8px 0 16px;font-size:12px;page-break-inside:auto;}' +
+                'tr{page-break-inside:avoid;page-break-after:auto;}' +
+                'th,td{border:1px solid #d1d5db;padding:7px 10px;text-align:left;word-wrap:break-word;overflow-wrap:break-word;}' +
                 'th{background:#f0fdfa;color:#008080;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;}' +
                 'td{color:#334e68;}' +
                 'tr:nth-child(even){background:#f9fafb;}' +
                 'ul{padding-left:18px;margin:6px 0;}li{margin:3px 0;}' +
-                '.section-box{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;margin:10px 0;}' +
+                '.section-box{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:14px 16px;margin:10px 0;page-break-inside:avoid;}' +
                 '.kv-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f3f4f6;font-size:13px;}' +
                 '.kv-row:last-child{border-bottom:none;}' +
-                '.kv-label{color:#627d98;font-weight:500;}' +
-                '.kv-value{color:#1a1a2e;font-weight:600;text-align:right;}' +
+                '.kv-label{color:#627d98;font-weight:500;max-width:50%;}' +
+                '.kv-value{color:#1a1a2e;font-weight:600;text-align:right;max-width:50%;word-wrap:break-word;overflow-wrap:break-word;}' +
                 '.footer{text-align:center;margin-top:40px;padding-top:12px;border-top:2px solid #e2e8f0;font-size:10px;color:#829ab1;}' +
                 '.footer strong{color:#334e68;}' +
                 '.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;}' +
                 '.badge-received,.badge-completed{background:#d1fae5;color:#065f46;}' +
                 '.badge-pending{background:#fef3c7;color:#92400e;}' +
                 '.badge-in-progress{background:#e0e7ff;color:#3730a3;}' +
-                '@media print{body{padding:0;}.no-print{display:none;}}' +
-                '</style>' +
-                '</head><body>' +
+                '.download-bar{text-align:center;margin-bottom:16px;padding:10px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;}' +
+                '.download-bar button{padding:8px 24px;background:#008080;color:#fff;border:none;border-radius:6px;font-weight:600;font-size:13px;cursor:pointer;margin:0 6px;}' +
+                '.download-bar button:hover{background:#006666;}' +
+                '@media print{.no-print,.download-bar{display:none;}body{padding:0;}}';
+
+                var fullHtml = '<html><head><title>' + doc.title + '</title><style>' + pdfStyles + '</style></head><body>' +
+                '<div class="download-bar no-print">' +
+                    '<button onclick="downloadClientPDF()">Download PDF</button>' +
+                    '<button onclick="window.print()" style="background:#334e68;">Print</button>' +
+                '</div>' +
+                '<div id="pdfContent">' +
                 '<div class="logo-header">' +
-                    '<img src="/images/logo.svg" alt="KINNOVANCE" onerror="this.style.display=\'none\'">' +
                     '<div class="company-name">KINNOVANCE</div>' +
                     '<div class="doc-title">' + doc.title + '</div>' +
                     (cName ? '<div class="client-info">Client: ' + cName + '</div>' : '') +
@@ -841,8 +926,24 @@
                 '<div class="footer">' +
                     '<p>This document is generated by <strong>KINNOVANCE</strong></p>' +
                     '<p>Confidential &mdash; For authorized use only</p>' +
-                '</div>' +
-                '</body></html>');
+                '</div></div>' +
+                '<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>' +
+                '<script>' +
+                'function downloadClientPDF(){' +
+                    'var el=document.getElementById("pdfContent");' +
+                    'var opt={margin:[20,15,20,15],filename:"' + (doc.title || 'document').replace(/[^a-z0-9]/gi, '_').toLowerCase() + '.pdf",' +
+                    'image:{type:"jpeg",quality:0.98},' +
+                    'html2canvas:{scale:2,useCORS:true},' +
+                    'jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},' +
+                    'pagebreak:{mode:["avoid-all","css","legacy"]}};' +
+                    'html2pdf().set(opt).from(el).save();' +
+                '}' +
+                '<\/script>' +
+                '</body></html>';
+
+                var printWindow = window.open('', '_blank');
+                printWindow.document.write(fullHtml);
+                printWindow.document.close();
             } catch(e) {
                 showToast('Error loading document', 'error');
             }
@@ -902,6 +1003,163 @@
             return html;
         }
 
+        // ===== OVERVIEW / WORK TRACKER =====
+        let overviewData = null;
+
+        async function loadOverview() {
+            try {
+                const res = await api.fetch(`/projects/${projectId}/client-overview`);
+                overviewData = res.data;
+                renderOverview();
+            } catch(e) {
+                document.getElementById('overviewContent').innerHTML = '<div class="text-center text-red-400 py-12">Error loading overview</div>';
+            }
+        }
+
+        function formatWaitDays(days) {
+            if (days <= 0) return 'Just now';
+            if (days === 1) return '1 day';
+            if (days < 30) return days + ' days';
+            var months = Math.floor(days / 30);
+            var rem = days % 30;
+            return months + 'mo ' + rem + 'd';
+        }
+
+        function getHolderColor(holder) {
+            if (holder === 'agency') return { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200', gradient: 'from-blue-500 to-blue-700', dot: 'bg-blue-500', label: 'Agency (Our Team)' };
+            if (holder === 'client') return { bg: 'bg-amber-100', text: 'text-amber-700', border: 'border-amber-200', gradient: 'from-amber-500 to-amber-700', dot: 'bg-amber-500', label: 'Client (Your Side)' };
+            if (holder === 'testing') return { bg: 'bg-violet-100', text: 'text-violet-700', border: 'border-violet-200', gradient: 'from-violet-500 to-violet-700', dot: 'bg-violet-500', label: 'QA Testing' };
+            if (holder === 'review') return { bg: 'bg-indigo-100', text: 'text-indigo-700', border: 'border-indigo-200', gradient: 'from-indigo-500 to-indigo-700', dot: 'bg-indigo-500', label: 'Under Review' };
+            if (holder === 'completed') return { bg: 'bg-emerald-100', text: 'text-emerald-700', border: 'border-emerald-200', gradient: 'from-emerald-500 to-emerald-700', dot: 'bg-emerald-500', label: 'Completed ✅' };
+            if (holder === 'none') return { bg: 'bg-gray-100', text: 'text-gray-500', border: 'border-gray-200', gradient: 'from-gray-400 to-gray-600', dot: 'bg-gray-400', label: 'Not Started' };
+            return { bg: 'bg-gray-100', text: 'text-gray-500', border: 'border-gray-200', gradient: 'from-gray-400 to-gray-600', dot: 'bg-gray-400', label: 'Not Set' };
+        }
+
+        function getHolderIcon(holder) {
+            if (holder === 'agency') return '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>';
+            if (holder === 'client') return '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>';
+            if (holder === 'testing') return '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>';
+            if (holder === 'review') return '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>';
+            if (holder === 'completed') return '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            return '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+        }
+
+        function renderOverview() {
+            if (!overviewData) return;
+            var d = overviewData;
+            var container = document.getElementById('overviewContent');
+            var html = '';
+            var stageIcons = { 'Requirement': '📋', 'Design': '🎨', 'Frontend': '💻', 'Backend': '⚙️', 'QA Testing': '🔍', 'Hosting & Deployment': '☁️', 'Delivery': '🚀', 'Maintenance': '🔧' };
+
+            // ===== ACTION REQUIRED FROM CLIENT =====
+            if (d.clientDelay && d.clientDelay.stagesWaiting > 0) {
+                html += '<div class="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6">' +
+                    '<div class="flex items-center gap-2 mb-3">' +
+                        '<div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center text-white">' +
+                            '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' +
+                        '</div>' +
+                        '<div>' +
+                            '<h3 class="font-bold text-amber-800">Action Required From You</h3>' +
+                            '<p class="text-xs text-amber-600">' + d.clientDelay.stagesWaiting + ' stage(s) waiting for <strong>' + formatWaitDays(d.clientDelay.totalDelayDays) + '</strong></p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="space-y-2">';
+                d.clientDelay.stages.forEach(function(s) {
+                    html += '<div class="flex items-center justify-between bg-white rounded-xl px-4 py-3 border border-amber-100">' +
+                        '<div class="flex items-center gap-2">' +
+                            '<span class="text-lg">' + (stageIcons[s.name] || '📌') + '</span>' +
+                            '<div>' +
+                                '<p class="font-semibold text-gray-900 text-sm">' + s.name + '</p>' +
+                                '<p class="text-xs text-amber-600">' + (s.reason || 'Your input needed') + '</p>' +
+                            '</div>' +
+                        '</div>' +
+                        '<span class="text-sm font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-lg">' + formatWaitDays(s.waitingDays) + '</span>' +
+                    '</div>';
+                });
+                html += '</div></div>';
+            }
+
+            // ===== WHOSE SIDE IS IT? - SIMPLE STAGE LIST =====
+            html += '<div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mb-6">' +
+                '<div class="px-6 py-4 border-b border-gray-100">' +
+                    '<h3 class="font-bold text-gray-900 text-lg">Current Work Status</h3>' +
+                    '<p class="text-xs text-gray-500 mt-0.5">Which side is each stage currently waiting on</p>' +
+                '</div>' +
+                '<div class="divide-y divide-gray-100">';
+
+            d.stageOverview.sort(function(a, b) { return (a.order || 0) - (b.order || 0); });
+            d.stageOverview.forEach(function(s) {
+                var isCompleted = s.status === 'completed';
+                var isPending = s.status === 'pending';
+                var color = getHolderColor(s.currentHolder);
+                var icon = stageIcons[s.name] || s.icon || '📌';
+
+                html += '<div class="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors">';
+
+                // Stage icon + name
+                html += '<div class="flex items-center gap-3 flex-1 min-w-0">' +
+                    '<span class="text-xl flex-shrink-0">' + icon + '</span>' +
+                    '<div class="min-w-0">' +
+                        '<p class="font-semibold text-gray-900 text-sm">' + s.name + '</p>';
+                // Show reason if active
+                if (!isCompleted && !isPending && s.holderReason) {
+                    html += '<p class="text-xs text-gray-500 truncate">' + s.holderReason + '</p>';
+                }
+                html += '</div></div>';
+
+                // Holder badge
+                if (isCompleted) {
+                    html += '<span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-700 flex-shrink-0">' +
+                        '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>' +
+                        'Done</span>';
+                } else if (isPending) {
+                    html += '<span class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-full bg-gray-100 text-gray-400 flex-shrink-0">Upcoming</span>';
+                } else {
+                    html += '<span class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-full ' + color.bg + ' ' + color.text + ' flex-shrink-0">' +
+                        '<span class="w-2 h-2 rounded-full ' + color.dot + ' ' + (s.currentHolder === 'client' ? 'animate-pulse' : '') + '"></span>' +
+                        color.label + '</span>';
+                }
+
+                // Wait time
+                if (!isCompleted && !isPending && s.waitingDays > 0) {
+                    html += '<span class="text-xs font-semibold ' + color.text + ' ml-2 flex-shrink-0">' + formatWaitDays(s.waitingDays) + '</span>';
+                }
+
+                html += '</div>';
+            });
+
+            html += '</div></div>';
+
+            // ===== TIMELINE =====
+            if (d.timeline && d.timeline.length > 0) {
+                html += '<div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">' +
+                    '<div class="px-6 py-4 border-b border-gray-100">' +
+                        '<h3 class="font-bold text-gray-900">Status Timeline</h3>' +
+                        '<p class="text-xs text-gray-500 mt-0.5">History of work handoffs</p>' +
+                    '</div>' +
+                    '<div class="divide-y divide-gray-50">';
+                d.timeline.forEach(function(t) {
+                    var tc = getHolderColor(t.holder);
+                    var durText = t.durationHours < 24 ? t.durationHours + 'h' : Math.round(t.durationHours / 24) + 'd';
+                    var icon = stageIcons[t.stageName] || t.stageIcon || '📌';
+                    html += '<div class="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 transition-colors">' +
+                        '<span class="text-base flex-shrink-0">' + icon + '</span>' +
+                        '<div class="flex-1 min-w-0">' +
+                            '<p class="text-sm text-gray-900 truncate"><strong>' + t.stageName + '</strong> → ' + tc.label + '</p>' +
+                            '<p class="text-xs text-gray-400">' + (t.reason || 'Status change') + '</p>' +
+                        '</div>' +
+                        '<div class="text-right flex-shrink-0">' +
+                            '<p class="text-sm font-bold ' + tc.text + '">' + durText + '</p>' +
+                            '<p class="text-[10px] text-gray-400">' + new Date(t.startedAt).toLocaleDateString('en-US', {month:'short', day:'numeric'}) + '</p>' +
+                        '</div>' +
+                    '</div>';
+                });
+                html += '</div></div>';
+            }
+
+            container.innerHTML = html;
+        }
+
         function switchTab(tab) {
             var contents = document.querySelectorAll('.tab-content');
             for (var i = 0; i < contents.length; i++) contents[i].classList.add('hidden');
@@ -909,6 +1167,16 @@
             for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('tab-active');
             document.getElementById('tab-' + tab).classList.remove('hidden');
             document.querySelector('[data-tab="' + tab + '"]').classList.add('tab-active');
+            // Clear badge for this tab
+            setBadge(tab, 0);
+            // Mark as seen based on current count
+            if (tab === 'documents') {
+                var docCards = document.getElementById('clientDocsGrid')?.querySelectorAll('.card-hover') || [];
+                markTabSeen('documents', docCards.length);
+            } else if (tab === 'meetings') {
+                var mtgCards = document.getElementById('meetingsGrid')?.querySelectorAll('.card-hover') || [];
+                markTabSeen('meetings', mtgCards.length);
+            }
         }
 
         function showToast(message, type) {

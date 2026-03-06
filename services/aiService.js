@@ -70,6 +70,76 @@ class AIService {
     }
 
     /**
+     * Summarize a long description into a short, clean summary
+     * @param {string} description - Long description to summarize
+     * @param {number} maxLength - Maximum length of summary (default 200 words)
+     * @returns {string|null} Summarized text or original if too short
+     */
+    static async summarizeDescription(description, maxLength = 200) {
+        if (!description) return '';
+        
+        // If already short, return as is
+        const wordCount = description.split(/\s+/).length;
+        if (wordCount <= maxLength / 2) return description;
+
+        const apiKey = process.env.OPENROUTER_API_KEY;
+        if (!apiKey) {
+            console.warn('[AIService] No API key for summarization, returning truncated version');
+            const words = description.split(/\s+/);
+            return words.slice(0, Math.floor(maxLength / 2)).join(' ') + '...';
+        }
+
+        try {
+            const systemPrompt = `You are an expert content summarizer. Create a concise, professional summary that captures the essence of the given text.
+
+RULES:
+- Keep the summary to ${maxLength} words maximum
+- Use clear, professional language
+- Maintain key details and context
+- Make it suitable for professional documents
+- Return ONLY the summary text, nothing else`;
+
+            const body = {
+                model: process.env.OPENROUTER_MODEL || 'openai/gpt-4.1-nano',
+                messages: [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'user', content: `Summarize this: ${description}` }
+                ],
+                temperature: 0.5,
+                max_tokens: Math.max(100, Math.floor(maxLength / 4)),
+                response_format: undefined // Not using JSON for this
+            };
+
+            const res = await fetch(AIService.API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`,
+                    'HTTP-Referer': 'http://localhost:5000',
+                    'X-Title': 'AgencyControl Document Generator'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!res.ok) {
+                console.warn('[AIService] Summary API error, returning truncated');
+                const words = description.split(/\s+/);
+                return words.slice(0, Math.floor(maxLength / 2)).join(' ') + '...';
+            }
+
+            const data = await res.json();
+            const summary = data.choices?.[0]?.message?.content;
+            
+            return summary && summary.trim() ? summary.trim() : description;
+        } catch (err) {
+            console.warn('[AIService] Summarization failed:', err.message);
+            // Fallback: return truncated version
+            const words = description.split(/\s+/);
+            return words.slice(0, Math.floor(maxLength / 2)).join(' ') + '...';
+        }
+    }
+
+    /**
      * Generate a structured document using AI
      * @param {string} docType - Document type label
      * @param {object} projectData - Sanitized project data for context
