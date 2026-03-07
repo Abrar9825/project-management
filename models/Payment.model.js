@@ -24,6 +24,9 @@ const ClientPaymentSchema = new mongoose.Schema({
     date: {
         type: Date
     },
+    dueDate: {
+        type: Date
+    },
     status: {
         type: String,
         enum: ['pending', 'received', 'cancelled'],

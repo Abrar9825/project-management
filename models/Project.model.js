@@ -213,6 +213,16 @@ const ProjectSchema = new mongoose.Schema({
         type: Number,
         default: 3
     },
+    advanceDueDate: {
+        type: Number,
+        default: 1,
+        description: 'Days for advance payment due date'
+    },
+    milestoneDueDate: {
+        type: Number,
+        default: 15,
+        description: 'Days grace period after each milestone for payment'
+    },
     gradient: {
         type: String,
         default: 'card-gradient-1'

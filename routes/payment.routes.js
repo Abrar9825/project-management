@@ -8,6 +8,7 @@ const {
     updateClientPayment,
     deleteClientPayment,
     generatePaymentSchedule,
+    sendOverdueNotice,
     getDeveloperPaymentsByProject,
     getMyPayments,
     addDeveloperPayment,
@@ -40,6 +41,7 @@ router.get('/client/:projectId', adminOnly, getClientPayments);
 router.post('/client/generate/:projectId', adminOnly, generatePaymentSchedule);
 router.post('/client', adminOnly, clientPaymentValidation, handleValidation, addClientPayment);
 router.put('/client/:id', adminOnly, updateClientPayment);
+router.post('/client/:id/overdue-notice', adminOnly, sendOverdueNotice);
 router.delete('/client/:id', adminOnly, deleteClientPayment);
 
 // Developer payment routes

@@ -9,6 +9,7 @@ const Document = require('../models/Document.model');
 const Feedback = require('../models/Feedback.model');
 const { Activity } = require('../models/Activity.model');
 const DocumentGenerator = require('../services/documentGenerator');
+const { sendPaymentOverdueEmail } = require('../services/emailService');
 
 class AutomationEngine {
 
@@ -168,6 +169,94 @@ class AutomationEngine {
             }
         } catch (err) {
             console.error('[AUTOMATION] runAllChecks error:', err.message);
+        }
+    }
+
+    /**
+     * [SCHEDULER JOB] Check all overdue payments and send automated emails
+     * Runs daily (via cron in server.js)
+     */
+    static async checkAndEmailOverduePayments() {
+        try {
+            console.log('[SCHEDULER] 📧 Running overdue payment checker...');
+            
+            // Find all pending payments with a due date that has passed
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const overduePayments = await ClientPayment.find({
+                status: 'pending',
+                dueDate: { $lt: today }
+            }).populate('project', 'name client clientAccess latePaymentPolicy createdBy');
+            
+            console.log(`[SCHEDULER] Found ${overduePayments.length} overdue payments to notify`);
+            
+            let sentCount = 0;
+            for (const payment of overduePayments) {
+                try {
+                    const project = payment.project;
+                    if (!project) continue;
+                    
+                    const clientEmail = project.clientAccess?.clientEmail;
+                    const clientName = project.clientAccess?.clientName || project.client;
+                    
+                    if (!clientEmail) {
+                        console.log(`[SCHEDULER] ⏭️  Skipping payment "${payment.label}" - no client email`);
+                        continue;
+                    }
+                    
+                    // Check if we've already sent an email for this payment today
+                    // (simple check - we could improve this with a sentDate field later)
+                    const recentActivity = await Activity.findOne({
+                        project: project._id,
+                        userName: 'System',
+                        action: new RegExp(`sent overdue notice.*${payment.label}`),
+                        createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+                    });
+                    
+                    if (recentActivity) {
+                        console.log(`[SCHEDULER] ⏭️  Email for "${payment.label}" already sent today`);
+                        continue;
+                    }
+                    
+                    // Send email
+                    await sendPaymentOverdueEmail(
+                        clientEmail,
+                        clientName,
+                        {
+                            label: payment.label,
+                            amount: payment.amount,
+                            dueDate: payment.dueDate,
+                            note: payment.note
+                        },
+                        {
+                            name: project.name,
+                            latePaymentPolicy: project.latePaymentPolicy
+                        }
+                    );
+                    
+                    // Log activity
+                    await Activity.create({
+                        project: project._id,
+                        user: project.createdBy,
+                        userName: 'System',
+                        action: `[AUTO SCHEDULER] sent overdue notice for "${payment.label}" (₹${payment.amount}) to ${clientName}`,
+                        icon: '⏰',
+                        type: 'payment'
+                    });
+                    
+                    sentCount++;
+                    console.log(`[SCHEDULER] ✅ Overdue email sent for "${payment.label}" (${payment.amount}) → ${clientEmail}`);
+                } catch (err) {
+                    console.error(`[SCHEDULER] ❌ Error processing payment "${payment.label}":`, err.message);
+                }
+            }
+            
+            console.log(`[SCHEDULER] 📧 Overdue checker complete - ${sentCount} email(s) sent`);
+            return { checked: overduePayments.length, sent: sentCount };
+        } catch (err) {
+            console.error('[SCHEDULER] checkAndEmailOverduePayments error:', err.message);
+            return { error: err.message };
         }
     }
 }

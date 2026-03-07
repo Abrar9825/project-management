@@ -5,50 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Project | Project Control System</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        .step-complete { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-        .step-active { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); }
-        .step-pending { background: #e5e7eb; }
-    </style>
+    <link rel="stylesheet" href="/css/design-system.css">
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-    <!-- Navigation Bar -->
-    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="/my-work" class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-teal-600 rounded-xl flex items-center justify-center shadow-sm">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    </div>
-                    <span class="text-xl font-bold text-gray-800">ProjectControl</span>
-                </a>
-                <div class="hidden md:flex items-center space-x-1" id="navLinks">
-                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all">My Work</a>
-                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-subadmin-only">Projects</a>
-                    <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">Users</a>
-                    <a href="/documents" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">Documents</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="/profile" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-all">
-                        <div class="w-9 h-9 bg-teal-500 rounded-full flex items-center justify-center text-white font-semibold text-sm"><span id="userInitials">AK</span></div>
-                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Admin</span>
-                    </a>
-                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Logout">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <%- include('partials/nav', { activePage: 'projects' }) %>
 
     <!-- Main Content -->
     <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         <!-- Page Header -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Create New Project</h1>
-            <p class="text-gray-500 mt-1">Fill in the details to set up a new project</p>
+            <h1 class="ds-page-title">Create New Project</h1>
+            <p class="ds-page-subtitle">Fill in the details to set up a new project</p>
         </div>
 
         <!-- Stepper -->
@@ -96,28 +65,28 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Project Name *</label>
-                            <input type="text" id="projectName" placeholder="Enter project name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none" required>
+                            <input type="text" id="projectName" placeholder="Enter project name" class="ds-input" required>
                         </div>
                         
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                            <textarea id="projectDescription" rows="3" placeholder="Brief project description..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none resize-none"></textarea>
+                            <textarea id="projectDescription" rows="3" placeholder="Brief project description..." class="ds-input resize-none"></textarea>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Client Name *</label>
-                            <input type="text" id="clientName" placeholder="Enter client name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none" required>
+                            <input type="text" id="clientName" placeholder="Enter client name" class="ds-input" required>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Client Email</label>
-                            <input type="email" id="clientEmail" placeholder="client@example.com" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none">
+                            <input type="email" id="clientEmail" placeholder="client@example.com" class="ds-input">
                             <p class="text-xs text-gray-400 mt-1">Used for sending project emails & notifications</p>
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Project Type *</label>
-                            <select id="projectType" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none bg-white" required>
+                            <select id="projectType" class="ds-input bg-white" required>
                                 <option value="">Select type</option>
                                 <option value="web">Web Application</option>
                                 <option value="mobile">Mobile App</option>
@@ -153,12 +122,12 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
-                            <input type="date" id="startDate" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none">
+                            <input type="date" id="startDate" class="ds-input">
                         </div>
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">Expected Delivery Date</label>
-                            <input type="date" id="dueDate" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none">
+                            <input type="date" id="dueDate" class="ds-input">
                         </div>
                     </div>
                 </div>
@@ -257,7 +226,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Advance Percentage</label>
                                 <div class="relative">
-                                    <input type="number" id="advancePercent" placeholder="25" min="0" max="100" value="25" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none">
+                                    <input type="number" id="advancePercent" placeholder="25" min="0" max="100" value="25" class="ds-input">
                                     <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">%</span>
                                 </div>
                                 <p class="text-xs text-gray-400 mt-1">Advance amount: $<span id="advanceAmountDisplay">0.00</span></p>
@@ -265,7 +234,7 @@
                             
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Number of Milestones</label>
-                                <select id="milestoneCount" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none bg-white">
+                                <select id="milestoneCount" class="ds-input bg-white">
                                     <option value="1">1 Milestone</option>
                                     <option value="2">2 Milestones</option>
                                     <option value="3" selected>3 Milestones</option>
@@ -276,6 +245,36 @@
                             </div>
                         </div>
                         
+                        <!-- Payment Terms (Due Dates) -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5">
+                            <div class="flex items-center gap-2 mb-3">
+                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <label class="text-sm font-semibold text-blue-900">Payment Terms (Due Dates)</label>
+                            </div>
+                            <p class="text-xs text-blue-700 mb-4">Auto-calculate due dates for all payments. Overdue emails will be sent automatically.</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-blue-800 mb-1">Advance Payment Due In</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="advanceDueDate" min="1" max="30" value="1" class="w-full px-4 py-2.5 border border-blue-200 bg-white rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition-all">
+                                        <span class="text-sm text-blue-700 font-medium whitespace-nowrap">days</span>
+                                    </div>
+                                    <p class="text-[11px] text-blue-600 mt-1">From project creation date</p>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-blue-800 mb-1">Milestone Payment Grace Period</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="milestoneDueDate" min="1" max="60" value="15" class="w-full px-4 py-2.5 border border-blue-200 bg-white rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition-all">
+                                        <span class="text-sm text-blue-700 font-medium whitespace-nowrap">days</span>
+                                    </div>
+                                    <p class="text-[11px] text-blue-600 mt-1">After milestone completion</p>
+                                </div>
+                            </div>
+                            <div class="mt-3 p-2.5 bg-white rounded-lg border border-blue-100">
+                                <p class="text-xs text-blue-800">💡 <strong>Example:</strong> If milestone completed on 15th, payment due on <span id="dueDateExample" class="font-semibold">30th</span> (15 days grace)</p>
+                            </div>
+                        </div>
+
                         <!-- Milestone Breakdown with Editable % -->
                         <div id="milestoneBreakdown" class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
                             <div class="flex items-center justify-between mb-4">
@@ -289,16 +288,16 @@
 
                 <!-- Form Actions -->
                 <div class="px-8 py-5 bg-gray-50 border-t border-gray-100 flex justify-between">
-                    <button type="button" id="prevBtn" onclick="prevStep()" class="px-6 py-2.5 text-gray-600 font-medium rounded-xl hover:bg-gray-100 transition-all hidden">
+                    <button type="button" id="prevBtn" onclick="prevStep()" class="ds-btn ds-btn-md ds-btn-ghost hidden">
                         ← Previous
                     </button>
                     
                     <div class="flex gap-3 ml-auto">
-                        <a class='px-6 py-2.5 text-gray-600 font-medium rounded-xl hover:bg-gray-100 transition-all' href='/projects'>Cancel</a>
-                        <button type="button" id="nextBtn" onclick="nextStep()" class="px-6 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-xl hover:shadow-md transition-all">
+                        <a class="ds-btn ds-btn-md ds-btn-ghost" href='/projects'>Cancel</a>
+                        <button type="button" id="nextBtn" onclick="nextStep()" class="ds-btn ds-btn-md ds-btn-primary">
                             Next Step →
                         </button>
-                        <button type="button" id="submitBtn" onclick="createProject()" class="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-medium rounded-xl hover:shadow-lg transform hover:-translate-y-0.5 transition-all hidden">
+                        <button type="button" id="submitBtn" onclick="createProject()" class="ds-btn ds-btn-md ds-btn-success hidden">
                             Create Project ✓
                         </button>
                     </div>
@@ -528,6 +527,20 @@
             renderMilestones();
         });
 
+        // ==================== PAYMENT TERMS EXAMPLE ====================
+        function updateDueDateExample() {
+            const milestoneDays = parseInt(document.getElementById('milestoneDueDate').value) || 15;
+            const exampleDate = new Date();
+            exampleDate.setDate(15);
+            exampleDate.setDate(exampleDate.getDate() + milestoneDays);
+            const d = exampleDate.getDate();
+            const suffix = ['st','nd','rd'][((d - 1) % 10) % 3] || 'th';
+            document.getElementById('dueDateExample').textContent = d + suffix;
+        }
+        document.getElementById('milestoneDueDate')?.addEventListener('input', updateDueDateExample);
+        document.getElementById('milestoneDueDate')?.addEventListener('change', updateDueDateExample);
+        updateDueDateExample();
+
         // ==================== CREATE PROJECT ====================
         async function createProject() {
             if (!validateStep(3)) return;
@@ -572,7 +585,9 @@
                 team: team,
                 totalAmount: parseFloat(document.getElementById('totalAmount').value) || 0,
                 advancePercent: parseFloat(document.getElementById('advancePercent').value) || 0,
-                milestones: parseInt(document.getElementById('milestoneCount').value) || 3
+                milestones: parseInt(document.getElementById('milestoneCount').value) || 3,
+                advanceDueDate: parseInt(document.getElementById('advanceDueDate').value) || 1,
+                milestoneDueDate: parseInt(document.getElementById('milestoneDueDate').value) || 15
             };
             
             try {

@@ -5,67 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documents | ProjectControl</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        teal: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',600:'#008080',700:'#0f766e' }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/css/design-system.css">
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-    <!-- Navigation Bar -->
-    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="/my-work" class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-teal-600 rounded-xl flex items-center justify-center shadow-sm">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    </div>
-                    <span class="text-xl font-bold text-gray-800">ProjectControl</span>
-                </a>
-                <div class="hidden md:flex items-center space-x-1" id="navLinks">
-                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all">My Work</a>
-                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-subadmin-only">Projects</a>
-                    <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">Users</a>
-                    <a href="/documents" class="px-4 py-2 rounded-lg bg-teal-50 text-teal-700 font-medium transition-all admin-only">Documents</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="/profile" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-all">
-                        <div class="w-9 h-9 bg-teal-500 rounded-full flex items-center justify-center text-white font-semibold text-sm"><span id="userInitials">AK</span></div>
-                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Admin</span>
-                    </a>
-                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Logout">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <%- include('partials/nav', { activePage: 'documents' }) %>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         <!-- Header -->
         <div class="mb-8">
             <div class="flex items-center justify-between mb-2">
-                <h1 class="text-3xl font-bold text-gray-900">Project Documents & Quotations</h1>
+                <h1 class="ds-page-title">Project Documents & Quotations</h1>
                 <div class="flex gap-2">
                     <a id="docCenterLink" href="/document-center" class="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg hover:from-teal-600 hover:to-teal-800 text-sm font-medium shadow-sm hidden admin-subadmin-only">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Open Document Center
                     </a>
                 </div>
             </div>
-            <p class="text-gray-500 text-sm mb-3">Select a project below to open its Document Center for auto-generated contracts, invoices & more.</p>
+            <p class="ds-page-subtitle mb-3">Select a project below to open its Document Center for auto-generated contracts, invoices & more.</p>
             <div class="flex gap-2 admin-only">
-                <button onclick="openCreateModal('requirement')" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 text-sm font-medium">+ Requirement Document</button>
-                <button onclick="openCreateModal('quotation')" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">+ Quotation</button>
-                <button onclick="openCreateModal('agreement')" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600 text-sm font-medium">+ Agreement</button>
-                <button onclick="openCreateModal('design-brief')" class="px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 text-sm font-medium">+ Design Brief</button>
+                <button onclick="openCreateModal('requirement')" class="ds-btn ds-btn-sm ds-btn-primary">+ Requirement Document</button>
+                <button onclick="openCreateModal('quotation')" class="ds-btn ds-btn-sm" style="background:#2563eb;color:#fff">+ Quotation</button>
+                <button onclick="openCreateModal('agreement')" class="ds-btn ds-btn-sm ds-btn-primary">+ Agreement</button>
+                <button onclick="openCreateModal('design-brief')" class="ds-btn ds-btn-sm" style="background:#db2777;color:#fff">+ Design Brief</button>
             </div>
         </div>
 
@@ -131,8 +94,8 @@
                 <div id="docExtras"></div>
                 
                 <div class="flex gap-2">
-                    <button onclick="submitDocument()" id="submitBtn" class="px-6 py-2 bg-teal-600 text-white font-medium rounded-lg hover:bg-teal-700">Create</button>
-                    <button onclick="closeModal()" class="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">Cancel</button>
+                    <button onclick="submitDocument()" id="submitBtn" class="ds-btn ds-btn-md ds-btn-primary">Create</button>
+                    <button onclick="closeModal()" class="ds-btn ds-btn-md ds-btn-secondary">Cancel</button>
                 </div>
             </div>
         </div>
@@ -147,8 +110,8 @@
             </div>
             <div id="viewModalContent" class="space-y-4"></div>
             <div class="flex gap-2 mt-6">
-                <button onclick="if(currentDoc) downloadDocPDF(currentDoc._id)" class="flex items-center gap-1.5 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 text-sm"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Download PDF</button>
-                <button onclick="closeViewModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm">Close</button>
+                <button onclick="if(currentDoc) downloadDocPDF(currentDoc._id)" class="ds-btn ds-btn-sm ds-btn-primary"><svg class="ds-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Download PDF</button>
+                <button onclick="closeViewModal()" class="ds-btn ds-btn-sm ds-btn-secondary">Close</button>
             </div>
         </div>
     </div>

@@ -2,7 +2,7 @@ const Project = require('../models/Project.model');
 const { Activity, Remark } = require('../models/Activity.model');
 const { ClientPayment } = require('../models/Payment.model');
 const AutomationEngine = require('../services/automationEngine');
-const { sendProjectCreatedEmail } = require('../services/emailService');
+const { sendProjectCreatedEmail, sendStageCompletionEmail, sendAssetRequestEmail } = require('../services/emailService');
 
 // Default stages template
 const defaultStages = [
@@ -115,11 +115,14 @@ exports.createProject = async (req, res) => {
             clientEmail,
             type,
             priority,
+            startDate,
             dueDate,
             team,
             totalAmount,
             advancePercent,
             milestones,
+            advanceDueDate,
+            milestoneDueDate,
             description
         } = req.body;
 
@@ -129,11 +132,14 @@ exports.createProject = async (req, res) => {
             client,
             type,
             priority,
+            startDate: startDate || new Date(),
             dueDate,
             team,
             totalAmount,
             advancePercent,
             milestones,
+            advanceDueDate: advanceDueDate || 1,
+            milestoneDueDate: milestoneDueDate || 15,
             description,
             stages: defaultStages,
             createdBy: req.user.id,
@@ -144,7 +150,7 @@ exports.createProject = async (req, res) => {
             }
         });
 
-        // Auto-create client payment records based on totalAmount, advancePercent, milestones
+        // Auto-create client payment records with DUE DATES
         if (totalAmount && totalAmount > 0) {
             const advPct = advancePercent || 25;
             const numMilestones = milestones || 3;
@@ -152,27 +158,44 @@ exports.createProject = async (req, res) => {
             const remaining = totalAmount - advanceAmount;
             const milestoneAmount = Math.round(remaining / numMilestones);
 
+            // Prepare due dates
+            const advanceDueDays = advanceDueDate || 1;
+            const milestoneDueDays = milestoneDueDate || 15;
+            const projectDuration = dueDate ? Math.ceil((new Date(dueDate) - new Date(startDate || Date.now())) / (1000 * 60 * 60 * 24)) : 90;
+            const daysPerMilestone = Math.ceil(projectDuration / numMilestones);
+
             const paymentRecords = [];
-            // Advance payment
+            
+            // Advance payment - due in X days
+            const advanceDueDate_val = new Date();
+            advanceDueDate_val.setDate(advanceDueDate_val.getDate() + advanceDueDays);
             paymentRecords.push({
                 project: project._id,
                 projectName: project.name,
                 label: 'Advance Payment',
                 amount: advanceAmount,
                 status: 'pending',
+                dueDate: advanceDueDate_val,
                 createdBy: req.user.id
             });
+            
             // Milestone payments
             const milestoneLabels = ['1st Milestone', '2nd Milestone', '3rd Milestone', '4th Milestone', '5th Milestone'];
             for (let i = 0; i < numMilestones; i++) {
                 const isLast = (i === numMilestones - 1);
                 const amt = isLast ? (remaining - milestoneAmount * (numMilestones - 1)) : milestoneAmount;
+                
+                // Calculate due date: milestone start + grace days
+                const milestoneDueDate_val = new Date();
+                milestoneDueDate_val.setDate(milestoneDueDate_val.getDate() + daysPerMilestone * (i + 1) + milestoneDueDays);
+                
                 paymentRecords.push({
                     project: project._id,
                     projectName: project.name,
                     label: milestoneLabels[i] || 'Final Payment',
                     amount: amt,
                     status: 'pending',
+                    dueDate: milestoneDueDate_val,
                     createdBy: req.user.id
                 });
             }
@@ -184,7 +207,7 @@ exports.createProject = async (req, res) => {
             project: project._id,
             user: req.user.id,
             userName: req.user.name,
-            action: 'created the project',
+            action: 'created the project with auto-calculated payment due dates',
             icon: '🚀',
             type: 'general'
         });
@@ -196,7 +219,7 @@ exports.createProject = async (req, res) => {
                 type,
                 priority,
                 dueDate,
-                startDate: req.body.startDate,
+                startDate: startDate,
                 totalAmount,
                 description
             }).catch(err => console.error('Email send error:', err.message));
@@ -342,6 +365,17 @@ exports.updateStage = async (req, res) => {
             icon: '📋',
             type: 'stage'
         });
+
+        // ── Stage completion email → notify client ──────────────────────
+        if (req.body.status === 'completed' && project.clientAccess?.clientEmail) {
+            sendStageCompletionEmail(
+                project.clientAccess.clientEmail,
+                project.clientAccess.clientName || project.client,
+                { name: stage.name, icon: stage.icon, summary: stage.summary },
+                { name: project.name, id: project._id }
+            ).catch(e => console.error('Email error (stage-completion):', e.message));
+        }
+        // ────────────────────────────────────────────────────────────────
 
         console.log('✅ updateStage success - returning updated project');
         res.status(200).json({
@@ -945,6 +979,20 @@ exports.addAssetRequest = async (req, res) => {
             icon: '📎',
             type: 'stage'
         });
+
+        // Send email to client
+        const clientEmail = project.clientAccess?.clientEmail || project.clientEmail;
+        const clientName = project.clientAccess?.clientName || project.client;
+        
+        if (clientEmail) {
+            await sendAssetRequestEmail(
+                clientEmail,
+                clientName || 'Client',
+                { label, type: type || 'other', note },
+                { name: stage.name },
+                { name: project.name }
+            );
+        }
 
         res.status(200).json({ success: true, data: project });
     } catch (err) {

@@ -1,6 +1,7 @@
 const Meeting = require('../models/Meeting.model');
 const Project = require('../models/Project.model');
 const { Activity } = require('../models/Activity.model');
+const { sendMeetingScheduledEmail } = require('../services/emailService');
 
 // @desc    Get all meetings for a project
 // @route   GET /api/meetings/project/:projectId
@@ -113,6 +114,41 @@ exports.createMeeting = async (req, res) => {
             icon: '📅',
             type: 'general'
         });
+
+        // ── Send meeting invite email to all attendees with an email ────
+        if (meeting.attendees && meeting.attendees.length > 0) {
+            const emailTargets = meeting.attendees.filter(a => a.email && a.email.trim());
+            if (emailTargets.length > 0) {
+                const meetingObj = meeting.toObject ? meeting.toObject() : meeting;
+                Promise.allSettled(
+                    emailTargets.map(a =>
+                        sendMeetingScheduledEmail(a.email, a.name || 'Attendee', meetingObj, false)
+                            .catch(e => console.error(`Email error (meeting) to ${a.email}:`, e.message))
+                    )
+                );
+            }
+        }
+        // Also send to client if project has clientEmail but not in attendees list
+        try {
+            const proj = await Project.findById(project).select('clientAccess');
+            if (proj?.clientAccess?.clientEmail) {
+                const alreadyIncluded = (meeting.attendees || []).some(
+                    a => a.email?.toLowerCase() === proj.clientAccess.clientEmail.toLowerCase()
+                );
+                if (!alreadyIncluded) {
+                    const meetingObj = meeting.toObject ? meeting.toObject() : meeting;
+                    sendMeetingScheduledEmail(
+                        proj.clientAccess.clientEmail,
+                        proj.clientAccess.clientName || 'Client',
+                        meetingObj,
+                        false
+                    ).catch(e => console.error('Email error (meeting→client):', e.message));
+                }
+            }
+        } catch (emailErr) {
+            console.error('Meeting email lookup error:', emailErr.message);
+        }
+        // ────────────────────────────────────────────────────────────────
 
         res.status(201).json({ success: true, data: meeting });
     } catch (err) {

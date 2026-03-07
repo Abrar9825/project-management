@@ -33,9 +33,10 @@ const meetingRoutes = require('./routes/meeting.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
 const generatorRoutes = require('./routes/generator.routes');
 const clientTaskRoutes = require('./routes/clientTask.routes');
+const AutomationEngine = require('./services/automationEngine');
 
 const app = express();
-
+    
 // Set view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -127,6 +128,51 @@ const server = app.listen(PORT, () => {
     console.log(`   Admin: admin@company.com / admin123`);
     console.log(`   SubAdmin: subadmin@company.com / subadmin123`);
     console.log(`   Developer: bilal@company.com / dev123\n`);
+
+    // ==================== SETUP DAILY CRON SCHEDULER ====================
+    // Check and send overdue payment emails every day at 9:00 AM
+    const setupScheduler = () => {
+        const now = new Date();
+        const scheduledTime = new Date();
+        scheduledTime.setHours(9, 0, 0, 0); // 9:00 AM
+
+        // If it's already past 9 AM today, schedule for tomorrow
+        if (now > scheduledTime) {
+            scheduledTime.setDate(scheduledTime.getDate() + 1);
+        }
+
+        const timeUntilScheduled = scheduledTime - now;
+
+        console.log(`[SCHEDULER] ⏰ Next overdue payment check: ${scheduledTime.toLocaleString()}`);
+
+        // Schedule the first run
+        setTimeout(() => {
+            console.log(`[SCHEDULER] 🔔 Executing scheduled task: checkAndEmailOverduePayments`);
+            AutomationEngine.checkAndEmailOverduePayments().then(result => {
+                console.log(`[SCHEDULER] ✅ Task completed:`, result);
+            }).catch(err => {
+                console.error(`[SCHEDULER] ❌ Task error:`, err);
+            });
+
+            // After first run, repeat every 24 hours
+            setInterval(() => {
+                console.log(`[SCHEDULER] 🔔 Executing scheduled task: checkAndEmailOverduePayments`);
+                AutomationEngine.checkAndEmailOverduePayments().then(result => {
+                    console.log(`[SCHEDULER] ✅ Task completed:`, result);
+                }).catch(err => {
+                    console.error(`[SCHEDULER] ❌ Task error:`, err);
+                });
+            }, 24 * 60 * 60 * 1000); // Every 24 hours
+        }, timeUntilScheduled);
+    };
+
+    try {
+        setupScheduler();
+        console.log('[SCHEDULER] ✅ Scheduler initialized');
+    } catch (err) {
+        console.error('[SCHEDULER] ❌ Failed to initialize scheduler:', err.message);
+    }
+    // ============================================================
 });
 
 // Handle unhandled promise rejections

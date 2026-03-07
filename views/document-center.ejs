@@ -5,18 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Center | Agency Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: { 50:'#f0fdfa',100:'#ccfbf1',200:'#99f6e4',300:'#5eead4',400:'#2dd4bf',500:'#008080',600:'#0d9488',700:'#0f766e',800:'#115e59',900:'#134e4a' },
-                        oxford: { 50:'#f0f4f8',100:'#d9e2ec',200:'#bcccdc',300:'#9fb3c8',400:'#829ab1',500:'#627d98',600:'#486581',700:'#334e68',800:'#243b53',900:'#102a43' }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/css/design-system.css">
     <style>
         .doc-card:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,128,128,0.12); }
         .status-draft { background: #fef3c7; color: #92400e; }
@@ -24,47 +13,20 @@
         .status-approved { background: #d1fae5; color: #065f46; }
         .status-sent { background: #ede9fe; color: #5b21b6; }
         .gen-btn:hover { transform: scale(1.02); }
-        .tab-active { border-bottom: 3px solid #008080; color: #008080; font-weight: 600; }
+        .tab-active { border-bottom: 3px solid #0d9488; color: #0d9488; font-weight: 600; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body class="bg-gray-50 min-h-screen">
-    <!-- Navigation Bar -->
-    <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <a href="/my-work" class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-teal-600 rounded-xl flex items-center justify-center shadow-sm">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                    </div>
-                    <span class="text-xl font-bold text-gray-800">ProjectControl</span>
-                </a>
-                <div class="hidden md:flex items-center space-x-1" id="navLinks">
-                    <a href="/my-work" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all">My Work</a>
-                    <a href="/projects" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-subadmin-only">Projects</a>
-                    <a href="/users" class="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium transition-all admin-only">Users</a>
-                    <a href="/documents" class="px-4 py-2 rounded-lg bg-teal-50 text-teal-700 font-medium transition-all admin-only">Documents</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="/profile" class="flex items-center space-x-3 hover:bg-gray-50 rounded-lg px-2 py-1 transition-all">
-                        <div class="w-9 h-9 bg-teal-500 rounded-full flex items-center justify-center text-white font-semibold text-sm"><span id="userInitials">AK</span></div>
-                        <span class="hidden sm:block text-sm font-medium text-gray-700" id="userName">Admin</span>
-                    </a>
-                    <button onclick="logout()" class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Logout">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
+    <%- include('partials/nav', { activePage: 'documents' }) %>
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Back + Title -->
         <div class="flex items-center justify-between mb-6">
             <div>
                 <a href="/projects" class="text-teal-600 hover:text-teal-700 text-sm font-medium mb-2 inline-block">&larr; Back to Projects</a>
-                <h1 class="text-3xl font-bold text-oxford-900">Document Center</h1>
-                <p class="text-gray-500 mt-1" id="projectLabel">Loading project...</p>
+            <h1 class="ds-page-title">Document Center</h1>
+            <p class="ds-page-subtitle" id="projectLabel">Loading project...</p>
             </div>
             <div class="flex gap-3">
                 <button onclick="generateAllDocs()" class="gen-btn px-5 py-2.5 bg-gradient-to-r from-teal-500 to-teal-700 text-white font-medium rounded-xl hover:shadow-lg transition-all flex items-center gap-2 admin-only">
@@ -146,12 +108,12 @@
             </div>
             <div class="flex-1 overflow-y-auto p-6" id="modalContent"></div>
             <div class="flex items-center justify-end gap-3 p-4 border-t bg-gray-50">
-                <button onclick="downloadPDF()" class="px-4 py-2 bg-oxford-700 text-white rounded-lg hover:bg-oxford-800 flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                <button onclick="downloadPDF()" class="ds-btn ds-btn-sm ds-btn-secondary">
+                    <svg class="ds-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                     Download PDF
                 </button>
-                <button onclick="sendDocToClient()" class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 admin-only flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <button onclick="sendDocToClient()" class="ds-btn ds-btn-sm ds-btn-primary admin-only">
+                    <svg class="ds-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                     Send to Client
                 </button>
             </div>
