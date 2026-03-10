@@ -12,81 +12,77 @@
     <%- include('partials/nav', { activePage: 'projects' }) %>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         
         <!-- Page Header -->
-        <div class="mb-8">
-            <h1 class="ds-page-title">Create New Project</h1>
-            <p class="ds-page-subtitle">Fill in the details to set up a new project</p>
+        <div class="mb-4">
+            <h1 class="ds-page-title" id="pageTitle">Create New Project</h1>
+            <p class="ds-page-subtitle" id="pageSubtitle">Fill in the details to set up a new project</p>
         </div>
 
         <!-- Stepper -->
-        <div class="mb-10">
+        <div class="mb-5">
             <div class="flex items-center justify-between relative">
-                <div class="absolute top-6 left-0 right-0 h-0.5 bg-gray-200 z-0"></div>
-                <div id="progressLine" class="absolute top-6 left-0 h-0.5 bg-teal-500 z-0 transition-all duration-500" style="width: 0%"></div>
+                <div class="absolute top-4 left-0 right-0 h-0.5 bg-gray-200 z-0"></div>
+                <div id="progressLine" class="absolute top-4 left-0 h-0.5 bg-teal-500 z-0 transition-all duration-500" style="width: 0%"></div>
                 
                 <div class="flex flex-col items-center z-10 step-indicator" data-step="1">
-                    <div id="step1Circle" class="w-12 h-12 rounded-full step-active flex items-center justify-center text-white font-bold shadow-lg transition-all">1</div>
-                    <span class="mt-2 text-sm font-medium text-teal-600">Basic Info</span>
+                    <div id="step1Circle" class="w-8 h-8 rounded-full step-active flex items-center justify-center text-white text-sm font-bold shadow transition-all">1</div>
+                    <span class="mt-1 text-xs font-medium text-teal-600">Basic Info</span>
                 </div>
                 <div class="flex flex-col items-center z-10 step-indicator" data-step="2">
-                    <div id="step2Circle" class="w-12 h-12 rounded-full step-pending flex items-center justify-center text-gray-400 font-bold transition-all">2</div>
-                    <span class="mt-2 text-sm font-medium text-gray-400">Team</span>
+                    <div id="step2Circle" class="w-8 h-8 rounded-full step-pending flex items-center justify-center text-gray-400 text-sm font-bold transition-all">2</div>
+                    <span class="mt-1 text-xs font-medium text-gray-400">Team</span>
                 </div>
                 <div class="flex flex-col items-center z-10 step-indicator" data-step="3">
-                    <div id="step3Circle" class="w-12 h-12 rounded-full step-pending flex items-center justify-center text-gray-400 font-bold transition-all">3</div>
-                    <span class="mt-2 text-sm font-medium text-gray-400">Payment</span>
+                    <div id="step3Circle" class="w-8 h-8 rounded-full step-pending flex items-center justify-center text-gray-400 text-sm font-bold transition-all">3</div>
+                    <span class="mt-1 text-xs font-medium text-gray-400">Payment</span>
                 </div>
             </div>
         </div>
 
         <!-- Error Message -->
-        <div id="errorMessage" class="hidden mb-4 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl"></div>
+        <div id="errorMessage" class="hidden mb-3 p-3 text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg"></div>
 
         <!-- Form Card -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             <form id="projectForm" onsubmit="return false;">
 
                 <!-- ==================== Step 1: Basic Info ==================== -->
-                <div id="step1Content" class="step-content p-8">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-10 h-10 bg-teal-600 rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div id="step1Content" class="step-content p-5">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-7 h-7 bg-teal-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900">Basic Information</h2>
-                            <p class="text-gray-500 text-sm">Enter project details</p>
-                        </div>
+                        <h2 class="text-base font-semibold text-gray-900">Basic Information</h2>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Project Name *</label>
-                            <input type="text" id="projectName" placeholder="Enter project name" class="ds-input" required>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Project Name *</label>
+                            <input type="text" id="projectName" placeholder="Enter project name" class="ds-input ds-input-sm" required>
                         </div>
                         
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
-                            <textarea id="projectDescription" rows="3" placeholder="Brief project description..." class="ds-input resize-none"></textarea>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Description</label>
+                            <textarea id="projectDescription" rows="2" placeholder="Brief project description..." class="ds-input ds-input-sm resize-none"></textarea>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Client Name *</label>
-                            <input type="text" id="clientName" placeholder="Enter client name" class="ds-input" required>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Client Name *</label>
+                            <input type="text" id="clientName" placeholder="Enter client name" class="ds-input ds-input-sm" required>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Client Email</label>
-                            <input type="email" id="clientEmail" placeholder="client@example.com" class="ds-input">
-                            <p class="text-xs text-gray-400 mt-1">Used for sending project emails & notifications</p>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Client Email</label>
+                            <input type="email" id="clientEmail" placeholder="client@example.com" class="ds-input ds-input-sm">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Project Type *</label>
-                            <select id="projectType" class="ds-input bg-white" required>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Project Type *</label>
+                            <select id="projectType" class="ds-input ds-input-sm bg-white" required>
                                 <option value="">Select type</option>
                                 <option value="web">Web Application</option>
                                 <option value="mobile">Mobile App</option>
@@ -99,98 +95,89 @@
                         </div>
                         
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Priority *</label>
-                            <div class="flex gap-3">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Priority *</label>
+                            <div class="flex gap-2">
                                 <label class="flex-1 cursor-pointer">
                                     <input type="radio" name="priority" value="low" class="peer hidden">
-                                    <div class="text-center py-3 px-4 rounded-xl border-2 border-gray-200 peer-checked:border-emerald-500 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 transition-all font-medium">Low</div>
+                                    <div class="text-center py-1.5 px-2 rounded-lg border border-gray-200 text-xs peer-checked:border-emerald-500 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 transition-all font-medium">Low</div>
                                 </label>
                                 <label class="flex-1 cursor-pointer">
                                     <input type="radio" name="priority" value="medium" class="peer hidden" checked>
-                                    <div class="text-center py-3 px-4 rounded-xl border-2 border-gray-200 peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 transition-all font-medium">Medium</div>
+                                    <div class="text-center py-1.5 px-2 rounded-lg border border-gray-200 text-xs peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-700 transition-all font-medium">Medium</div>
                                 </label>
                                 <label class="flex-1 cursor-pointer">
                                     <input type="radio" name="priority" value="high" class="peer hidden">
-                                    <div class="text-center py-3 px-4 rounded-xl border-2 border-gray-200 peer-checked:border-orange-500 peer-checked:bg-orange-50 peer-checked:text-orange-700 transition-all font-medium">High</div>
+                                    <div class="text-center py-1.5 px-2 rounded-lg border border-gray-200 text-xs peer-checked:border-orange-500 peer-checked:bg-orange-50 peer-checked:text-orange-700 transition-all font-medium">High</div>
                                 </label>
                                 <label class="flex-1 cursor-pointer">
                                     <input type="radio" name="priority" value="critical" class="peer hidden">
-                                    <div class="text-center py-3 px-4 rounded-xl border-2 border-gray-200 peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 transition-all font-medium">Critical</div>
+                                    <div class="text-center py-1.5 px-2 rounded-lg border border-gray-200 text-xs peer-checked:border-red-500 peer-checked:bg-red-50 peer-checked:text-red-700 transition-all font-medium">Critical</div>
                                 </label>
                             </div>
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
-                            <input type="date" id="startDate" class="ds-input">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Start Date</label>
+                            <input type="date" id="startDate" class="ds-input ds-input-sm">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Expected Delivery Date</label>
-                            <input type="date" id="dueDate" class="ds-input">
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Expected Delivery</label>
+                            <input type="date" id="dueDate" class="ds-input ds-input-sm">
                         </div>
                     </div>
                 </div>
 
                 <!-- ==================== Step 2: Team ==================== -->
-                <div id="step2Content" class="step-content p-8 hidden">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div id="step2Content" class="step-content p-5 hidden">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-7 h-7 bg-teal-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
                             </svg>
                         </div>
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900">Team Assignment</h2>
-                            <p class="text-gray-500 text-sm">Assign team members to this project</p>
-                        </div>
+                        <h2 class="text-base font-semibold text-gray-900">Team Assignment</h2>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Project Manager -->
-                        <div class="bg-teal-50 p-5 rounded-2xl border border-teal-100">
-                            <label class="block text-sm font-medium text-teal-700 mb-2">Project Manager *</label>
-                            <select id="teamPM" class="w-full px-4 py-3 border border-teal-200 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none bg-white">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div class="bg-teal-50 p-3 rounded-lg border border-teal-100">
+                            <label class="block text-xs font-medium text-teal-700 mb-1">Project Manager *</label>
+                            <select id="teamPM" class="w-full px-3 py-2 text-sm border border-teal-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none bg-white">
                                 <option value="">Select PM</option>
                             </select>
                         </div>
                         
-                        <!-- Designer -->
-                        <div class="bg-gradient-to-br from-pink-50 to-rose-50 p-5 rounded-2xl border border-pink-100">
-                            <label class="block text-sm font-medium text-pink-700 mb-2">Designer</label>
-                            <select id="teamDesigner" class="w-full px-4 py-3 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all outline-none bg-white">
+                        <div class="bg-pink-50 p-3 rounded-lg border border-pink-100">
+                            <label class="block text-xs font-medium text-pink-700 mb-1">Designer</label>
+                            <select id="teamDesigner" class="w-full px-3 py-2 text-sm border border-pink-200 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all outline-none bg-white">
                                 <option value="">Select Designer</option>
                             </select>
                         </div>
                         
-                        <!-- Frontend Developer -->
-                        <div class="bg-gradient-to-br from-cyan-50 to-blue-50 p-5 rounded-2xl border border-cyan-100">
-                            <label class="block text-sm font-medium text-cyan-700 mb-2">Frontend Developer</label>
-                            <select id="teamFrontend" class="w-full px-4 py-3 border border-cyan-200 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all outline-none bg-white">
+                        <div class="bg-cyan-50 p-3 rounded-lg border border-cyan-100">
+                            <label class="block text-xs font-medium text-cyan-700 mb-1">Frontend Developer</label>
+                            <select id="teamFrontend" class="w-full px-3 py-2 text-sm border border-cyan-200 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all outline-none bg-white">
                                 <option value="">Select Frontend Dev</option>
                             </select>
                         </div>
                         
-                        <!-- Backend Developer -->
-                        <div class="bg-gradient-to-br from-emerald-50 to-green-50 p-5 rounded-2xl border border-emerald-100">
-                            <label class="block text-sm font-medium text-emerald-700 mb-2">Backend Developer</label>
-                            <select id="teamBackend" class="w-full px-4 py-3 border border-emerald-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all outline-none bg-white">
+                        <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100">
+                            <label class="block text-xs font-medium text-emerald-700 mb-1">Backend Developer</label>
+                            <select id="teamBackend" class="w-full px-3 py-2 text-sm border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all outline-none bg-white">
                                 <option value="">Select Backend Dev</option>
                             </select>
                         </div>
                         
-                        <!-- QA Engineer -->
-                        <div class="bg-gradient-to-br from-amber-50 to-yellow-50 p-5 rounded-2xl border border-amber-100">
-                            <label class="block text-sm font-medium text-amber-700 mb-2">QA Engineer</label>
-                            <select id="teamQA" class="w-full px-4 py-3 border border-amber-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all outline-none bg-white">
+                        <div class="bg-amber-50 p-3 rounded-lg border border-amber-100">
+                            <label class="block text-xs font-medium text-amber-700 mb-1">QA Engineer</label>
+                            <select id="teamQA" class="w-full px-3 py-2 text-sm border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all outline-none bg-white">
                                 <option value="">Select QA</option>
                             </select>
                         </div>
                         
-                        <!-- DevOps -->
-                        <div class="bg-gradient-to-br from-slate-50 to-gray-100 p-5 rounded-2xl border border-slate-200">
-                            <label class="block text-sm font-medium text-slate-700 mb-2">DevOps Engineer</label>
-                            <select id="teamDevOps" class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-slate-500 focus:border-transparent transition-all outline-none bg-white">
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <label class="block text-xs font-medium text-gray-700 mb-1">DevOps Engineer</label>
+                            <select id="teamDevOps" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-500 focus:border-transparent transition-all outline-none bg-white">
                                 <option value="">Select DevOps</option>
                             </select>
                         </div>
@@ -198,43 +185,40 @@
                 </div>
 
                 <!-- ==================== Step 3: Payment ==================== -->
-                <div id="step3Content" class="step-content p-8 hidden">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-10 h-10 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div id="step3Content" class="step-content p-5 hidden">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-7 h-7 bg-amber-500 rounded-lg flex items-center justify-center">
+                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900">Payment Setup</h2>
-                            <p class="text-gray-500 text-sm">Configure project payment milestones</p>
-                        </div>
+                        <h2 class="text-base font-semibold text-gray-900">Payment Setup</h2>
                     </div>
                     
-                    <div class="space-y-6">
+                    <div class="space-y-4">
                         <!-- Total Amount -->
-                        <div class="bg-teal-600 p-6 rounded-2xl">
-                            <label class="block text-sm font-medium text-white/80 mb-2">Total Project Amount *</label>
+                        <div class="bg-teal-600 p-4 rounded-xl">
+                            <label class="block text-xs font-medium text-white/80 mb-1">Total Project Amount *</label>
                             <div class="relative">
-                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-lg font-bold text-gray-400">$</span>
-                                <input type="number" id="totalAmount" placeholder="0.00" class="w-full pl-10 pr-4 py-4 text-2xl font-bold border-0 rounded-xl focus:ring-2 focus:ring-white focus:ring-opacity-50 outline-none" required>
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base font-bold text-gray-400">$</span>
+                                <input type="number" id="totalAmount" placeholder="0.00" class="w-full pl-8 pr-3 py-2.5 text-xl font-bold border-0 rounded-lg focus:ring-2 focus:ring-white focus:ring-opacity-50 outline-none" required>
                             </div>
                         </div>
                         
                         <!-- Advance & Milestones Config -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Advance Percentage</label>
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Advance Percentage</label>
                                 <div class="relative">
-                                    <input type="number" id="advancePercent" placeholder="25" min="0" max="100" value="25" class="ds-input">
-                                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">%</span>
+                                    <input type="number" id="advancePercent" placeholder="25" min="0" max="100" value="25" class="ds-input ds-input-sm">
+                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">%</span>
                                 </div>
-                                <p class="text-xs text-gray-400 mt-1">Advance amount: $<span id="advanceAmountDisplay">0.00</span></p>
+                                <p class="text-[11px] text-gray-400 mt-0.5">Advance: $<span id="advanceAmountDisplay">0.00</span></p>
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Number of Milestones</label>
-                                <select id="milestoneCount" class="ds-input bg-white">
+                                <label class="block text-xs font-medium text-gray-600 mb-1">Number of Milestones</label>
+                                <select id="milestoneCount" class="ds-input ds-input-sm bg-white">
                                     <option value="1">1 Milestone</option>
                                     <option value="2">2 Milestones</option>
                                     <option value="3" selected>3 Milestones</option>
@@ -245,59 +229,56 @@
                             </div>
                         </div>
                         
-                        <!-- Payment Terms (Due Dates) -->
-                        <div class="bg-blue-50 border border-blue-200 rounded-2xl p-5">
-                            <div class="flex items-center gap-2 mb-3">
-                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <label class="text-sm font-semibold text-blue-900">Payment Terms (Due Dates)</label>
+                        <!-- Payment Terms -->
+                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3">
+                            <div class="flex items-center gap-1.5 mb-2">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <label class="text-xs font-semibold text-blue-900">Payment Terms</label>
                             </div>
-                            <p class="text-xs text-blue-700 mb-4">Auto-calculate due dates for all payments. Overdue emails will be sent automatically.</p>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-xs font-medium text-blue-800 mb-1">Advance Payment Due In</label>
-                                    <div class="flex items-center gap-2">
-                                        <input type="number" id="advanceDueDate" min="1" max="30" value="1" class="w-full px-4 py-2.5 border border-blue-200 bg-white rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition-all">
-                                        <span class="text-sm text-blue-700 font-medium whitespace-nowrap">days</span>
+                                    <label class="block text-[11px] font-medium text-blue-800 mb-0.5">Advance Due In</label>
+                                    <div class="flex items-center gap-1.5">
+                                        <input type="number" id="advanceDueDate" min="1" max="30" value="1" class="w-full px-2.5 py-1.5 text-sm border border-blue-200 bg-white rounded-lg focus:ring-2 focus:ring-blue-400 outline-none transition-all">
+                                        <span class="text-xs text-blue-700 font-medium">days</span>
                                     </div>
-                                    <p class="text-[11px] text-blue-600 mt-1">From project creation date</p>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-blue-800 mb-1">Milestone Payment Grace Period</label>
-                                    <div class="flex items-center gap-2">
-                                        <input type="number" id="milestoneDueDate" min="1" max="60" value="15" class="w-full px-4 py-2.5 border border-blue-200 bg-white rounded-xl focus:ring-2 focus:ring-blue-400 outline-none transition-all">
-                                        <span class="text-sm text-blue-700 font-medium whitespace-nowrap">days</span>
+                                    <label class="block text-[11px] font-medium text-blue-800 mb-0.5">Milestone Grace Period</label>
+                                    <div class="flex items-center gap-1.5">
+                                        <input type="number" id="milestoneDueDate" min="1" max="60" value="15" class="w-full px-2.5 py-1.5 text-sm border border-blue-200 bg-white rounded-lg focus:ring-2 focus:ring-blue-400 outline-none transition-all">
+                                        <span class="text-xs text-blue-700 font-medium">days</span>
                                     </div>
-                                    <p class="text-[11px] text-blue-600 mt-1">After milestone completion</p>
                                 </div>
                             </div>
-                            <div class="mt-3 p-2.5 bg-white rounded-lg border border-blue-100">
-                                <p class="text-xs text-blue-800">💡 <strong>Example:</strong> If milestone completed on 15th, payment due on <span id="dueDateExample" class="font-semibold">30th</span> (15 days grace)</p>
+                            <div class="mt-2 p-2 bg-white rounded-md border border-blue-100">
+                                <p class="text-[11px] text-blue-800">Example: Milestone on 15th → due <span id="dueDateExample" class="font-semibold">30th</span> (15 days grace)</p>
                             </div>
                         </div>
 
-                        <!-- Milestone Breakdown with Editable % -->
-                        <div id="milestoneBreakdown" class="bg-gray-50 p-5 rounded-2xl border border-gray-100">
-                            <div class="flex items-center justify-between mb-4">
-                                <h4 class="text-sm font-medium text-gray-700">Payment Breakdown</h4>
-                                <span class="text-xs font-medium px-2 py-1 rounded-lg" id="totalPercentBadge">Total: 100%</span>
+                        <!-- Milestone Breakdown -->
+                        <div id="milestoneBreakdown" class="bg-gray-50 p-3 rounded-xl border border-gray-100">
+                            <div class="flex items-center justify-between mb-2">
+                                <h4 class="text-xs font-medium text-gray-700">Payment Breakdown</h4>
+                                <span class="text-[11px] font-medium px-1.5 py-0.5 rounded-md" id="totalPercentBadge">Total: 100%</span>
                             </div>
-                            <div class="space-y-3" id="milestoneList"></div>
+                            <div class="space-y-2" id="milestoneList"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Form Actions -->
-                <div class="px-8 py-5 bg-gray-50 border-t border-gray-100 flex justify-between">
-                    <button type="button" id="prevBtn" onclick="prevStep()" class="ds-btn ds-btn-md ds-btn-ghost hidden">
+                <div class="px-5 py-3 bg-gray-50 border-t border-gray-100 flex justify-between">
+                    <button type="button" id="prevBtn" onclick="prevStep()" class="ds-btn ds-btn-sm ds-btn-ghost hidden">
                         ← Previous
                     </button>
                     
-                    <div class="flex gap-3 ml-auto">
-                        <a class="ds-btn ds-btn-md ds-btn-ghost" href='/projects'>Cancel</a>
-                        <button type="button" id="nextBtn" onclick="nextStep()" class="ds-btn ds-btn-md ds-btn-primary">
+                    <div class="flex gap-2 ml-auto">
+                        <a class="ds-btn ds-btn-sm ds-btn-ghost" id="cancelBtn" href='/projects'>Cancel</a>
+                        <button type="button" id="nextBtn" onclick="nextStep()" class="ds-btn ds-btn-sm ds-btn-primary">
                             Next Step →
                         </button>
-                        <button type="button" id="submitBtn" onclick="createProject()" class="ds-btn ds-btn-md ds-btn-success hidden">
+                        <button type="button" id="submitBtn" onclick="createProject()" class="ds-btn ds-btn-sm ds-btn-success hidden">
                             Create Project ✓
                         </button>
                     </div>
@@ -311,7 +292,12 @@
         let currentStep = 1;
         const totalSteps = 3;
         let allUsers = [];
-        let milestonePercents = []; // stores % for each milestone
+        let milestonePercents = [];
+        
+        // ==================== EDIT MODE DETECTION ====================
+        const urlParams = new URLSearchParams(window.location.search);
+        const editProjectId = urlParams.get('edit');
+        const isEditMode = !!editProjectId;
 
         // ==================== STEPPER ====================
         function updateStepper() {
@@ -324,17 +310,17 @@
                 const label = indicator.querySelector('span');
                 
                 if (i < currentStep) {
-                    circle.className = 'w-12 h-12 rounded-full step-complete flex items-center justify-center text-white font-bold shadow-lg transition-all';
+                    circle.className = 'w-8 h-8 rounded-full step-complete flex items-center justify-center text-white text-sm font-bold shadow transition-all';
                     circle.innerHTML = '✓';
-                    label.className = 'mt-2 text-sm font-medium text-emerald-600';
+                    label.className = 'mt-1 text-xs font-medium text-emerald-600';
                 } else if (i === currentStep) {
-                    circle.className = 'w-12 h-12 rounded-full step-active flex items-center justify-center text-white font-bold shadow-lg transition-all';
+                    circle.className = 'w-8 h-8 rounded-full step-active flex items-center justify-center text-white text-sm font-bold shadow transition-all';
                     circle.innerHTML = i;
-                    label.className = 'mt-2 text-sm font-medium text-teal-600';
+                    label.className = 'mt-1 text-xs font-medium text-teal-600';
                 } else {
-                    circle.className = 'w-12 h-12 rounded-full step-pending flex items-center justify-center text-gray-400 font-bold transition-all';
+                    circle.className = 'w-8 h-8 rounded-full step-pending flex items-center justify-center text-gray-400 text-sm font-bold transition-all';
                     circle.innerHTML = i;
-                    label.className = 'mt-2 text-sm font-medium text-gray-400';
+                    label.className = 'mt-1 text-xs font-medium text-gray-400';
                 }
             }
             
@@ -449,14 +435,14 @@
             }
             
             let html = `
-                <div class="flex items-center justify-between p-3 bg-emerald-50 rounded-xl">
-                    <div class="flex items-center gap-3">
-                        <span class="w-8 h-8 bg-emerald-500 text-white rounded-lg flex items-center justify-center text-sm font-bold">A</span>
-                        <span class="text-sm font-medium text-emerald-700">Advance</span>
+                <div class="flex items-center justify-between p-2 bg-emerald-50 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="w-6 h-6 bg-emerald-500 text-white rounded flex items-center justify-center text-xs font-bold">A</span>
+                        <span class="text-xs font-medium text-emerald-700">Advance</span>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <span class="text-sm text-emerald-600 font-medium">${advPct}%</span>
-                        <span class="font-bold text-emerald-700 min-w-[80px] text-right">$${advanceAmount.toFixed(2)}</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs text-emerald-600 font-medium">${advPct}%</span>
+                        <span class="font-bold text-emerald-700 text-sm min-w-[70px] text-right">$${advanceAmount.toFixed(2)}</span>
                     </div>
                 </div>
             `;
@@ -465,18 +451,18 @@
                 const pct = milestonePercents[i] || 0;
                 const amount = (total * pct / 100);
                 html += `
-                    <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-100">
-                        <div class="flex items-center gap-3">
-                            <span class="w-8 h-8 bg-teal-500 text-white rounded-lg flex items-center justify-center text-sm font-bold">${i + 1}</span>
-                            <span class="text-sm font-medium text-gray-700">Milestone ${i + 1}</span>
-                        </div>
+                    <div class="flex items-center justify-between p-2 bg-white rounded-lg border border-gray-100">
                         <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 bg-teal-500 text-white rounded flex items-center justify-center text-xs font-bold">${i + 1}</span>
+                            <span class="text-xs font-medium text-gray-700">Milestone ${i + 1}</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
                             <input type="number" value="${pct}" min="0" max="100" step="0.1"
                                    onchange="updateMilestonePercent(${i}, this.value)"
                                    oninput="updateMilestonePercent(${i}, this.value)"
-                                   class="w-20 px-2 py-1.5 text-sm text-center border border-gray-200 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none font-medium">
-                            <span class="text-gray-400 text-sm">%</span>
-                            <span class="font-bold text-gray-700 min-w-[80px] text-right" id="msAmt${i}">$${amount.toFixed(2)}</span>
+                                   class="w-16 px-1.5 py-1 text-xs text-center border border-gray-200 rounded focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none font-medium">
+                            <span class="text-gray-400 text-xs">%</span>
+                            <span class="font-bold text-gray-700 text-sm min-w-[70px] text-right" id="msAmt${i}">$${amount.toFixed(2)}</span>
                         </div>
                     </div>
                 `;
@@ -541,13 +527,13 @@
         document.getElementById('milestoneDueDate')?.addEventListener('change', updateDueDateExample);
         updateDueDateExample();
 
-        // ==================== CREATE PROJECT ====================
+        // ==================== CREATE / UPDATE PROJECT ====================
         async function createProject() {
             if (!validateStep(3)) return;
             
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Creating...';
+            submitBtn.textContent = isEditMode ? 'Updating...' : 'Creating...';
             
             // Build team array matching TeamMemberSchema
             const team = [];
@@ -591,25 +577,33 @@
             };
             
             try {
-                const result = await api.createProject(projectData);
+                let result;
+                if (isEditMode) {
+                    result = await api.updateProject(editProjectId, projectData);
+                } else {
+                    result = await api.createProject(projectData);
+                }
                 
                 if (result.success) {
-                    // Redirect to project detail or projects list
-                    const projectId = result.data?._id || result.data?.id;
-                    if (projectId) {
-                        window.location.href = `/project-detail?id=${projectId}`;
+                    if (isEditMode) {
+                        window.location.href = `/project-detail?id=${editProjectId}`;
                     } else {
-                        window.location.href = '/projects';
+                        const projectId = result.data?._id || result.data?.id;
+                        if (projectId) {
+                            window.location.href = `/project-detail?id=${projectId}`;
+                        } else {
+                            window.location.href = '/projects';
+                        }
                     }
                 } else {
-                    showError(result.error || 'Failed to create project');
+                    showError(result.error || (isEditMode ? 'Failed to update project' : 'Failed to create project'));
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Create Project ✓';
+                    submitBtn.textContent = isEditMode ? 'Update Project ✓' : 'Create Project ✓';
                 }
             } catch (error) {
                 showError('Connection failed. Please try again.');
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Create Project ✓';
+                submitBtn.textContent = isEditMode ? 'Update Project ✓' : 'Create Project ✓';
             }
         }
 
@@ -652,15 +646,88 @@
                 document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
             }
             
-            // Set default dates
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('startDate').value = today;
-            const threeMonths = new Date();
-            threeMonths.setMonth(threeMonths.getMonth() + 3);
-            document.getElementById('dueDate').value = threeMonths.toISOString().split('T')[0];
-            
             updateStepper();
             await loadUsers();
+            
+            if (isEditMode) {
+                // Edit mode: update page title and load project data
+                document.title = 'Edit Project | Project Control System';
+                document.getElementById('pageTitle').textContent = 'Edit Project';
+                document.getElementById('pageSubtitle').textContent = 'Update project details';
+                document.getElementById('submitBtn').textContent = 'Update Project \u2713';
+                document.getElementById('cancelBtn').href = '/project-detail?id=' + editProjectId;
+                await loadProjectForEdit();
+            } else {
+                // Create mode: set default dates
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('startDate').value = today;
+                const threeMonths = new Date();
+                threeMonths.setMonth(threeMonths.getMonth() + 3);
+                document.getElementById('dueDate').value = threeMonths.toISOString().split('T')[0];
+            }
+        }
+
+        // ==================== LOAD PROJECT FOR EDIT ====================
+        async function loadProjectForEdit() {
+            try {
+                const result = await api.getProject(editProjectId);
+                if (!result.success || !result.data) {
+                    showError('Failed to load project data');
+                    return;
+                }
+                const p = result.data;
+
+                // Step 1: Basic Info
+                document.getElementById('projectName').value = p.name || '';
+                document.getElementById('projectDescription').value = p.description || '';
+                document.getElementById('clientName').value = p.clientDetails?.name || p.client || '';
+                document.getElementById('clientEmail').value = p.clientDetails?.email || p.clientAccess?.clientEmail || '';
+                document.getElementById('projectType').value = p.type || '';
+                
+                // Priority radio
+                const priorityRadio = document.querySelector(`input[name="priority"][value="${p.priority || 'medium'}"]`);
+                if (priorityRadio) priorityRadio.checked = true;
+                
+                // Dates
+                if (p.startDate) document.getElementById('startDate').value = new Date(p.startDate).toISOString().split('T')[0];
+                if (p.dueDate) document.getElementById('dueDate').value = new Date(p.dueDate).toISOString().split('T')[0];
+
+                // Step 2: Team
+                const teamMap = {};
+                (p.team || []).forEach(t => {
+                    const userId = t.user?._id || t.user;
+                    if (t.role === 'Project Manager') teamMap['teamPM'] = userId;
+                    else if (t.role === 'Designer') teamMap['teamDesigner'] = userId;
+                    else if (t.role === 'Frontend Dev') teamMap['teamFrontend'] = userId;
+                    else if (t.role === 'Backend Dev') teamMap['teamBackend'] = userId;
+                    else if (t.role === 'QA Engineer') teamMap['teamQA'] = userId;
+                    else if (t.role === 'DevOps') teamMap['teamDevOps'] = userId;
+                });
+                Object.keys(teamMap).forEach(selectId => {
+                    const select = document.getElementById(selectId);
+                    if (select) select.value = teamMap[selectId];
+                });
+
+                // Step 3: Payment
+                document.getElementById('totalAmount').value = p.totalAmount || 0;
+                document.getElementById('advancePercent').value = p.advancePercent || 0;
+                
+                // Milestone count
+                const msCount = p.milestones || 3;
+                document.getElementById('milestoneCount').value = msCount;
+                
+                // Payment terms
+                if (p.advanceDueDate) document.getElementById('advanceDueDate').value = p.advanceDueDate;
+                if (p.milestoneDueDate) document.getElementById('milestoneDueDate').value = p.milestoneDueDate;
+                
+                // Reset milestone percents so renderMilestones recalculates
+                milestonePercents = [];
+                renderMilestones();
+                
+            } catch (err) {
+                console.error('Error loading project for edit:', err);
+                showError('Failed to load project data');
+            }
         }
 
         init();

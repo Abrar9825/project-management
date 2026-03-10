@@ -14,32 +14,45 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         <!-- Header -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-2">
-                <h1 class="ds-page-title">Project Documents & Quotations</h1>
-                <div class="flex gap-2">
-                    <a id="docCenterLink" href="/document-center" class="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg hover:from-teal-600 hover:to-teal-800 text-sm font-medium shadow-sm hidden admin-subadmin-only">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Open Document Center
-                    </a>
+        <div class="mb-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                <div>
+                    <h1 class="ds-page-title">Documents</h1>
+                    <p class="ds-page-subtitle">Manage project documents, quotations, and agreements</p>
                 </div>
+                <a id="docCenterLink" href="/document-center" class="ds-btn ds-btn-md ds-btn-secondary admin-subadmin-only hidden">
+                    <svg class="ds-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Document Center
+                </a>
             </div>
-            <p class="ds-page-subtitle mb-3">Select a project below to open its Document Center for auto-generated contracts, invoices & more.</p>
-            <div class="flex gap-2 admin-only">
-                <button onclick="openCreateModal('requirement')" class="ds-btn ds-btn-sm ds-btn-primary">+ Requirement Document</button>
-                <button onclick="openCreateModal('quotation')" class="ds-btn ds-btn-sm" style="background:#2563eb;color:#fff">+ Quotation</button>
-                <button onclick="openCreateModal('agreement')" class="ds-btn ds-btn-sm ds-btn-primary">+ Agreement</button>
-                <button onclick="openCreateModal('design-brief')" class="ds-btn ds-btn-sm" style="background:#db2777;color:#fff">+ Design Brief</button>
+            <div class="flex flex-wrap gap-2 admin-only">
+                <button onclick="openCreateModal('requirement')" class="ds-btn ds-btn-sm ds-btn-primary">
+                    <svg class="ds-icon-xs" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                    Requirement
+                </button>
+                <button onclick="openCreateModal('quotation')" class="ds-btn ds-btn-sm ds-btn-primary">
+                    <svg class="ds-icon-xs" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Quotation
+                </button>
+                <button onclick="openCreateModal('agreement')" class="ds-btn ds-btn-sm ds-btn-primary">
+                    <svg class="ds-icon-xs" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Agreement
+                </button>
+                <button onclick="openCreateModal('design-brief')" class="ds-btn ds-btn-sm ds-btn-primary">
+                    <svg class="ds-icon-xs" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.5a2 2 0 00-1 .267M7 21H5a2 2 0 01-2-2v-4a2 2 0 012-2h2.5M9 3h1M7 9h6m-9 6h9m-6 0h6m-3-3h3m-3 3v3"/></svg>
+                    Design Brief
+                </button>
             </div>
         </div>
 
         <!-- Tabs -->
-        <div class="bg-white border-b border-gray-200 mb-6">
-            <div class="flex space-x-4">
-                <button onclick="filterByType('all')" data-type="all" class="filter-btn active px-4 py-3 font-medium text-teal-600 border-b-2 border-teal-600">All Documents</button>
-                <button onclick="filterByType('requirement')" data-type="requirement" class="filter-btn px-4 py-3 font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Requirements</button>
-                <button onclick="filterByType('quotation')" data-type="quotation" class="filter-btn px-4 py-3 font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Quotations</button>
-                <button onclick="filterByType('agreement')" data-type="agreement" class="filter-btn px-4 py-3 font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Agreements</button>
-                <button onclick="filterByType('handover')" data-type="handover" class="filter-btn px-4 py-3 font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Handovers</button>
+        <div class="bg-white border-b border-gray-200 mb-6 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-6">
+                <button onclick="filterByType('all')" data-type="all" class="filter-btn active px-1 py-3 text-sm font-medium text-teal-600 border-b-2 border-teal-600">All Documents</button>
+                <button onclick="filterByType('requirement')" data-type="requirement" class="filter-btn px-1 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Requirements</button>
+                <button onclick="filterByType('quotation')" data-type="quotation" class="filter-btn px-1 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Quotations</button>
+                <button onclick="filterByType('agreement')" data-type="agreement" class="filter-btn px-1 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Agreements</button>
+                <button onclick="filterByType('handover')" data-type="handover" class="filter-btn px-1 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent">Handovers</button>
             </div>
         </div>
 
@@ -673,6 +686,9 @@
         if(!TOKEN || !USER.name) {
             window.location.href = '/login';
         } else {
+            document.getElementById('userName').textContent = USER.name;
+            document.getElementById('userInitials').textContent = USER.name.split(' ').map(n => n[0]).join('').substring(0, 2);
+            
             if(USER.role !== 'admin') {
                 document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
             }

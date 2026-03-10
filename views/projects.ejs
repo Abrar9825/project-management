@@ -166,15 +166,16 @@
                 const currentStage = project.stages?.find(s => s.status === 'in-progress')?.name || 'Not Started';
                 
                 return `
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all transform hover:-translate-y-1">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all cursor-pointer group" 
+                         onclick="window.location.href='/project-detail?id=${project._id}'">
                         <!-- Gradient Header -->
-                        <div class="${gradient} p-5">
+                        <div class="${gradient} p-5 group-hover:opacity-90 transition-opacity">
                             <div class="flex items-start justify-between">
                                 <div>
-                                    <h3 class="text-lg font-bold text-white">${project.name}</h3>
-                                    <p class="text-white/80 text-sm mt-1">${project.clientDetails?.name || project.client || 'No Client'}</p>
+                                    <h3 class="text-base font-bold text-white">${project.name}</h3>
+                                    <p class="text-white/80 text-xs mt-1">${project.clientDetails?.name || project.client || 'No Client'}</p>
                                 </div>
-                                <span class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white/20 text-white capitalize backdrop-blur-sm">
+                                <span class="px-2 py-0.5 text-xs font-semibold rounded-md bg-white/20 text-white capitalize backdrop-blur-sm">
                                     ${project.priority || 'medium'}
                                 </span>
                             </div>
@@ -183,58 +184,53 @@
                         <!-- Content -->
                         <div class="p-5">
                             <!-- Status & Stage -->
-                            <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center justify-between mb-3">
                                 <div class="flex items-center gap-2">
-                                    <span class="w-2.5 h-2.5 rounded-full ${health.dot} animate-pulse"></span>
-                                    <span class="text-sm font-medium ${health.textColor}">${health.label}</span>
+                                    <span class="w-2 h-2 rounded-full ${health.dot} animate-pulse"></span>
+                                    <span class="text-xs font-medium ${health.textColor}">${health.label}</span>
                                 </div>
-                                <span class="text-sm text-gray-500">Stage: <span class="font-medium text-gray-700">${currentStage}</span></span>
+                                <span class="text-xs text-gray-500">Stage: <span class="font-medium text-gray-700">${currentStage}</span></span>
                             </div>
                             
                             <!-- Progress Bar -->
                             <div class="mb-4">
-                                <div class="flex justify-between text-sm mb-1.5">
+                                <div class="flex justify-between text-xs mb-1">
                                     <span class="text-gray-500">Progress</span>
                                     <span class="font-semibold text-gray-700">${progress}%</span>
                                 </div>
-                                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
                                     <div class="h-full ${gradient} rounded-full transition-all" style="width: ${progress}%"></div>
                                 </div>
                             </div>
                             
                             <!-- Footer Info -->
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                            <div class="flex items-center justify-between pt-3 pb-3 border-t border-gray-100">
                                 <div class="flex items-center gap-2">
                                     <div class="flex -space-x-2">
                                         ${Array(Math.min(teamSize, 3)).fill(0).map((_, i) => `
-                                            <div class="w-7 h-7 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 border-2 border-white flex items-center justify-center text-xs font-medium text-white">
+                                            <div class="w-6 h-6 rounded-full bg-gradient-to-br from-slate-300 to-slate-400 border border-white flex items-center justify-center text-[10px] font-medium text-white">
                                                 ${String.fromCharCode(65 + i)}
                                             </div>
                                         `).join('')}
                                         ${teamSize > 3 ? `
-                                            <div class="w-7 h-7 rounded-full bg-gray-200 border-2 border-white flex items-center justify-center text-xs font-medium text-gray-600">
+                                            <div class="w-6 h-6 rounded-full bg-gray-200 border border-white flex items-center justify-center text-[10px] font-medium text-gray-600">
                                                 +${teamSize - 3}
                                             </div>
                                         ` : ''}
                                     </div>
                                     <span class="text-xs text-gray-400">${teamSize} members</span>
                                 </div>
-                                
-                                <a href="/project-detail?id=${project._id}" 
-                                   class="ds-btn ds-btn-xs ds-btn-outline">
-                                    View
-                                </a>
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="flex gap-2 pt-3 border-t border-gray-100 admin-subadmin-only">
-                                <a href="/document-center?id=${project._id}" 
-                                   class="flex-1 ds-btn ds-btn-xs ds-btn-outline">
-                                    <svg class="ds-icon-xs" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Doc Center
-                                </a>
+                            <div class="flex gap-2 pt-2" onclick="event.stopPropagation();">
                                 <a href="/client-portal?id=${project._id}" 
-                                   class="flex-1 ds-btn ds-btn-xs ds-btn-secondary">
+                                   class="flex-1 ds-btn ds-btn-xs ds-btn-primary justify-center">
                                     <svg class="ds-icon-xs" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg> Client Portal
+                                </a>
+                                <a href="/document-center?id=${project._id}" 
+                                   class="flex-1 ds-btn ds-btn-xs ds-btn-outline justify-center">
+                                    <svg class="ds-icon-xs" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> Doc Center
                                 </a>
                             </div>
                         </div>
