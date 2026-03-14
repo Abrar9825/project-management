@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Details | Project Control System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/design-system.css">
+    <style>
+        .pro-input {
+            width: 100% !important;
+            padding: 10px 14px !important;
+            border: 2px solid #cbd5e1 !important;
+            border-radius: 12px !important;
+            background-color: #ffffff !important;
+            color: #1f2937 !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        .pro-input:hover {
+            border-color: #7dd3c0 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+        }
+
+        .pro-input:focus {
+            border-color: #0d9488 !important;
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1), 0 4px 6px rgba(0,0,0,0.1) !important;
+        }
+
+        .pro-input::placeholder {
+            color: #9ca3af !important;
+        }
+
+        .form-section {
+            @apply px-6 py-4 border-b border-gray-200;
+        }
+
+        .form-section:last-child {
+            @apply border-b-0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .status-badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .badge-contacted {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            color: #6b21a8;
+            border: 1px solid #d8b4fe;
+        }
+
+        .badge-quoted {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .badge-converted {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .badge-rejected {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <%- include('partials/nav') %>
+
+    <main>
+        <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3">
+            <!-- Back Button -->
+            <div class="flex items-center gap-1.5 mb-2 px-2">
+                <a href="/leads" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-white border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:border-teal-400 hover:text-teal-600 transition shadow-sm hover:shadow-md">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    <span>Back to Leads</span>
+                </a>
+            </div>
+
+            <!-- Header -->
+            <div class="mb-3 px-2">
+                <h1 class="text-2xl font-bold text-gray-900">Lead Details</h1>
+                <p class="text-gray-600 text-sm mt-1">View and manage lead information</p>
+            </div>
+
+            <!-- Detail Content -->
+            <div id="detailContent" class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                <!-- Lead Header Section -->
+                <div class="form-section space-y-4">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900" id="detailName">Loading...</h2>
+                            <p class="text-gray-600 text-sm mt-1" id="detailCompany">-</p>
+                        </div>
+                        <div id="statusBadge" class="status-badge badge-new mt-1">
+                            <span id="statusEmoji">🆕</span>
+                            <span id="statusText">New</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="form-section space-y-3">
+                    <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Contact Information
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Email</label>
+                            <a href="mailto:" id="detailEmail" class="pro-input bg-gray-50 block text-teal-600 hover:text-teal-700 break-all">Loading...</a>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Phone</label>
+                            <a href="tel:" id="detailPhone" class="pro-input bg-gray-50 block text-teal-600 hover:text-teal-700">-</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Information Section -->
+                <div class="form-section space-y-3">
+                    <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Project Information
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Project Type</label>
+                            <div class="pro-input bg-gray-50" id="detailType">-</div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Budget (₨)</label>
+                            <div class="pro-input bg-gray-50 font-bold text-teal-600" id="detailBudget">-</div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Created Date</label>
+                            <div class="pro-input bg-gray-50" id="detailDate">-</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-2">Description</label>
+                        <div class="pro-input bg-gray-50 resize-none" id="detailDescription" style="padding: 12px 14px; min-height: 80px; white-space: pre-wrap; word-wrap: break-word;">-</div>
+                    </div>
+                </div>
+
+                <!-- Status & Actions Section -->
+                <div class="form-section space-y-4">
+                    <h3 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        Status & Actions
+                    </h3>
+
+                    <div class="flex gap-3">
+                        <div class="flex-1">
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Update Status</label>
+                            <select id="statusSelect" class="pro-input bg-white cursor-pointer" onchange="updateLeadStatus()">
+                                <option value="new">🆕 New</option>
+                                <option value="contacted">📞 Contacted</option>
+                                <option value="quoted">💼 Quoted</option>
+                                <option value="converted">✅ Converted</option>
+                                <option value="rejected">❌ Rejected</option>
+                            </select>
+                        </div>
+                        <button onclick="convertLeadToProject()" class="px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold text-sm rounded-xl hover:from-teal-700 hover:to-teal-800 transition shadow-md hover:shadow-lg flex items-center justify-center gap-2 mt-6">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            <span>Convert</span>
+                        </button>
+                        <button onclick="deleteLead()" class="px-6 py-2.5 bg-white border-2 border-red-300 text-red-600 font-bold text-sm rounded-xl hover:bg-red-50 transition shadow-sm hover:shadow-md flex items-center justify-center gap-2 mt-6">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            <span>Delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 bg-white rounded-lg shadow-lg px-4 py-3 z-50 max-w-md"></div>
+
+    <script>
+        const API_BASE = '/api/leads';
+        const token = localStorage.getItem('token');
+        let currentLeadId = null;
+
+        function getStatusBadgeClass(status) {
+            const badges = {
+                'new': 'badge-new',
+                'contacted': 'badge-contacted',
+                'quoted': 'badge-quoted',
+                'converted': 'badge-converted',
+                'rejected': 'badge-rejected'
+            };
+            return badges[status] || 'badge-new';
+        }
+
+        function getStatusEmoji(status) {
+            const emojis = {
+                'new': '🆕',
+                'contacted': '📞',
+                'quoted': '💼',
+                'converted': '✅',
+                'rejected': '❌'
+            };
+            return emojis[status] || '🆕';
+        }
+
+        function capitalize(str) {
+            if (!str || typeof str !== 'string') return '-';
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        function formatCurrency(amount) {
+            if (!amount || amount === 'undefined') return 'N/A';
+            return '₨' + parseInt(amount).toLocaleString();
+        }
+
+        function formatDate(dateString) {
+            if (!dateString || dateString === 'undefined') return 'N/A';
+            try {
+                return new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+            } catch (e) {
+                return 'N/A';
+            }
+        }
+
+        async function loadLeadDetail() {
+            const params = new URLSearchParams(window.location.search);
+            currentLeadId = params.get('id');
+
+            if (!currentLeadId) {
+                showToast('Lead not found', 'error');
+                setTimeout(() => window.location.href = '/leads', 1500);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/${currentLeadId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load lead');
+
+                const lead = await response.json();
+                displayLeadDetail(lead);
+            } catch (error) {
+                showToast('Error loading lead: ' + error.message, 'error');
+            }
+        }
+
+        function displayLeadDetail(lead) {
+            if (!lead) {
+                showToast('Invalid lead data', 'error');
+                return;
+            }
+
+            document.getElementById('detailName').textContent = lead.fullName || '-';
+            document.getElementById('detailCompany').textContent = lead.company || '-';
+            
+            const emailEl = document.getElementById('detailEmail');
+            emailEl.textContent = lead.email || '-';
+            if (lead.email) emailEl.href = `mailto:${lead.email}`;
+            
+            const phoneEl = document.getElementById('detailPhone');
+            phoneEl.textContent = lead.phone || '-';
+            if (lead.phone) phoneEl.href = `tel:${lead.phone}`;
+            
+            document.getElementById('detailType').textContent = lead.projectType ? capitalize(lead.projectType) : '-';
+            document.getElementById('detailBudget').textContent = formatCurrency(lead.budget);
+            document.getElementById('detailDate').textContent = formatDate(lead.createdAt);
+            document.getElementById('detailDescription').textContent = lead.description || 'No description provided';
+
+            const badgeEl = document.getElementById('statusBadge');
+            badgeEl.className = `status-badge ${getStatusBadgeClass(lead.status || 'new')}`;
+            document.getElementById('statusEmoji').textContent = getStatusEmoji(lead.status || 'new');
+            document.getElementById('statusText').textContent = capitalize(lead.status || 'new');
+            document.getElementById('statusSelect').value = lead.status || 'new';
+        }
+
+        async function updateLeadStatus() {
+            const newStatus = document.getElementById('statusSelect').value;
+            try {
+                const response = await fetch(`${API_BASE}/${currentLeadId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                if (!response.ok) throw new Error('Failed to update status');
+                showToast('✓ Status updated successfully!', 'success');
+                loadLeadDetail();
+            } catch (error) {
+                showToast('✗ ' + error.message, 'error');
+            }
+        }
+
+        async function convertLeadToProject() {
+            if (!confirm('Convert this lead to a project?')) return;
+            try {
+                const response = await fetch(`${API_BASE}/${currentLeadId}/convert`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to convert lead');
+                showToast('✓ Lead converted to project!', 'success');
+                setTimeout(() => window.location.href = '/leads', 1500);
+            } catch (error) {
+                showToast('✗ ' + error.message, 'error');
+            }
+        }
+
+        async function deleteLead() {
+            if (!confirm('Are you sure you want to delete this lead? This action cannot be undone.')) return;
+            try {
+                const response = await fetch(`${API_BASE}/${currentLeadId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to delete lead');
+                showToast('✓ Lead deleted successfully!', 'success');
+                setTimeout(() => window.location.href = '/leads', 1500);
+            } catch (error) {
+                showToast('✗ ' + error.message, 'error');
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `fixed bottom-4 right-4 rounded-lg shadow-lg px-4 py-3 z-50 max-w-md text-sm font-medium ${
+                type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+            }`;
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        loadLeadDetail();
+    </script>
+</body>
+</html>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 bg-white border border-gray-200 rounded-lg px-4 py-3 shadow-lg text-sm z-50 max-w-md"></div>
+
+    <script>
+        const leadId = new URLSearchParams(window.location.search).get('id');
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!leadId) {
+                showToast('Lead ID not found', 'error');
+                setTimeout(() => window.location.href = '/leads', 2000);
+                return;
+            }
+            await loadLeadDetail();
+        });
+
+        async function loadLeadDetail() {
+            try {
+                const res = await fetch(`${API_BASE}/${leadId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    renderDetailView(data.data);
+                } else {
+                    showToast(data.error || 'Failed to load lead', 'error');
+                }
+            } catch (err) {
+                console.error('Error loading lead:', err);
+                showToast('Error loading lead', 'error');
+            }
+        }
+
+        function renderDetailView(lead) {
+            const statusColor = getStatusColor(lead.status);
+            const statusIcon = getStatusIcon(lead.status);
+
+            const html = `
+                <!-- Header Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-6">
+                        <div class="flex justify-between items-start gap-4">
+                            <div>
+                                <h1 class="text-3xl font-bold text-white">${lead.fullName}</h1>
+                                <p class="text-teal-100 text-lg mt-1">${lead.company}</p>
+                            </div>
+                            <span class="status-badge ${statusColor}">
+                                <span>${statusIcon}</span>
+                                <span>${capitalize(lead.status)}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Contact Information
+                        </h3>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 mb-1">Email Address</p>
+                            <a href="mailto:${lead.email}" class="text-teal-600 hover:text-teal-700 font-medium flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                ${lead.email}
+                            </a>
+                        </div>
+                        <div>
+                            <p class="text-sm font-semibold text-gray-600 mb-1">Phone Number</p>
+                            <p class="text-gray-900 font-medium flex items-center gap-2">
+                                <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                                </svg>
+                                ${lead.phone || 'Not provided'}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Details -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Project Details
+                        </h3>
+                    </div>
+                    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+                            <p class="text-sm font-semibold text-blue-700 mb-1">Project Type</p>
+                            <p class="text-2xl font-bold text-blue-900 flex items-center gap-2">
+                                <span>${getProjectTypeIcon(lead.projectType)}</span>
+                                ${capitalize(lead.projectType) || 'Unspecified'}
+                            </p>
+                        </div>
+                        ${lead.budget ? `
+                            <div class="bg-green-50 rounded-lg p-4 border border-green-100">
+                                <p class="text-sm font-semibold text-green-700 mb-1">Budget</p>
+                                <p class="text-2xl font-bold text-green-900">₨${lead.budget.toLocaleString()}</p>
+                            </div>
+                        ` : ''}
+                        <div class="bg-purple-50 rounded-lg p-4 border border-purple-100">
+                            <p class="text-sm font-semibold text-purple-700 mb-1">Created</p>
+                            <p class="text-lg font-bold text-purple-900">${new Date(lead.createdAt).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                ${lead.description ? `
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Description
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-gray-700 whitespace-pre-wrap">${lead.description}</p>
+                        </div>
+                    </div>
+                ` : ''}
+
+                <!-- Documents -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            Documents (${lead.attachments ? lead.attachments.length : 0})
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        ${lead.attachments && lead.attachments.length > 0 ? `
+                            <div class="space-y-3">
+                                ${lead.attachments.map(doc => `
+                                    <div class="flex items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-200 hover:border-teal-300 transition">
+                                        <div class="flex items-center gap-3 flex-1 min-w-0">
+                                            <span class="text-2xl">📄</span>
+                                            <div class="flex-1 min-w-0">
+                                                <a href="${doc.filePath}" target="_blank" class="text-teal-600 hover:text-teal-700 font-medium truncate block">
+                                                    ${doc.originalName}
+                                                </a>
+                                                <p class="text-xs text-gray-500">${(doc.size / 1024).toFixed(2)} KB</p>
+                                            </div>
+                                        </div>
+                                        <button onclick="deleteDocument('${lead._id}', '${doc._id}')" class="ml-3 p-2 text-red-500 hover:bg-red-50 rounded transition" title="Delete">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : `
+                            <p class="text-gray-500 text-center py-8">No documents attached</p>
+                        `}
+                        
+                        <div class="mt-4">
+                            <input type="file" id="uploadInput" multiple accept=".doc,.docx,.pdf,.txt" class="hidden" onchange="handleUploadFile('${lead._id}')">
+                            <button onclick="document.getElementById('uploadInput').click()" class="ds-btn ds-btn-sm ds-btn-outline w-full">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                <span>Upload Document</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status & Actions -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                            Status & Actions
+                        </h3>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Lead Status</label>
+                            <select id="statusSelect" onchange="updateLeadStatus()" class="ds-input w-full">
+                                <option value="new" ${lead.status === 'new' ? 'selected' : ''}>🆕 New</option>
+                                <option value="contacted" ${lead.status === 'contacted' ? 'selected' : ''}>📞 Contacted</option>
+                                <option value="quoted" ${lead.status === 'quoted' ? 'selected' : ''}>💼 Quoted</option>
+                                <option value="converted" ${lead.status === 'converted' ? 'selected' : ''} ${lead.convertedToProjectId ? '' : 'disabled'}>✅ Converted</option>
+                                <option value="rejected" ${lead.status === 'rejected' ? 'selected' : ''}>❌ Rejected</option>
+                            </select>
+                        </div>
+
+                        <div class="flex gap-3 pt-4">
+                            ${lead.convertedToProjectId ? `
+                                <a href="/project-detail?id=${lead.convertedToProjectId._id || lead.convertedToProjectId}" class="flex-1 ds-btn ds-btn-md ds-btn-primary justify-center">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>View Project</span>
+                                </a>
+                            ` : `
+                                <button onclick="convertLeadToProject('${lead._id}')" class="flex-1 ds-btn ds-btn-md ds-btn-primary justify-center">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                    </svg>
+                                    <span>Convert to Project</span>
+                                </button>
+                            `}
+                            <button onclick="deleteLead('${lead._id}')" class="ds-btn ds-btn-md ds-btn-danger justify-center">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                                <span>Delete Lead</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('detailContent').innerHTML = html;
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                'new': '🆕',
+                'contacted': '📞',
+                'quoted': '💼',
+                'converted': '✅',
+                'rejected': '❌'
+            };
+            return icons[status] || '•';
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'new': 'bg-blue-100 text-blue-800',
+                'contacted': 'bg-purple-100 text-purple-800',
+                'quoted': 'bg-yellow-100 text-yellow-800',
+                'converted': 'bg-green-100 text-green-800',
+                'rejected': 'bg-red-100 text-red-800'
+            };
+            return colors[status] || 'bg-gray-100 text-gray-800';
+        }
+
+        function getProjectTypeIcon(type) {
+            const icons = {
+                'web': '🌐',
+                'mobile': '📱',
+                'desktop': '💻',
+                'design': '🎨',
+                'other': '📋'
+            };
+            return icons[type] || '📋';
+        }
+
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        async function updateLeadStatus() {
+            const newStatus = document.getElementById('statusSelect').value;
+            await updateLead(newStatus);
+        }
+
+        async function updateLead(status) {
+            try {
+                const res = await fetch(`${API_BASE}/${leadId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Lead updated successfully', 'success');
+                } else {
+                    showToast(data.error || 'Failed to update lead', 'error');
+                }
+            } catch (err) {
+                console.error('Error updating lead:', err);
+                showToast('Error updating lead', 'error');
+            }
+        }
+
+        async function convertLeadToProject(leadId) {
+            try {
+                const res = await fetch(`${API_BASE}/${leadId}/convert`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Lead converted to project successfully!', 'success');
+                    setTimeout(() => {
+                        window.location.href = `/add-project?leadId=${leadId}`;
+                    }, 1500);
+                } else {
+                    showToast(data.error || 'Failed to convert lead', 'error');
+                }
+            } catch (err) {
+                console.error('Error converting lead:', err);
+                showToast('Error converting lead', 'error');
+            }
+        }
+
+        async function handleUploadFile(leadId) {
+            const input = document.getElementById('uploadInput');
+            if (!input.files || input.files.length === 0) return;
+
+            const formData = new FormData();
+            Array.from(input.files).forEach(file => {
+                formData.append('documents', file);
+            });
+
+            await uploadDocuments(leadId, formData);
+        }
+
+        async function uploadDocuments(leadId, formData) {
+            try {
+                const res = await fetch(`${API_BASE}/${leadId}/upload`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Documents uploaded successfully!', 'success');
+                    await loadLeadDetail();
+                } else {
+                    showToast(data.error || 'Failed to upload documents', 'error');
+                }
+            } catch (err) {
+                console.error('Error uploading documents:', err);
+                showToast('Error uploading documents', 'error');
+            }
+        }
+
+        async function deleteDocument(leadId, docId) {
+            if (!confirm('Are you sure you want to delete this document?')) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/${leadId}/document/${docId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Document deleted successfully', 'success');
+                    await loadLeadDetail();
+                } else {
+                    showToast(data.error || 'Failed to delete document', 'error');
+                }
+            } catch (err) {
+                console.error('Error deleting document:', err);
+                showToast('Error deleting document', 'error');
+            }
+        }
+
+        async function deleteLead(leadId) {
+            if (!confirm('Are you sure you want to delete this lead? This action cannot be undone.')) return;
+
+            try {
+                const res = await fetch(`${API_BASE}/${leadId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Lead deleted successfully', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/leads';
+                    }, 1500);
+                } else {
+                    showToast(data.error || 'Failed to delete lead', 'error');
+                }
+            } catch (err) {
+                console.error('Error deleting lead:', err);
+                showToast('Error deleting lead', 'error');
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const bgColor = type === 'success' ? 'bg-green-50 border border-green-200' : 
+                           type === 'error' ? 'bg-red-50 border border-red-200' : 'bg-blue-50 border border-blue-200';
+            const textColor = type === 'success' ? 'text-green-800' : 
+                             type === 'error' ? 'text-red-800' : 'text-blue-800';
+
+            toast.className = `${bgColor} ${textColor} rounded-lg px-4 py-3 flex items-center gap-2`;
+            toast.innerHTML = `
+                <span>${type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ'}</span>
+                <span>${message}</span>
+            `;
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

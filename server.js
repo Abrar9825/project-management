@@ -33,6 +33,7 @@ const meetingRoutes = require('./routes/meeting.routes');
 const feedbackRoutes = require('./routes/feedback.routes');
 const generatorRoutes = require('./routes/generator.routes');
 const clientTaskRoutes = require('./routes/clientTask.routes');
+const leadRoutes = require('./routes/lead.routes');
 const AutomationEngine = require('./services/automationEngine');
 
 const app = express();
@@ -77,6 +78,7 @@ app.use('/api/meetings', meetingRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/generator', generatorRoutes);
 app.use('/api/client-tasks', clientTaskRoutes);
+app.use('/api/leads', leadRoutes);
 
 // View Routes
 app.get('/', (req, res) => res.redirect('/login'));
@@ -91,6 +93,12 @@ app.get('/client-panel', (req, res) => res.render('client-panel'));
 app.get('/documents', (req, res) => res.render('documents'));
 app.get('/document-center', (req, res) => res.render('document-center'));
 app.get('/client-portal', (req, res) => res.render('client-portal'));
+app.get('/leads', (req, res) => res.render('leads'));
+app.get('/create-lead', (req, res) => res.render('create-lead'));
+app.get('/lead-detail', (req, res) => res.render('lead-detail'));
+app.get('/create-order', (req, res) => res.render('create-order'));
+app.get('/order-detail', (req, res) => res.render('order-detail'));
+app.get('/orders', (req, res) => res.render('orders'));
 
 // Health check route
 app.get('/api/health', (req, res) => {

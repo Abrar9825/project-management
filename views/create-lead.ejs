@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Lead | Project Control System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/design-system.css">
+    <style>
+        .btn-transition {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .input-focus { 
+            @apply focus:ring-2 focus:ring-teal-500 focus:border-teal-500;
+        }
+
+        .pro-input {
+            width: 100% !important;
+            padding: 10px 14px !important;
+            border: 2px solid #cbd5e1 !important;
+            border-radius: 12px !important;
+            background-color: #ffffff !important;
+            color: #1f2937 !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        .pro-input:hover {
+            border-color: #7dd3c0 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+        }
+
+        .pro-input:focus {
+            border-color: #0d9488 !important;
+            outline: none !important;
+            ring-color: #ccfbf1 !important;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1), 0 4px 6px rgba(0,0,0,0.1) !important;
+        }
+
+        .pro-input::placeholder {
+            color: #9ca3af !important;
+        }
+
+        .form-section {
+            @apply px-6 py-4 border-b border-gray-200;
+        }
+
+        .form-section:last-child {
+            @apply border-b-0;
+        }
+
+        .form-section {
+            @apply px-6 py-4 border-b border-gray-200;
+        }
+
+        .form-section:last-child {
+            @apply border-b-0;
+        }
+
+        .dropzone {
+            width: 100%;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
+            padding: 32px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .dropzone:hover {
+            border-color: #7dd3c0;
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .dropzone:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(13, 148, 136, 0.1);
+        }
+
+        .dropzone.drag-active {
+            border-color: #0d9488;
+            border-width: 2px;
+            background: linear-gradient(135deg, #ccfbf1 0%, #a7f3d0 100%);
+            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <%- include('partials/nav') %>
+
+    <div class="max-w-6xl mx-auto px-3 sm:px-4 py-2">
+        <!-- Back Button & Title -->
+        <div class="flex items-center gap-1.5 mb-2 px-2">
+            <a href="/leads" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-white border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:border-teal-400 hover:text-teal-600 transition shadow-sm hover:shadow-md">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                <span>Back to Leads</span>
+            </a>
+        </div>
+
+        <!-- Header -->
+        <div class="mb-3 px-2">
+            <h1 class="text-2xl font-bold text-gray-900">Create New Lead</h1>
+            <p class="text-gray-600 text-sm mt-1">Add a new lead to your sales pipeline and track progress</p>
+        </div>
+
+        <!-- Form Card -->
+        <div class=\"bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden\">
+            <form id="leadForm" onsubmit="handleLeadFormSubmit(event)" class="divide-y divide-gray-200">
+                <!-- Personal Information Section -->
+                <div class="form-section space-y-3">
+                    <h2 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Personal Information
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">First Name *</label>
+                            <input type="text" id="firstName" required class="pro-input" placeholder="John">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Last Name *</label>
+                            <input type="text" id="lastName" required class="pro-input" placeholder="Doe">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Company *</label>
+                            <input type="text" id="company" required class="pro-input" placeholder="Tech Company">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Email *</label>
+                            <input type="email" id="email" required class="pro-input" placeholder="john@company.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Phone Number</label>
+                            <input type="tel" id="phone" class="pro-input" placeholder="+92 300 1234567">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Information Section -->
+                <div class="form-section space-y-3">
+                    <h2 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Project Information
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Project Type *</label>
+                            <select id="projectType" required class="pro-input bg-white cursor-pointer">
+                                <option value="">Select project type...</option>
+                                <option value="web">🌐 Web Development</option>
+                                <option value="mobile">📱 Mobile App</option>
+                                <option value="desktop">💻 Desktop Application</option>
+                                <option value="design">🎨 Design</option>
+                                <option value="other">📋 Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Budget (₨)</label>
+                            <input type="number" id="budget" min="0" class="pro-input" placeholder="500000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Timeline</label>
+                            <input type="text" class="pro-input" placeholder="e.g. 3 months">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-2">Project Description</label>
+                        <textarea id="description" rows="2" class="pro-input resize-none" placeholder="Describe your project requirements and goals..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Document Upload Section -->
+                <div class="form-section space-y-3">
+                    <h2 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Documents & Attachments
+                    </h2>
+
+                    <div>
+                        <input type="file" id="fileInput" multiple accept=".doc,.docx,.pdf,.txt" class="hidden" onchange="handleFileSelect(event)">
+                        <div class="dropzone" onclick="document.getElementById('fileInput').click()" ondrop="handleFileDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                            <svg class="w-10 h-10 text-teal-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3v-6"/></svg>
+                            <p class="text-gray-800 font-bold text-sm mb-1">Click to upload or drag & drop</p>
+                            <p class="text-xs text-gray-600">DOC • DOCX • PDF • TXT (Max 5MB)</p>
+                        </div>
+                    </div>
+
+                    <!-- File List -->
+                    <div id="fileList" class="space-y-0.5"></div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-white flex gap-3 border-t border-gray-200">
+                    <a href="/leads" class="flex-1 px-6 py-2.5 bg-white border-2 border-gray-300 text-gray-700 font-bold text-sm rounded-xl hover:bg-gray-50 hover:border-gray-400 transition shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        <span>Cancel</span>
+                    </a>
+                    <button type="submit" class="flex-1 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold text-sm rounded-xl hover:from-teal-700 hover:to-teal-800 transition shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        <span>Create Lead</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 bg-white rounded-lg shadow-lg px-4 py-3 z-50 max-w-md"></div>
+
+    <script>
+        const API_BASE = '/api/leads';
+        const token = localStorage.getItem('token');
+        let selectedFiles = [];
+
+        function handleFileSelect(event) {
+            selectedFiles = Array.from(event.target.files);
+            renderFileList();
+        }
+
+        function handleFileDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const dropzone = event.currentTarget;
+            dropzone.classList.remove('drag-active');
+            
+            selectedFiles = Array.from(event.dataTransfer.files);
+            renderFileList();
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.add('drag-active');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.remove('drag-active');
+        }
+
+        function renderFileList() {
+            const fileList = document.getElementById('fileList');
+            if (selectedFiles.length === 0) {
+                fileList.innerHTML = '';
+                return;
+            }
+
+            fileList.innerHTML = `
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p class="text-sm font-semibold text-blue-900 mb-3">📎 Selected Files (${selectedFiles.length})</p>
+                    <div class="space-y-2">
+                        ${selectedFiles.map((file, idx) => `
+                            <div class="flex items-center justify-between bg-white p-3 rounded border border-blue-100">
+                                <div class="flex items-center gap-2 flex-1">
+                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">${file.name}</p>
+                                        <p class="text-xs text-gray-500">${(file.size / 1024).toFixed(2)} KB</p>
+                                    </div>
+                                </div>
+                                <button type="button" onclick="removeFile(${idx})" class="ml-2 p-1 text-red-500 hover:bg-red-50 rounded transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderFileList();
+        }
+
+        function handleLeadFormSubmit(event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append('firstName', document.getElementById('firstName').value);
+            formData.append('lastName', document.getElementById('lastName').value);
+            formData.append('company', document.getElementById('company').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('phone', document.getElementById('phone').value);
+            formData.append('projectType', document.getElementById('projectType').value);
+            formData.append('budget', document.getElementById('budget').value || 0);
+            formData.append('description', document.getElementById('description').value);
+
+            // Add selected files
+            selectedFiles.forEach(file => {
+                formData.append('documents', file);
+            });
+
+            createLead(formData);
+        }
+
+        async function createLead(formData) {
+            try {
+                // Disable submit button
+                const submitBtn = document.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+
+                const res = await fetch(API_BASE, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('Lead created successfully! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/leads';
+                    }, 1500);
+                } else {
+                    showToast(data.error || 'Failed to create lead', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg><span>Create Lead</span>';
+                }
+            } catch (err) {
+                console.error('Error creating lead:', err);
+                showToast('Error creating lead', 'error');
+                const submitBtn = document.querySelector('button[type="submit"]');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg><span>Create Lead</span>';
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const bgColor = type === 'success' ? 'bg-green-50 border border-green-200' :
+                type === 'error' ? 'bg-red-50 border border-red-200' : 'bg-blue-50 border border-blue-200';
+            const textColor = type === 'success' ? 'text-green-800' :
+                type === 'error' ? 'text-red-800' : 'text-blue-800';
+            const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ';
+
+            toast.className = `${bgColor} ${textColor} rounded-lg px-4 py-3 flex items-center gap-2`;
+            toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+    </script>
+</body>
+</html>

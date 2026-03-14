@@ -1,0 +1,4 @@
+# Ignore uploaded lead documents
+*
+!.gitignore
+

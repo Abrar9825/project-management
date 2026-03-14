@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const ActivitySchema = new mongoose.Schema({
     project: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Project',
-        required: true
+        ref: 'Project'
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -26,7 +25,7 @@ const ActivitySchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ['task', 'payment', 'stage', 'general', 'remark'],
+        enum: ['task', 'payment', 'stage', 'general', 'remark', 'lead'],
         default: 'general'
     },
     createdAt: {

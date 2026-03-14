@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Order | Project Control System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/css/design-system.css">
+    <style>
+        .pro-input {
+            width: 100% !important;
+            padding: 10px 14px !important;
+            border: 2px solid #cbd5e1 !important;
+            border-radius: 12px !important;
+            background-color: #ffffff !important;
+            color: #1f2937 !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        .pro-input:hover {
+            border-color: #7dd3c0 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+        }
+
+        .pro-input:focus {
+            border-color: #0d9488 !important;
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1), 0 4px 6px rgba(0,0,0,0.1) !important;
+        }
+
+        .pro-input::placeholder {
+            color: #9ca3af !important;
+        }
+
+        .form-section {
+            @apply px-6 py-4 border-b border-gray-200;
+        }
+
+        .form-section:last-child {
+            @apply border-b-0;
+        }
+
+        .dropzone {
+            width: 100%;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fdfa 100%);
+            padding: 32px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .dropzone:hover {
+            border-color: #7dd3c0;
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .dropzone:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 6px rgba(13, 148, 136, 0.1);
+        }
+
+        .dropzone.drag-active {
+            border-color: #0d9488;
+            border-width: 2px;
+            background: linear-gradient(135deg, #ccfbf1 0%, #a7f3d0 100%);
+            box-shadow: 0 8px 20px rgba(13, 148, 136, 0.2);
+        }
+
+        /* Status Badge Styles */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .status-badge:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .badge-pending {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+
+        .badge-processing {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .badge-shipped {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            color: #6b21a8;
+            border: 1px solid #d8b4fe;
+        }
+
+        .badge-delivered {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .badge-cancelled {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <%- include('partials/nav') %>
+    <main>
+        <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3">
+            <!-- Back Button -->
+            <div class="flex items-center gap-1.5 mb-2 px-2">
+                <a href="/" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold bg-white border-2 border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:border-teal-400 hover:text-teal-600 transition shadow-sm hover:shadow-md">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    <span>Back</span>
+                </a>
+            </div>
+
+            <!-- Header -->
+            <div class="mb-3 px-2">
+                <h1 class="text-2xl font-bold text-gray-900">Create New Order</h1>
+                <p class="text-gray-600 text-sm mt-1">Add a new order to your system</p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                <form id="orderForm" onsubmit="handleOrderFormSubmit(event)" class="divide-y divide-gray-200">
+                    <!-- Order Information Section -->
+                    <div class="form-section space-y-3">
+                        <h2 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Order Information
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Order ID *</label>
+                                <input type="text" id="orderId" required class="pro-input" placeholder="ORD-2024-001">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Order Date *</label>
+                                <input type="date" id="orderDate" required class="pro-input">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Status</label>
+                                <select id="orderStatus" class="pro-input bg-white cursor-pointer">
+                                    <option value="pending">⏳ Pending</option>
+                                    <option value="processing">⚙️ Processing</option>
+                                    <option value="shipped">📦 Shipped</option>
+                                    <option value="delivered">✅ Delivered</option>
+                                    <option value="cancelled">❌ Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Product Name *</label>
+                                <input type="text" id="productName" required class="pro-input" placeholder="Product name">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Quantity *</label>
+                                <input type="number" id="quantity" min="1" required class="pro-input" placeholder="1">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Description</label>
+                            <textarea id="description" rows="2" class="pro-input resize-none" placeholder="Order details..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Customer Information Section -->
+                    <div class="form-section space-y-3">
+                        <h2 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Customer Information
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Customer Name *</label>
+                                <input type="text" id="customerName" required class="pro-input" placeholder="John Doe">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Email *</label>
+                                <input type="email" id="customerEmail" required class="pro-input" placeholder="john@company.com">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Phone</label>
+                                <input type="tel" id="customerPhone" class="pro-input" placeholder="+92 300 1234567">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-2">Delivery Address</label>
+                            <textarea id="address" rows="2" class="pro-input resize-none" placeholder="Street, City, Country..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Pricing Section -->
+                    <div class="form-section space-y-3">
+                        <h2 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Pricing Details
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Unit Price (₨) *</label>
+                                <input type="number" id="unitPrice" min="0" step="0.01" required class="pro-input" placeholder="1000">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Discount (%)</label>
+                                <input type="number" id="discount" min="0" max="100" class="pro-input" placeholder="0">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 mb-2">Total Amount (₨)</label>
+                                <div class="pro-input bg-gray-50 font-bold text-teal-600" id="totalAmount">₨0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documents Section -->
+                    <div class="form-section space-y-3">
+                        <h2 class="text-sm font-bold text-gray-900 flex items-center gap-2 mb-3">
+                            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            Documents
+                        </h2>
+
+                        <div>
+                            <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.jpg,.png" class="hidden" onchange="handleFileSelect(event)">
+                            <div class="dropzone" onclick="document.getElementById('fileInput').click()" ondrop="handleFileDrop(event)" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
+                                <svg class="w-10 h-10 text-teal-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3v-6"/></svg>
+                                <p class="text-gray-800 font-bold text-sm mb-1">Click to upload or drag & drop</p>
+                                <p class="text-xs text-gray-600">PDF • DOC • DOCX • JPG • PNG (Max 10MB)</p>
+                            </div>
+                        </div>
+
+                        <!-- File List -->
+                        <div id="fileList" class="space-y-0.5"></div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-white flex gap-3 border-t border-gray-200">
+                        <a href="/" class="flex-1 px-6 py-2.5 bg-white border-2 border-gray-300 text-gray-700 font-bold text-sm rounded-xl hover:bg-gray-50 hover:border-gray-400 transition shadow-sm hover:shadow-md flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <span>Cancel</span>
+                        </a>
+                        <button type="submit" class="flex-1 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-700 text-white font-bold text-sm rounded-xl hover:from-teal-700 hover:to-teal-800 transition shadow-md hover:shadow-lg flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            <span>Create Order</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 bg-white rounded-lg shadow-lg px-4 py-3 z-50 max-w-md"></div>
+
+    <script>
+        let selectedFiles = [];
+
+        // Auto-calculate total amount
+        document.getElementById('unitPrice').addEventListener('input', calculateTotal);
+        document.getElementById('discount').addEventListener('input', calculateTotal);
+        document.getElementById('quantity').addEventListener('input', calculateTotal);
+
+        function calculateTotal() {
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
+            const discount = parseFloat(document.getElementById('discount').value) || 0;
+
+            const subtotal = quantity * unitPrice;
+            const discountAmount = (subtotal * discount) / 100;
+            const total = subtotal - discountAmount;
+
+            document.getElementById('totalAmount').textContent = '₨' + Math.round(total).toLocaleString();
+        }
+
+        function handleFileSelect(event) {
+            selectedFiles = Array.from(event.target.files);
+            renderFileList();
+        }
+
+        function handleFileDrop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.remove('drag-active');
+            selectedFiles = Array.from(event.dataTransfer.files);
+            renderFileList();
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.add('drag-active');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.currentTarget.classList.remove('drag-active');
+        }
+
+        function renderFileList() {
+            const fileList = document.getElementById('fileList');
+            if (selectedFiles.length === 0) {
+                fileList.innerHTML = '';
+                return;
+            }
+
+            fileList.innerHTML = `
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-2">
+                    <p class="text-xs font-semibold text-blue-900 mb-1">📎 ${selectedFiles.length} file(s)</p>
+                    <div class="space-y-1">
+                        ${selectedFiles.map((file, idx) => `
+                            <div class="flex items-center justify-between bg-white p-2 rounded border border-blue-100 text-xs">
+                                <div class="flex items-center gap-1.5 flex-1 min-w-0">
+                                    <svg class="w-3.5 h-3.5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    <span class="truncate">${file.name}</span>
+                                </div>
+                                <button onclick="removeFile(${idx})" type="button" class="text-red-600 hover:text-red-700 ml-2 flex-shrink-0">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function removeFile(idx) {
+            selectedFiles.splice(idx, 1);
+            renderFileList();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `fixed bottom-4 right-4 rounded-lg shadow-lg px-4 py-3 z-50 max-w-md text-sm font-medium ${
+                type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+            }`;
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        async function handleOrderFormSubmit(event) {
+            event.preventDefault();
+
+            const orderData = {
+                orderId: document.getElementById('orderId').value,
+                orderDate: document.getElementById('orderDate').value,
+                status: document.getElementById('orderStatus').value,
+                product: {
+                    name: document.getElementById('productName').value,
+                    quantity: document.getElementById('quantity').value,
+                    unitPrice: document.getElementById('unitPrice').value,
+                    discount: document.getElementById('discount').value
+                },
+                customer: {
+                    name: document.getElementById('customerName').value,
+                    email: document.getElementById('customerEmail').value,
+                    phone: document.getElementById('customerPhone').value,
+                    address: document.getElementById('address').value
+                },
+                description: document.getElementById('description').value
+            };
+
+            showToast('✓ Order created successfully!', 'success');
+            setTimeout(() => window.location.href = '/', 1500);
+        }
+
+        // Set today's date as default
+        document.getElementById('orderDate').valueAsDate = new Date();
+    </script>
+</body>
+</html>

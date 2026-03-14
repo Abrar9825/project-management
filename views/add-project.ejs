@@ -297,7 +297,9 @@
         // ==================== EDIT MODE DETECTION ====================
         const urlParams = new URLSearchParams(window.location.search);
         const editProjectId = urlParams.get('edit');
+        const leadId = urlParams.get('leadId');
         const isEditMode = !!editProjectId;
+        const isLeadConversion = !!leadId;
 
         // ==================== STEPPER ====================
         function updateStepper() {
@@ -391,6 +393,56 @@
                 populateTeamDropdowns();
             } catch (error) {
                 console.error('Error loading users:', error);
+            }
+        }
+
+        // ==================== LOAD LEAD FOR CONVERSION ====================
+        async function loadLeadForConversion() {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`/api/leads/${leadId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await res.json();
+                
+                if (!data.success || !data.data) {
+                    showError('Failed to load lead data');
+                    return;
+                }
+                
+                const lead = data.data;
+                
+                // Add breadcrumb info
+                const pageHeader = document.querySelector('[class*="flex justify-between items-start"]');
+                if (pageHeader) {
+                    pageHeader.innerHTML += `
+                        <div class="bg-teal-50 border border-teal-200 rounded-lg px-3 py-2 text-xs">
+                            <p class="text-teal-600 font-medium">Converting from Lead:</p>
+                            <p class="text-teal-800 font-bold">${lead.company}</p>
+                        </div>
+                    `;
+                }
+                
+                // Pre-fill form with lead data
+                document.getElementById('projectName').value = lead.company || '';
+                document.getElementById('projectDescription').value = lead.description || '';
+                document.getElementById('clientName').value = `${lead.firstName} ${lead.lastName}`.trim() || '';
+                document.getElementById('clientEmail').value = lead.email || '';
+                document.getElementById('projectType').value = lead.projectType || 'web';
+                if (lead.budget) {
+                    document.getElementById('totalAmount').value = lead.budget;
+                }
+                
+                // Set default dates
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('startDate').value = today;
+                const threeMonths = new Date();
+                threeMonths.setMonth(threeMonths.getMonth() + 3);
+                document.getElementById('dueDate').value = threeMonths.toISOString().split('T')[0];
+                
+            } catch (err) {
+                console.error('Error loading lead:', err);
+                showError('Failed to load lead data');
             }
         }
 
@@ -580,6 +632,9 @@
                 let result;
                 if (isEditMode) {
                     result = await api.updateProject(editProjectId, projectData);
+                } else if (isLeadConversion) {
+                    // For lead conversion: create project first
+                    result = await api.createProject(projectData);
                 } else {
                     result = await api.createProject(projectData);
                 }
@@ -587,6 +642,28 @@
                 if (result.success) {
                     if (isEditMode) {
                         window.location.href = `/project-detail?id=${editProjectId}`;
+                    } else if (isLeadConversion) {
+                        // Lead conversion: mark lead as converted
+                        const projectId = result.data?._id || result.data?.id;
+                        try {
+                            const token = localStorage.getItem('token');
+                            await fetch(`/api/leads/${leadId}/convert-to-project`, {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${token}`,
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ projectName: projectData.name })
+                            });
+                        } catch (conversionErr) {
+                            console.error('Error marking lead as converted:', conversionErr);
+                        }
+                        
+                        if (projectId) {
+                            window.location.href = `/project-detail?id=${projectId}`;
+                        } else {
+                            window.location.href = '/projects';
+                        }
                     } else {
                         const projectId = result.data?._id || result.data?.id;
                         if (projectId) {
@@ -657,6 +734,12 @@
                 document.getElementById('submitBtn').textContent = 'Update Project \u2713';
                 document.getElementById('cancelBtn').href = '/project-detail?id=' + editProjectId;
                 await loadProjectForEdit();
+            } else if (isLeadConversion) {
+                // Lead conversion mode: update page title and load lead data
+                document.title = 'Convert Lead to Project | Project Control System';
+                document.getElementById('pageTitle').textContent = 'Convert Lead to Project';
+                document.getElementById('pageSubtitle').textContent = 'Create a new project from a lead';
+                await loadLeadForConversion();
             } else {
                 // Create mode: set default dates
                 const today = new Date().toISOString().split('T')[0];
