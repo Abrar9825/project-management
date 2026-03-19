@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/auth.middleware');
 const {
     getClientTasks,
     createClientTask,
@@ -9,10 +8,10 @@ const {
     deleteClientTask
 } = require('../controllers/clientTask.controller');
 
-router.get('/:projectId', protect, getClientTasks);
-router.post('/:projectId', protect, createClientTask);
-router.put('/:id/start', protect, startClientTask);
-router.put('/:id/complete', protect, completeClientTask);
-router.delete('/:id', protect, deleteClientTask);
+router.get('/:projectId', getClientTasks);
+router.post('/:projectId', createClientTask);
+router.put('/:id/start', startClientTask);
+router.put('/:id/complete', completeClientTask);
+router.delete('/:id', deleteClientTask);
 
 module.exports = router;

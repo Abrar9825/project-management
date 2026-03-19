@@ -62,39 +62,43 @@ const createProjectValidation = [
 ];
 
 // Apply protect middleware to all routes
-router.use(protect);
+// Removed for client portal access
+// router.use(protect);
+
+// Middleware to protect specific routes
+const protectedRoutes = (req, res, next) => protect(req, res, next);
 
 // Project routes
 router.route('/')
-    .get(getProjects)
-    .post(adminOnly, createProjectValidation, handleValidation, createProject);
+    .get(protect, getProjects)
+    .post(protect, adminOnly, createProjectValidation, handleValidation, createProject);
 
-router.get('/stats', adminOnly, getProjectStats);
+router.get('/stats', protect, adminOnly, getProjectStats);
 
 router.route('/:id')
-    .get(getProject)
-    .put(adminOnly, updateProject)
-    .delete(adminOnly, deleteProject);
+    .get(protect, getProject)
+    .put(protect, adminOnly, updateProject)
+    .delete(protect, adminOnly, deleteProject);
 
 // Stage routes
-router.put('/:id/stages/:stageId', adminSubadminOnly, updateStage);
-router.put('/:id/stages/:stageId/items/:itemId', adminSubadminOnly, updateStageItem);
+router.put('/:id/stages/:stageId', protect, adminSubadminOnly, updateStage);
+router.put('/:id/stages/:stageId/items/:itemId', protect, adminSubadminOnly, updateStageItem);
 
 // Activity routes
 router.route('/:id/activities')
-    .get(getActivities)
-    .post(addActivity);
+    .get(protect, getActivities)
+    .post(protect, addActivity);
 
 // Remark routes
 router.route('/:id/remarks')
-    .get(getRemarks)
-    .post(body('text').trim().notEmpty().withMessage('Remark text is required'), handleValidation, addRemark);
+    .get(protect, getRemarks)
+    .post(protect, body('text').trim().notEmpty().withMessage('Remark text is required'), handleValidation, addRemark);
 
 // ===== NEW: Blocker Engine =====
-router.get('/:id/blockers', computeBlockers);
+router.get('/:id/blockers', protect, computeBlockers);
 
 // ===== NEW: Project Health =====
-router.get('/:id/health', getProjectHealth);
+router.get('/:id/health', protect, getProjectHealth);
 
 // ===== NEW: Client View =====
 router.get('/:id/client-view', getClientView);
@@ -103,27 +107,27 @@ router.get('/:id/client-view', getClientView);
 router.get('/:id/client-overview', getClientOverview);
 
 // ===== NEW: Save Description Summary =====
-router.put('/:id/save-summary', saveDescriptionSummary);
+router.put('/:id/save-summary', protect, saveDescriptionSummary);
 
 // ===== NEW: Approval Workflow =====
-router.put('/:id/stages/:stageId/submit-approval', adminSubadminOnly, submitStageForApproval);
-router.put('/:id/stages/:stageId/subadmin-review', adminSubadminOnly, subadminReviewStage);
-router.put('/:id/stages/:stageId/admin-approve', adminOnly, adminApproveStage);
+router.put('/:id/stages/:stageId/submit-approval', protect, adminSubadminOnly, submitStageForApproval);
+router.put('/:id/stages/:stageId/subadmin-review', protect, adminSubadminOnly, subadminReviewStage);
+router.put('/:id/stages/:stageId/admin-approve', protect, adminOnly, adminApproveStage);
 
 // ===== NEW: Stage Visibility & Payment Linking =====
-router.put('/:id/stages/:stageId/visibility', adminOnly, toggleStageVisibility);
-router.put('/:id/stages/:stageId/link-payment', adminOnly, linkPaymentToStage);
-router.put('/:id/stages/:stageId/holder', adminSubadminOnly, updateStageHolder);
+router.put('/:id/stages/:stageId/visibility', protect, adminOnly, toggleStageVisibility);
+router.put('/:id/stages/:stageId/link-payment', protect, adminOnly, linkPaymentToStage);
+router.put('/:id/stages/:stageId/holder', protect, adminSubadminOnly, updateStageHolder);
 
 // ===== NEW: Asset Requests =====
-router.post('/:id/stages/:stageId/asset-requests', adminSubadminOnly, addAssetRequest);
+router.post('/:id/stages/:stageId/asset-requests', protect, adminSubadminOnly, addAssetRequest);
 router.put('/:id/stages/:stageId/asset-requests/:assetId', upload.single('file'), updateAssetRequest);
-router.delete('/:id/stages/:stageId/asset-requests/:assetId', adminSubadminOnly, deleteAssetRequest);
+router.delete('/:id/stages/:stageId/asset-requests/:assetId', protect, adminSubadminOnly, deleteAssetRequest);
 
 // ===== NEW: Stage PDF Data =====
-router.get('/:id/stages/:stageId/pdf-data', getStagePdfData);
+router.get('/:id/stages/:stageId/pdf-data', getClientView, getStagePdfData);
 
 // ===== NEW: Maintenance Mode =====
-router.put('/:id/maintenance', adminOnly, enterMaintenanceMode);
+router.put('/:id/maintenance', protect, adminOnly, enterMaintenanceMode);
 
 module.exports = router;
